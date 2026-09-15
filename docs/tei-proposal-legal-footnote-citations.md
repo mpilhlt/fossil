@@ -276,26 +276,26 @@ repeating the work, or explicitly to **another footnote**. `<ref>` is already
 
 | `@type` | Meaning | Examples |
 | --- | --- | --- |
-| `preceedingWork` | the work just cited | *supra*, *above*, `id.`, `op. cit.`, `a.a.O.` |
+| `precedingWork` | the work just cited | *supra*, *above*, `id.`, `op. cit.`, `a.a.O.` |
 | `subsequentWork` | a work cited later | *infra*, *below* |
-| `preceedingAuthor` | the author just named, work unspecified | `ders.`, `idem` |
+| `precedingAuthor` | the author just named, work unspecified | `ders.`, `idem` |
 | `footnote` | an explicit cross-reference to another footnote, carrying `@n` | `n. 7`, `N. 22`, "oben N. 22" |
 
 (This list is intentionally open — see §7.1.)
 
 ```xml
-<bibl><author>Vogel</author>, <ref type="preceedingWork">id.</ref>,
+<bibl><author>Vogel</author>, <ref type="precedingWork">id.</ref>,
   <citedRange unit="page" from="79" to="79">p. 79</citedRange></bibl>
 
-<bibl><author>Vogel</author>, <ref type="preceedingWork">op. cit.</ref>,
+<bibl><author>Vogel</author>, <ref type="precedingWork">op. cit.</ref>,
   <ref type="footnote" n="7">n. 7</ref>,
   <citedRange unit="page" from="80" to="81">pp. 80–1.</citedRange></bibl>
 
-<bibl><ref type="preceedingAuthor">Ders.</ref>, <ref type="preceedingWork">a.a.O.</ref>,
+<bibl><ref type="precedingAuthor">Ders.</ref>, <ref type="precedingWork">a.a.O.</ref>,
   <citedRange unit="page" from="123" to="123">S. 123</citedRange>.</bibl>
 
 <bibl><author>Carbonnier</author> (<ref type="footnote">vorige N.</ref>),
-  <ref type="preceedingWork">a.a.O.</ref>.</bibl>
+  <ref type="precedingWork">a.a.O.</ref>.</bibl>
 ```
 
 (All four follow a consistent convention for the enclosing parenthesis — kept as plain
@@ -377,20 +377,34 @@ paragraph:
 > Social Change - On the Origins, Style, Decline and Revival of the Law and Development
 > Movement, Am. J. Comp. L. 25 (1977) 457 (479).
 
+**A note on this example's shape.** The following annotation is produced
+for GROBID's *references* model, which segments footnote text into a flat sequence of
+`<bibl>` spans and has no notion of a labeled span that sits between two `<bibl>`s. The
+aim here is therefore not a faithful semantic markup of the original running text.
+Instead, the citation context (`<seg type="citationContext">`) and the quotation
+(`<quote>`) are annotated as *part of* the `<bibl>` they belong to, which has the
+advantage that it is always unambiguous which citation a signal phrase or quotation
+belongs to. That grouping decision — which spans of running text join which `<bibl>` —
+is made upstream, by the (separate) annotation task that segments a footnote into
+`<bibl>` spans in the first place; this is also where `<label>` is used to
+annotate the footnote number (not part of the *references* model). A faithful semantic
+markup of the source text would use a different syntax.
+
 ```xml
+<listBibl>
 <bibl>
-  <label>30</label>
   <seg type="citationContext">Dazu etwa</seg>
   <author>Smelser</author>
-    <biblScope unit="page" from="175" to="176">175 f.</biblScope>
+    <biblScope unit="page" from="175" to="176">175 f.</biblScope> -
 </bibl>
- — <seg type="citationContext">Für die Kriminologie siehe</seg>
+ 
 <bibl>
+  <seg type="citationContext">Für die Kriminologie siehe</seg>
   <author>Kaiser</author>
-  (<ref type="preceedingWork">oben</ref> <ref type="footnote" n="22">N. 22</ref>)
-  <biblScope unit="page" from="89" to="89">89</biblScope>
+  (<ref type="precedingWork">oben</ref> <ref type="footnote" n="22">N. 22</ref>)
+  <biblScope unit="page" from="89" to="89">89</biblScope> sowie
 </bibl>
- sowie
+ 
 <bibl>
   <author>Blazicek</author>/<author>Janeksela</author>,
   <title level="a">Some Comments on Comparative Methodologies in Criminal Justice</title>,
@@ -400,21 +414,24 @@ paragraph:
   <biblScope unit="page">233</biblScope>
   <citedRange unit="page">(240)</citedRange>.
 </bibl>
-<seg type="citationContext">Als besonders gefährlich hat sich die unkritische Übertragung solcher Konzepte auf Länder der Dritten Welt erwiesen. So kam man etwa zu dem Ergebnis:</seg>
+  
 <bibl>
+  <seg type="citationContext">Als besonders gefährlich hat sich die unkritische Übertragung solcher Konzepte auf Länder der Dritten Welt erwiesen. So kam man etwa zu dem Ergebnis:</seg>
   <quote>„The U. S. law and development movement was largely a parochial     expression of the American legal style"</quote>,
   <author>Merryman</author>,
   <title level="a">Comparative Law and Social Change - On the Origins, Style, Decline and Revival of the Law and Development Movement</title>,
   <title level="j">Am. J. Comp. L.</title> <biblScope unit="volume">25</biblScope>
   (<date type="publication" when="1977">1977</date>)
   <biblScope unit="page">457</biblScope>
-  <citedRange unit="page">(479)</citedRange>.</bibl>
+  <citedRange unit="page">(479)</citedRange>.
 </bibl>
+
+</listBibl>
 ```
 
 Notes on choices made in this annotation:
 
-- `Kaiser (oben N. 22) 89` splits *oben* (`preceedingWork`) from *N. 22*
+- `Kaiser (oben N. 22) 89` splits *oben* (`precedingWork`) from *N. 22*
   (`footnote`, `@n="22"`) rather than fusing them into one `<ref>`, for the same reason
   `op. cit.` and `n. 7` are split in B7's second example: they are two distinct
   lexical devices that happen to sit next to each other, not a single fixed phrase.
@@ -443,7 +460,7 @@ Notes on choices made in this annotation:
 | `idno/@type = ECLI, CELEX` | Official external identifier schemes (EU) |
 | `title/@type = legislation` | Project vocabulary, mirrors `bibl/@type` |
 | `title/@type = caseName` | Borrowed from the Zotero field name |
-| `ref/@type = preceedingWork, subsequentWork, preceedingAuthor, footnote` | Project vocabulary — open question, §7 |
+| `ref/@type = precedingWork, subsequentWork, precedingAuthor, footnote` | Project vocabulary — open question, §7 |
 | `seg/@type = citationContext` | Project vocabulary |
 
 No TEI-published taxonomy exists for `bibl/@type`, `idno/@type`, `ref/@type`, `seg/@type`,
@@ -454,7 +471,7 @@ attributes are expected by the standard, not a deviation from it.
 
 1. **§B1** — `<bibl type="decision">` vs `<bibl type="legal_case">` (exact CSL parity vs.
    XML readability).
-2. **§B7** — is `preceedingWork` / `subsequentWork` / `preceedingAuthor` the right
+2. **§B7** — is `precedingWork` / `subsequentWork` / `precedingAuthor` the right
    three-way split, and is there a better-established term for any of them (e.g. from
    existing legal-citation-standard XML vocabularies, if any list members know of one)?
    We adopted these spellings for symmetry with each other rather than because they are
