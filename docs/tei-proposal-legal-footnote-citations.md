@@ -378,43 +378,42 @@ paragraph:
 > Movement, Am. J. Comp. L. 25 (1977) 457 (479).
 
 ```xml
-<bibl type="footnote">
+<bibl>
   <label>30</label>
   <seg type="citationContext">Dazu etwa</seg>
-  <bibl><author>Smelser</author>
-    <biblScope unit="page" from="175" to="176">175 f.</biblScope></bibl>
-  —
-  <seg type="citationContext">Für die Kriminologie siehe</seg>
-  <bibl><author>Kaiser</author>
-    (<ref type="preceedingWork">oben</ref> <ref type="footnote" n="22">N. 22</ref>)
-    <biblScope unit="page" from="89" to="89">89</biblScope></bibl>
-  sowie
-  <bibl><author>Blazicek</author>/<author>Janeksela</author>,
-    <title level="a">Some Comments on Comparative Methodologies in Criminal Justice</title>,
-    <title level="j">Int. J. Crim. Pen</title> <biblScope unit="volume">6</biblScope>
-    (<date type="publication" when="1978">1978</date>)
-    <biblScope unit="page">233</biblScope>
-    <citedRange unit="page">(240)</citedRange>.</bibl>
-  Als besonders gefährlich hat sich die unkritische Übertragung solcher Konzepte auf
-  Länder der Dritten Welt erwiesen. So kam man etwa zu dem Ergebnis:
-  <bibl><quote>„The U. S. law and development movement was largely a parochial
-    expression of the American legal style"</quote>,
-    <author>Merryman</author>,
-    <title level="a">Comparative Law and Social Change - On the Origins, Style, Decline
-    and Revival of the Law and Development Movement</title>,
-    <title level="j">Am. J. Comp. L.</title> <biblScope unit="volume">25</biblScope>
-    (<date type="publication" when="1977">1977</date>)
-    <biblScope unit="page">457</biblScope>
-    <citedRange unit="page">(479)</citedRange>.</bibl>
+  <author>Smelser</author>
+    <biblScope unit="page" from="175" to="176">175 f.</biblScope>
+</bibl>
+ — <seg type="citationContext">Für die Kriminologie siehe</seg>
+<bibl>
+  <author>Kaiser</author>
+  (<ref type="preceedingWork">oben</ref> <ref type="footnote" n="22">N. 22</ref>)
+  <biblScope unit="page" from="89" to="89">89</biblScope>
+</bibl>
+ sowie
+<bibl>
+  <author>Blazicek</author>/<author>Janeksela</author>,
+  <title level="a">Some Comments on Comparative Methodologies in Criminal Justice</title>,
+  <title level="j">Int. J. Crim. Pen</title>
+  <biblScope unit="volume">6</biblScope>
+  (<date type="publication" when="1978">1978</date>)
+  <biblScope unit="page">233</biblScope>
+  <citedRange unit="page">(240)</citedRange>.
+</bibl>
+<seg type="citationContext">Als besonders gefährlich hat sich die unkritische Übertragung solcher Konzepte auf Länder der Dritten Welt erwiesen. So kam man etwa zu dem Ergebnis:</seg>
+<bibl>
+  <quote>„The U. S. law and development movement was largely a parochial     expression of the American legal style"</quote>,
+  <author>Merryman</author>,
+  <title level="a">Comparative Law and Social Change - On the Origins, Style, Decline and Revival of the Law and Development Movement</title>,
+  <title level="j">Am. J. Comp. L.</title> <biblScope unit="volume">25</biblScope>
+  (<date type="publication" when="1977">1977</date>)
+  <biblScope unit="page">457</biblScope>
+  <citedRange unit="page">(479)</citedRange>.</bibl>
 </bibl>
 ```
 
 Notes on choices made in this annotation:
 
-- `sowie` ("as well as") and the analytical sentence about the Third World are left as
-  unlabeled prose: the first is a bare conjunction with no evaluative force, the second
-  does not introduce a citation at all. `<seg type="citationContext">` is reserved for
-  phrases that actually introduce a citation.
 - `Kaiser (oben N. 22) 89` splits *oben* (`preceedingWork`) from *N. 22*
   (`footnote`, `@n="22"`) rather than fusing them into one `<ref>`, for the same reason
   `op. cit.` and `n. 7` are split in B7's second example: they are two distinct
