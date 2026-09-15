@@ -392,39 +392,39 @@ markup of the source text would use a different syntax.
 
 ```xml
 <listBibl>
-<bibl>
-  <seg type="citationContext">Dazu etwa</seg>
-  <author>Smelser</author>
-    <biblScope unit="page" from="175" to="176">175 f.</biblScope> -
-</bibl>
- 
-<bibl>
-  <seg type="citationContext">Für die Kriminologie siehe</seg>
-  <author>Kaiser</author>
-  (<ref type="precedingWork">oben</ref> <ref type="footnote" n="22">N. 22</ref>)
-  <biblScope unit="page" from="89" to="89">89</biblScope> sowie
-</bibl>
- 
-<bibl>
-  <author>Blazicek</author>/<author>Janeksela</author>,
-  <title level="a">Some Comments on Comparative Methodologies in Criminal Justice</title>,
-  <title level="j">Int. J. Crim. Pen</title>
-  <biblScope unit="volume">6</biblScope>
-  (<date type="publication" when="1978">1978</date>)
-  <biblScope unit="page">233</biblScope>
-  <citedRange unit="page">(240)</citedRange>.
-</bibl>
+  <bibl>
+    <seg type="citationContext">Dazu etwa</seg>
+    <author>Smelser</author>
+      <biblScope unit="page" from="175" to="176">175 f.</biblScope> -
+  </bibl>
   
-<bibl>
-  <seg type="citationContext">Als besonders gefährlich hat sich die unkritische Übertragung solcher Konzepte auf Länder der Dritten Welt erwiesen. So kam man etwa zu dem Ergebnis:</seg>
-  <quote>„The U. S. law and development movement was largely a parochial     expression of the American legal style"</quote>,
-  <author>Merryman</author>,
-  <title level="a">Comparative Law and Social Change - On the Origins, Style, Decline and Revival of the Law and Development Movement</title>,
-  <title level="j">Am. J. Comp. L.</title> <biblScope unit="volume">25</biblScope>
-  (<date type="publication" when="1977">1977</date>)
-  <biblScope unit="page">457</biblScope>
-  <citedRange unit="page">(479)</citedRange>.
-</bibl>
+  <bibl>
+    <seg type="citationContext">Für die Kriminologie siehe</seg>
+    <author>Kaiser</author>
+    (<ref type="precedingWork">oben</ref> <ref type="footnote" n="22">N. 22</ref>)
+    <biblScope unit="page" from="89" to="89">89</biblScope> sowie
+  </bibl>
+  
+  <bibl>
+    <author>Blazicek</author>/<author>Janeksela</author>,
+    <title level="a">Some Comments on Comparative Methodologies in Criminal Justice</title>,
+    <title level="j">Int. J. Crim. Pen</title>
+    <biblScope unit="volume">6</biblScope>
+    (<date type="publication" when="1978">1978</date>)
+    <biblScope unit="page">233</biblScope>
+    <citedRange unit="page">(240)</citedRange>.
+  </bibl>
+    
+  <bibl>
+    <seg type="citationContext">Als besonders gefährlich hat sich die unkritische Übertragung solcher Konzepte auf Länder der Dritten Welt erwiesen. So kam man etwa zu dem Ergebnis:</seg>
+    <quote>„The U. S. law and development movement was largely a parochial expression of the American legal style"</quote>,
+    <author>Merryman</author>,
+    <title level="a">Comparative Law and Social Change - On the Origins, Style, Decline and Revival of the Law and Development Movement</title>,
+    <title level="j">Am. J. Comp. L.</title> <biblScope unit="volume">25</biblScope>
+    (<date type="publication" when="1977">1977</date>)
+    <biblScope unit="page">457</biblScope>
+    <citedRange unit="page">(479)</citedRange>.
+  </bibl>
 
 </listBibl>
 ```
