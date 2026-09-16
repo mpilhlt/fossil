@@ -325,9 +325,11 @@ in weniger komplexen Beziehungen vgl. die Konflikttheorie von</seg>
 ```
 
 `<seg type="citationContext">` marks only the signal phrase itself, not the citation
-that follows it; the two remain siblings, which keeps the signal reusable regardless of
+that follows it; the two remain separate, which keeps the signal reusable regardless of
 how many citations follow it (see the worked example in §5.3, where one signal
-introduces two citations).
+introduces two citations). For use in Grobid model training, the context must be a child
+of the first `<bibl>` to which it belongs; in a full-text annotation, this could be
+implemented differently.
 
 ---
 
