@@ -1,20 +1,28 @@
-# Grobid-footnote-flavour
+# FOSSIL - Footnote-based Open-access SSH Scientific Instance Labels
 
 This repo contains training data and other resources for building a [Grobid](https://github.com/kermitt2/grobid) flavour that can deal with references in footnotes, which is a common practice in law and the humanities.
 
+Paper: https://arxiv.org/abs/2606.01109
+
 This project is a collaboration between Christian Boulanger ([mpilhlt](https://www.lhlt.mpg.de/boulanger#)) and Luca Foppiano ([ScienciaLAB](https://sciencialab.com/)).
+
+The repository was renamed from `grobid-footnote-flavour`.
+
+## Status
+
+The dataset is actively being edited off-line and has not been published yet. This repo contains only an [older and incomplete version of the dataset batches](/batches/). Watch this space for updates.
 
 ## Schemas
 
 Standalone RNG schemas for validating GROBID training files are published at:
 
-**<https://mpilhlt.github.io/grobid-footnote-flavour/schema>**
+**<https://mpilhlt.github.io/fossil/schema>**
 
 | Schema | Validates |
 | ------ | --------- |
-| [grobid.training.segmentation.rng](https://mpilhlt.github.io/grobid-footnote-flavour/schema/grobid.training.segmentation.rng) | `*.training.segmentation.tei.xml` |
-| [grobid.training.references.rng](https://mpilhlt.github.io/grobid-footnote-flavour/schema/grobid.training.references.rng) | `*.training.references.tei.xml` |
-| [grobid.training.references.referenceSegmenter.rng](https://mpilhlt.github.io/grobid-footnote-flavour/schema/grobid.training.references.referenceSegmenter.rng) | `*.training.references.referenceSegmenter.tei.xml` |
+| [grobid.training.segmentation.rng](https://mpilhlt.github.io/fossil/schema/grobid.training.segmentation.rng) | `*.training.segmentation.tei.xml` |
+| [grobid.training.references.rng](https://mpilhlt.github.io/fossil/schema/grobid.training.references.rng) | `*.training.references.tei.xml` |
+| [grobid.training.references.referenceSegmenter.rng](https://mpilhlt.github.io/fossil/schema/grobid.training.references.referenceSegmenter.rng) | `*.training.references.referenceSegmenter.tei.xml` |
 
 ### Schema authoring
 

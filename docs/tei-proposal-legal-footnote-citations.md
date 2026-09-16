@@ -3,7 +3,7 @@
 | | |
 | --- | --- |
 | **Status** | Draft proposal for discussion on the TEI mailing list |
-| **Origin** | GROBID footnote-flavour project — [mpilhlt/grobid-footnote-flavour#41](https://github.com/mpilhlt/grobid-footnote-flavour/issues/41) |
+| **Origin** | FOSSIL project — [mpilhlt/fossil#41](https://github.com/mpilhlt/fossil/issues/41) |
 
 The key words **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**, and **MAY** are used as in
 RFC 2119.
@@ -497,8 +497,8 @@ attributes are expected by the standard, not a deviation from it.
 
 ## 8. References
 
-- GROBID footnote-flavour, issue #41 —
-  <https://github.com/mpilhlt/grobid-footnote-flavour/issues/41>
+- FOSSIL, issue #41 —
+  <https://github.com/mpilhlt/fossil/issues/41>
 - TEI P5 Guidelines — `<authority>`, `<bibl>`, `model.biblPart`, `model.imprintPart`,
   `att.citing` (`<biblScope>`, `<citedRange>`), `att.typed`, `att.canonical`.
 - EpiDoc Guidelines, "Encoding the Bibliography" —

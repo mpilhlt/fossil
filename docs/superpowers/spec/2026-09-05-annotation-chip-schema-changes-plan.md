@@ -3,7 +3,7 @@
 ## Context
 
 `pdf-tei-editor` (a downstream consumer of this repo's published schemas at
-`https://mpilhlt.github.io/grobid-footnote-flavour/schema/`) currently
+`https://mpilhlt.github.io/fossil/schema/`) currently
 hand-maintains a duplicate, drifting copy of this schema's tag/attribute
 descriptions and a curated subset of attribute values, used to render
 annotation "chips" (buttons) in its visual XML editor. It's redesigning
@@ -488,5 +488,5 @@ both before your changes (baseline) and after.
       decide to address it).
 - [ ] `git commit` per this repo's own convention (`git commit -m "Regenerate schemas"`
       after `docs/schema/` changes, per `README.md`), and pushed so the
-      published schema at `https://mpilhlt.github.io/grobid-footnote-flavour/schema/`
+      published schema at `https://mpilhlt.github.io/fossil/schema/`
       picks it up.

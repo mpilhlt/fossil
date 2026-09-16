@@ -3,7 +3,7 @@
 | | |
 | --- | --- |
 | **Status** | Draft |
-| **Issue** | [mpilhlt/grobid-footnote-flavour#41](https://github.com/mpilhlt/grobid-footnote-flavour/issues/41) |
+| **Issue** | [mpilhlt/fossil#41](https://github.com/mpilhlt/fossil/issues/41) |
 | **Source proposal** | `docs/tei-proposal-legal-footnote-citations.md` |
 | **Predecessor** | `docs/spec-legal-references.md` (#41, round 1 — implemented in commit `38c7114`) |
 | **Affects** | `schema/grobid.training.references.rng` (all changes below) |
@@ -457,4 +457,4 @@ citations, it does not carry the richer B7/B8/quote/authority annotation.
 - `docs/spec-legal-references.md` — round 1 (#41), already implemented.
 - `docs/superpowers/spec/2026-09-05-annotation-chip-schema-changes-plan.md` —
   `pdf-tei-editor` chip-generation consumer of this schema.
-- Issue #41 — <https://github.com/mpilhlt/grobid-footnote-flavour/issues/41>
+- Issue #41 — <https://github.com/mpilhlt/fossil/issues/41>

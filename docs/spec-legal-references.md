@@ -3,7 +3,7 @@
 | | |
 | --- | --- |
 | **Status** | Draft / proposal — decisions open (see §5) |
-| **Issue** | [mpilhlt/grobid-footnote-flavour#41](https://github.com/mpilhlt/grobid-footnote-flavour/issues/41) |
+| **Issue** | [mpilhlt/fossil#41](https://github.com/mpilhlt/fossil/issues/41) |
 | **Affects** | `schema/grobid.training.references.rng`, `schema/grobid.training.references.referenceSegmenter.rng`, `schema/shared/bibl-struct.rng`, `docs/guidelines.md`, downstream TEI mapping |
 | **Sample source** | Duranteye (2020), `10.5771/2699-1284-2020-1-16` |
 
@@ -522,7 +522,7 @@ deviation from it.
 
 ## 10. References
 
-- Issue #41 — <https://github.com/mpilhlt/grobid-footnote-flavour/issues/41>
+- Issue #41 — <https://github.com/mpilhlt/fossil/issues/41>
 - TEI P5 Guidelines — `att.citing` (`<biblScope>`, `<citedRange>`), `att.typed`,
   `att.canonical`, `<orgName>`, `<idno>`, `<title>`, `<bibl>` content model.
 - EpiDoc Guidelines — "Encoding the Bibliography" (`<biblScope>` vs `<citedRange>`,
