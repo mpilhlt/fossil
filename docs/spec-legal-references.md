@@ -156,7 +156,7 @@ recommendation. **R** marks the recommended option.
 | | Option | Aligns with | Trade-off |
 | --- | --- | --- | --- |
 | **A1 (R)** | New element `<citedRange unit="…">` for pinpoints; keep `<biblScope>` for the reporter's own volume/issue/page | TEI P5 semantics; EpiDoc practice; CSL keeps `section` separate from `page` | Adds one label to the flavour tagset; needs a post-processing rule |
-| A2 | Stay in `<biblScope>`, only add `@unit` values (`section`, `sub-section`, `margin`) | TEI (open `@unit`) | Conflates "extent" and "pinpoint"; the model sees one `biblScope` label doing double duty and can only separate `page` from `margin` by literal text |
+| A2 | Stay in `<biblScope>`, only add `@unit` values (`section`, `subSection`, `margin`) | TEI (open `@unit`) | Conflates "extent" and "pinpoint"; the model sees one `biblScope` label doing double duty and can only separate `page` from `margin` by literal text |
 | A3 | `<biblScope>` for everything, split `margin`/`page` by regex on `Tz.`/`Rn.` in post-processing only | — | No annotation cost; brittle; loses the distinction in gold data |
 
 **Recommendation: A1.** It is the TEI-sanctioned construct for this exact case and matches
@@ -224,7 +224,7 @@ suggested list the way EpiDoc does):
 | `@unit` | Matches | Source of token |
 | --- | --- | --- |
 | `section` | `§ 19a`, `Art. 5`, `Sec. 2` | TEI-adjacent; **exact CSL variable** |
-| `sub-section` | `Abs. 2` | new |
+| `subSection` | `Abs. 2` | new |
 | `sentence` | `S. 1`, `Satz 1` | new |
 | `number` | `Nr. 3` | TEI suggested list / CSL variable |
 | `letter` | `lit. b`, `Buchst. b` | new |
@@ -256,7 +256,7 @@ Adopting **A1, B1, C1, D1, E1, F1, G, H1**.
 | --- | --- |
 | Genre | `<bibl type="legislation">` / `<bibl type="decision">` |
 | Statute short-title | `<title level="m" type="legislation" key="UrhG">UrhG</title>` |
-| Statute subdivision | `<citedRange>` with `@unit` = `section` / `sub-section` / `sentence` / `number` / `letter` (marker included) |
+| Statute subdivision | `<citedRange>` with `@unit` = `section` / `subSection` / `sentence` / `number` / `letter` (marker included) |
 | Court | `<orgName type="court">` (not `<author>`) |
 | Docket / *Aktenzeichen* | `<idno type="docket">` (not `<title>`) |
 | ECLI / CELEX | `<idno type="ECLI">` / `<idno type="CELEX">` |
@@ -281,7 +281,7 @@ type="separator">–</label>` but **MUST NOT** mix conventions within a batch.
 ```xml
 <bibl type="legislation">
   <citedRange unit="section">§ 19a</citedRange>
-  <citedRange unit="sub-section">Abs. 2</citedRange>
+  <citedRange unit="subSection">Abs. 2</citedRange>
   <title level="m" type="legislation" key="UrhG">UrhG</title>
 </bibl>
 ```
@@ -291,7 +291,7 @@ type="separator">–</label>` but **MUST NOT** mix conventions within a batch.
 ```xml
 <bibl type="legislation">
   <citedRange unit="section">Art. 3</citedRange>
-  <citedRange unit="sub-section">Abs. 1</citedRange>
+  <citedRange unit="subSection">Abs. 1</citedRange>
   <citedRange unit="letter">lit. a</citedRange>
   <title level="m" type="legislation" key="DS-GVO">DS-GVO</title>
 </bibl>
@@ -408,7 +408,7 @@ Edit the composable sources under `schema/`, then regenerate `docs/schema/` with
     <attribute name="unit">
       <choice>
         <value>section</value>
-        <value>sub-section</value>
+        <value>subSection</value>
         <value>sentence</value>
         <value>number</value>
         <value>letter</value>
@@ -485,7 +485,7 @@ Enumerate them here only if stricter validation is wanted.
 | `bibl/@type` = `legislation` | **Borrowed from CSL 1.0.2** item type of the same name |
 | `bibl/@type` = `decision`, `footnote` | **Project vocabulary** (`footnote` already in use; CSL's equivalent is `legal_case`) |
 | `citedRange/@unit` = `section`, `number`, `page` | **Aligned with CSL variables / the TEI suggested `@unit` list** |
-| `citedRange/@unit` = `sub-section`, `sentence`, `letter`, `margin`, `recital` | **Project vocabulary** (open datatype; EpiDoc sets the precedent for extending `@unit`) |
+| `citedRange/@unit` = `subSection`, `sentence`, `letter`, `margin`, `recital` | **Project vocabulary** (open datatype; EpiDoc sets the precedent for extending `@unit`) |
 | `orgName/@type` = `court` | **Project vocabulary**; concept = CSL `authority` |
 | `idno/@type` = `docket` | **Project vocabulary**; concept = CSL `number` (docket sense) |
 | `idno/@type` = `ECLI`, `CELEX` | **Official external identifier schemes** (EU) |

@@ -718,7 +718,7 @@
           </group>
           <group>
             <a:documentation>Subsection, e.g. Abs. 2</a:documentation>
-            <value datatypeLibrary="">sub-section</value>
+            <value datatypeLibrary="">subSection</value>
           </group>
           <group>
             <a:documentation>Sentence within a subsection, e.g. Satz 2</a:documentation>

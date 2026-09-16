@@ -145,7 +145,7 @@
           </group>
           <group>
             <a:documentation>Subsection, e.g. Abs. 2</a:documentation>
-            <value>sub-section</value>
+            <value>subSection</value>
           </group>
           <group>
             <a:documentation>Sentence within a subsection, e.g. Satz 2</a:documentation>

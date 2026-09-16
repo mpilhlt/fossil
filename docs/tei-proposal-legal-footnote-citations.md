@@ -211,7 +211,7 @@ Recommended, extended `@unit` vocabulary (open list, per EpiDoc precedent):
 | `@unit` | Matches | Source |
 | --- | --- | --- |
 | `section` | `§ 19a`, `Art. 5`, `Sec. 2` | exact CSL variable |
-| `sub-section` | `Abs. 2` | project vocabulary |
+| `subSection` | `Abs. 2` | project vocabulary |
 | `sentence` | `S. 1`, `Satz 1` | project vocabulary |
 | `number` | `Nr. 3` | TEI-suggested / CSL variable |
 | `letter` | `lit. b`, `Buchst. b` | project vocabulary |
@@ -340,7 +340,7 @@ implemented differently.
 ```xml
 <bibl type="legislation">
   <citedRange unit="section">§ 19a</citedRange>
-  <citedRange unit="sub-section">Abs. 2</citedRange>
+  <citedRange unit="subSection">Abs. 2</citedRange>
   <title level="m" type="legislation" key="UrhG">UrhG</title>
 </bibl>
 ```
@@ -459,7 +459,7 @@ Notes on choices made in this annotation:
 | `bibl/@type = legislation` | Borrowed from CSL 1.0.2 |
 | `bibl/@type = decision` | Project vocabulary (CSL equivalent: `legal_case`) — open question, §7 |
 | `citedRange/@unit = section, number, page` | Aligned with CSL variables / the TEI-suggested `@unit` list |
-| `citedRange/@unit = sub-section, sentence, letter, margin, recital` | Project vocabulary (open datatype; EpiDoc precedent for extending `@unit`) |
+| `citedRange/@unit = subSection, sentence, letter, margin, recital` | Project vocabulary (open datatype; EpiDoc precedent for extending `@unit`) |
 | `authority/@type = court` | Project vocabulary; concept = CSL `authority` |
 | `idno/@type = docket` | Project vocabulary; concept = CSL `number` (docket sense) |
 | `idno/@type = ECLI, CELEX` | Official external identifier schemes (EU) |

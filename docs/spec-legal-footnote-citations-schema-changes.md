@@ -57,7 +57,7 @@ These proposal items were implemented in round 1 and match the new proposal exac
 | Proposal § | Concept | Current schema |
 | --- | --- | --- |
 | B1 | `<bibl type="legislation">` / `<bibl type="decision">` | `bibl`'s `@type` choice, `grobid.training.references.rng:60-77` |
-| B2 | `<citedRange unit="…">` pinpoint vs. `<biblScope>` container extent | `references_citedRange`, same file, identical 8-value `@unit` list (`section`, `sub-section`, `sentence`, `number`, `letter`, `margin`, `recital`, `page`) |
+| B2 | `<citedRange unit="…">` pinpoint vs. `<biblScope>` container extent | `references_citedRange`, same file, identical 8-value `@unit` list (`section`, `subSection`, `sentence`, `number`, `letter`, `margin`, `recital`, `page`) |
 | B4 | `<idno type="docket">` / `<idno type="ECLI">` / `<idno type="CELEX">` | `references_idno` |
 | B5 | `<title level="a" type="caseName">` | `references_title` |
 | B6 | `<title level="m" type="legislation" key="…">` | `references_title` |
