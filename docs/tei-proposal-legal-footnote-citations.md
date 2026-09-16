@@ -379,18 +379,21 @@ paragraph:
 > Social Change - On the Origins, Style, Decline and Revival of the Law and Development
 > Movement, Am. J. Comp. L. 25 (1977) 457 (479).
 
-**A note on this example's shape.** The following annotation is produced
-for GROBID's *references* model, which segments footnote text into a flat sequence of
-`<bibl>` spans and has no notion of a labeled span that sits between two `<bibl>`s. The
+**A note on this example's shape.** The following annotation targets
+GROBID's *references* model, which segments footnote text into a flat sequence of
+`<bibl>` spans and has no concept of a labeled span sitting between two `<bibl>`s. The
 aim here is therefore not a faithful semantic markup of the original running text.
 Instead, the citation context (`<seg type="citationContext">`) and the quotation
-(`<quote>`) are annotated as *part of* the `<bibl>` they belong to, which has the
+(`<quote>`) are annotated as *part of* the `<bibl>` they belong to (or are closest to,
+in the case where several citations follow, as in this example). This has the
 advantage that it is always unambiguous which citation a signal phrase or quotation
-belongs to. That grouping decision — which spans of running text join which `<bibl>` —
-is made upstream, by the (separate) annotation task that segments a footnote into
-`<bibl>` spans in the first place; this is also where `<label>` is used to
-annotate the footnote number (not part of the *references* model). A faithful semantic
-markup of the source text would use a different syntax.
+is associated with, without needing a separate mechanism to record that association
+(a mechanism this proposal does not define). That grouping decision — which spans of
+running text join which `<bibl>` — is made upstream by the separate annotation task
+that produces those `<bibl>` spans in the first place; this is also where `<label>` is
+used to annotate the footnote number — itself a task that isn't part of the
+*references* model. A faithful semantic markup of the source text would use a
+different syntax.
 
 ```xml
 <listBibl>
