@@ -5,6 +5,7 @@
 | **Status** | Draft |
 | **Issue** | [mpilhlt/fossil#41](https://github.com/mpilhlt/fossil/issues/41) |
 | **Source proposal** | `docs/tei-proposal-legal-footnote-citations.md` |
+| **TEI Guidelines proposal** | [TEIC/TEI#2974](https://github.com/TEIC/TEI/issues/2974) — Part A (`att.typed` on `<authority>`; `<authority>` added to `model.imprintPart`) **accepted** |
 | **Predecessor** | `docs/spec-legal-references.md` (#41, round 1 — implemented in commit `38c7114`) |
 | **Affects** | `schema/grobid.training.references.rng` (all changes below) |
 | **Not affected** | `schema/grobid.training.references.referenceSegmenter.rng`, `schema/shared/bibl-struct.rng`, `schema/shared/common-elements.rng`, `schema/grobid.training.segmentation.rng` |
@@ -64,24 +65,33 @@ These proposal items were implemented in round 1 and match the new proposal exac
 
 No action needed on any of these.
 
-## 3. Part A / B3 — adopt `<authority>` now
+## 3. Part A / B3 — `<authority>` is now accepted upstream TEI vocabulary
 
-**Revised from an earlier draft of this spec.** The first pass recommended keeping the
-`<orgName type="court">` fallback and deferring `<authority>` until the TEI Maintenance
-Committee accepts Part A, reasoning that a brand-new element is a materially bigger
-GROBID CRF training cost than a new attribute value on an element the model already
-predicts (`<orgName>` already carries `institution`/`collaboration`/`department`/
-`laboratory`). **Overridden by author decision: adopt `<authority>` authoritatively now,
-independent of the upstream TEI outcome; existing documents will be re-annotated.**
-Since nothing in the current corpus uses `orgName@type="court"` yet (§1), there is in
-any case no existing gold data to relabel — the migration-cost argument no longer
-applies, only the training-cost-of-a-new-label-class one, which the author has decided
-to accept.
+**Revised again from earlier drafts of this spec.** The first pass recommended keeping
+the `<orgName type="court">` fallback and deferring `<authority>` until the TEI
+Maintenance Committee accepted Part A, reasoning that a brand-new element is a
+materially bigger GROBID CRF training cost than a new attribute value on an element the
+model already predicts (`<orgName>` already carries `institution`/`collaboration`/
+`department`/`laboratory`). A second draft overrode that by author decision, adopting
+`<authority>` authoritatively regardless of the upstream outcome.
 
-This repository's schema is a self-contained GROBID-flavour grammar, not a subset of the
-TEI Guidelines' own schema — it does not need Part A to be accepted upstream (or even
-submitted) before defining a local `<authority>` element; Part A only concerns what the
-*official* TEI Guidelines permit.
+**That question is now moot: [TEIC/TEI#2974](https://github.com/TEIC/TEI/issues/2974)
+has been accepted.** Part A proposed exactly two changes to the official Guidelines —
+add `att.typed` to `<authority>` (Proposal 1), and add `<authority>` to
+`model.imprintPart`, making it reachable from `<bibl>`/`<biblStruct>`/`<monogr>`
+(Proposal 2) — and both landed as proposed. `<authority type="court">…</authority>`
+inside `<bibl>` is therefore plain, standard TEI P5, not a local extension of it or a
+bet on an unresolved proposal.
+
+This repository's schema is still a self-contained GROBID-flavour grammar rather than a
+generated subset of the official TEI schema, so the acceptance does not by itself change
+anything in `schema/` — the local `<authority>` define below (§5) still has to be added
+by hand, the same way every other element in this file is. What the acceptance removes
+is the need to argue for it: the training-cost-of-a-new-label-class tradeoff discussed
+in the earlier drafts no longer needs weighing against an unresolved standard, since
+`<authority>` is now the accepted vocabulary rather than a wager on one. Since nothing in
+the current corpus uses `orgName@type="court"` yet (§1), there is in any case no existing
+gold data to relabel.
 
 **Scope of the local `<authority>` element:**
 
@@ -435,16 +445,23 @@ citations, it does not carry the richer B7/B8/quote/authority annotation.
 
 ## 8. Open questions carried from the TEI proposal
 
+Part A (the Guidelines-level schema change) has been accepted — see the resolved item
+below. The remaining items are Part B domain-convention questions, which the proposal
+itself says need no TEI Guidelines change and so were not part of the acceptance vote;
+they stay open.
+
 - Proposal §7.2 asks the TEI list whether `precedingWork`/`subsequentWork`/
   `precedingAuthor` is the right three-way split (four, counting `footnote`) or whether
   established prior art exists. This spec adopts it now for the local schema (§4.1) since
   it is a strict improvement over the current two-way split either way, but the
   vocabulary may still change again if the list surfaces a better-established term —
   low cost given zero current corpus usage.
-- Proposal §7.3 asks whether extending `model.imprintPart` is the right place for
-  `<authority>` in the *official* Guidelines. That question is orthogonal to §3 above:
-  this repo's local `<authority>` is defined independently of where (or whether) the TEI
-  Guidelines end up placing it.
+- **Resolved.** Proposal §7.3 asked whether extending `model.imprintPart` was the right
+  place for `<authority>` in the *official* Guidelines, or whether the list would prefer
+  a broader `model.publicationStmtPart.agency`-in-`<bibl>` change instead.
+  [TEIC/TEI#2974](https://github.com/TEIC/TEI/issues/2974) accepted the `model.imprintPart`
+  route as originally proposed. This repo's local `<authority>` define (§5.3) already
+  matches that shape, so no follow-up is needed — see the revised §3 above.
 - Proposal §7.5 (citation-signal polarity — `see` vs. `cf.`/`contra` — as a further
   `@type` refinement on `<seg>`, or left to downstream classification) is left open here
   too; nothing in this spec forecloses adding a polarity attribute to
@@ -454,6 +471,9 @@ citations, it does not carry the richer B7/B8/quote/authority annotation.
 
 - `docs/tei-proposal-legal-footnote-citations.md` — the proposal this spec implements
   the local-schema portion of.
+- [TEIC/TEI#2974](https://github.com/TEIC/TEI/issues/2974) — the same proposal, filed
+  with the TEI Guidelines & Documentation tracker; Part A (`<authority>` `@type` +
+  `model.imprintPart` membership) accepted there.
 - `docs/spec-legal-references.md` — round 1 (#41), already implemented.
 - `docs/superpowers/spec/2026-09-05-annotation-chip-schema-changes-plan.md` —
   `pdf-tei-editor` chip-generation consumer of this schema.
