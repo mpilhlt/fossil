@@ -83,6 +83,7 @@
             <ref name="lb"/>
             <ref name="author"/>
             <ref name="orgName"/>
+            <ref name="authority"/>
             <ref name="references_title"/>
             <ref name="references_date"/>
             <ref name="references_biblScope"/>
@@ -96,6 +97,7 @@
             <ref name="references_note"/>
             <ref name="references_seg"/>
             <ref name="references_ref"/>
+            <ref name="references_quote"/>
           </choice>
         </zeroOrMore>
       </interleave>
@@ -108,11 +110,7 @@
       <optional>
         <attribute name="type">
           <choice>
-            <!-- legal (new, #41) -->
-            <group>
-              <a:documentation>Court issuing a decision</a:documentation>
-              <value>court</value>
-            </group>
+            <!-- legal (#41), out of scope for this round -->
             <value>jurisdiction</value>
             <!-- pre-existing, in use in batches/**/*.training.references.tei.xml -->
             <value>institution</value>
@@ -126,6 +124,46 @@
         </attribute>
       </optional>
       <text/>
+    </element>
+  </define>
+
+  <!-- <authority type="…"> names the institution responsible for the
+       cited work (CSL `authority` / Zotero `court`): a court, a
+       legislature, or (outside the legal domain) a regulator or other
+       issuing body. Not <author> (an institution, not a person) and not
+       a generic <orgName> (no "responsible for this work" role). @type
+       is open-ended; court/legislature are the values attested in
+       current legal-citation practice. <orgName> MAY be nested inside to
+       decompose a compound institutional name, e.g. a court plus its
+       deciding panel. -->
+  <define name="authority">
+    <element name="authority">
+      <a:documentation>Institution responsible for the cited work (court, legislature, regulator).</a:documentation>
+      <optional>
+        <attribute name="type">
+          <choice>
+            <group>
+              <a:documentation>Court issuing a decision</a:documentation>
+              <value>court</value>
+            </group>
+            <group>
+              <a:documentation>Legislature enacting a statute</a:documentation>
+              <value>legislature</value>
+            </group>
+          </choice>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="key">
+          <a:documentation>Short resolvable key for the authority, so it can later be linked to an external institution registry.</a:documentation>
+        </attribute>
+      </optional>
+      <interleave>
+        <text/>
+        <zeroOrMore>
+          <ref name="orgName"/>
+        </zeroOrMore>
+      </interleave>
     </element>
   </define>
 
@@ -399,16 +437,22 @@
     </element>
   </define>
 
-  <!-- <seg type="signal"> marks an introductory citation signal that
-       governs the reference, e.g. "See", "See also", "Cf.", "But see",
-       "Contra", "Accord", "E.g." (common in legal/footnote citations). -->
+  <!-- <seg type="citationContext"> marks a citation-signal phrase that
+       introduces or frames a citation with evaluative/directional force,
+       e.g. "See", "See also", "Cf.", "But see", "Contra", "vgl.",
+       "anderer Ansicht" (common in legal/footnote citations). Marks only
+       the signal phrase itself, not the citation that follows it. Stays
+       inside the <bibl> of the citation it introduces (see the
+       composite-footnote worked example and the note on its shape in
+       the source proposal) rather than sitting between citations as a
+       listBibl-level sibling. -->
   <define name="references_seg">
     <element name="seg">
       <optional>
         <attribute name="type">
           <group>
-            <a:documentation>Discourse signal word introducing or framing a citation (e.g. 'see', 'vgl.', 'cf.')</a:documentation>
-            <value>signal</value>
+            <a:documentation>Citation-signal phrase introducing or framing a citation (e.g. 'see', 'vgl.', 'cf.')</a:documentation>
+            <value>citationContext</value>
           </group>
         </attribute>
       </optional>
@@ -416,27 +460,51 @@
     </element>
   </define>
 
-  <!-- <ref type="anaphoric|cataphoric"> marks a positional cross-reference
-       to another reference/footnote:
-         anaphoric  -> points backward, e.g. "ibid.", "id.", "op. cit.",
-                       "supra note 5"
-         cataphoric -> points forward, e.g. "infra", "see note 12 below"
-       @target optionally holds the resolved pointer. -->
+  <!-- <quote> pairs a direct quotation from the body text with the <bibl>
+       that supports it (see the composite-footnote worked example). No
+       attributes: quotation marks/punctuation stay in the source text. -->
+  <define name="references_quote">
+    <element name="quote">
+      <a:documentation>Direct quotation from the body text, paired with the citation that supports it.</a:documentation>
+      <text/>
+    </element>
+  </define>
+
+  <!-- <ref type="…"> marks an intra-footnote anaphoric device that avoids
+       repeating a citation just given:
+         precedingWork   -> the work just cited, e.g. "id.", "op. cit.",
+                             "a.a.O.", "supra"
+         subsequentWork  -> a work cited later, e.g. "infra", "below"
+         precedingAuthor -> the author just named, work unspecified,
+                             e.g. "ders.", "idem"
+         footnote        -> explicit cross-reference to another footnote,
+                             carrying @n with the footnote number
+       @target optionally holds a resolved pointer once the citation is
+       resolved in post-processing; not required for training annotation. -->
   <define name="references_ref">
     <element name="ref">
       <optional>
-        <attribute name="type">
-          <choice>
-            <group>
-              <a:documentation>Points backward, e.g. "ibid.", "id.", "op. cit.", "supra note 5"</a:documentation>
-              <value>anaphoric</value>
-            </group>
-            <group>
-              <a:documentation>Points forward, e.g. "infra", "see note 12 below"</a:documentation>
-              <value>cataphoric</value>
-            </group>
-          </choice>
-        </attribute>
+        <choice>
+          <group>
+            <a:documentation>The work just cited, e.g. "id.", "op. cit.", "a.a.O.", "supra"</a:documentation>
+            <attribute name="type"><value>precedingWork</value></attribute>
+          </group>
+          <group>
+            <a:documentation>A work cited later, e.g. "infra", "below"</a:documentation>
+            <attribute name="type"><value>subsequentWork</value></attribute>
+          </group>
+          <group>
+            <a:documentation>The author just named, work unspecified, e.g. "ders.", "idem"</a:documentation>
+            <attribute name="type"><value>precedingAuthor</value></attribute>
+          </group>
+          <group>
+            <a:documentation>Explicit cross-reference to another footnote, carrying @n with the footnote number, e.g. "n. 7", "N. 22"</a:documentation>
+            <attribute name="type"><value>footnote</value></attribute>
+            <optional>
+              <attribute name="n"/>
+            </optional>
+          </group>
+        </choice>
       </optional>
       <optional>
         <attribute name="target"/>
