@@ -618,7 +618,25 @@ issue, or overall page range — with optional `@from`/`@to`:
 | `volume` | Volume number |
 | `issue` | Issue / number |
 
-As with `@when`, `@from` and `@to` can be left out when annotating if the page count 
+
+As with `@when`, `@from` and `@to` can be left out when annotating if the pages cannot be 
+reliably inferred from the text context itself, such as in the case "pp. 23-34".
+
+**Pinpoint extent.** When the citing text names a more specific location than
+`<biblScope>`'s own extent — the common "first page, at pinpoint page" pattern, e.g.
+"233, at 240" — mark that pinpoint with `<citedRange unit="page">`, a sibling of
+`<biblScope>`, never nested inside it:
+
+```xml
+<biblScope unit="page" from="233" to="250">233–250</biblScope>, at
+<citedRange unit="page">240</citedRange>
+```
+
+`<citedRange>`'s `@unit` list also includes several pinpoint levels specific to legal
+and humanities citation practice (statute sections, marginal numbers, recitals, and
+more) — see [Pinpoint citations](#pinpoint-citations-citedrange) under
+[Legal and Humanities Scholarship](#legal-and-humanities-scholarship) for the full
+vocabulary.
 
 **Publisher and place.** `<publisher>` and `<pubPlace>` hold the publisher's name (also
 used for corporate authors such as web pages) and place of publication.
