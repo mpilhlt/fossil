@@ -1,7 +1,7 @@
 # Annotation guidelines
 
-The annotation guidelines are a collection of best practices and indications on how the
-data should be annotated to support documents containing references in footnotes. They
+The annotation guidelines are a collection of best practices and indications for annotating 
+training material in the [FOSSIL dataset](https://github.com/mpilhlt/fossil). They
 complement what is described in the related models in the
 [Grobid documentation](https://grobid.readthedocs.io/en/latest/training/General-principles/).
 
@@ -96,7 +96,7 @@ There are three exceptions to this main rule:
    >
    > ```xml
    > <text>
-   >             <body>...</body><listBibl>...</listBibl><page>...</page>
+   >     <body>...</body><listBibl>...</listBibl><page>...</page>
    > </text>
    > ```
    >
@@ -634,8 +634,7 @@ reliably inferred from the text context itself, such as in the case "pp. 23-34".
 
 `<citedRange>`'s `@unit` list also includes several pinpoint levels specific to legal
 and humanities citation practice (statute sections, marginal numbers, recitals, and
-more) — see [Pinpoint citations](#pinpoint-citations-citedrange) under
-[Legal and Humanities Scholarship](#legal-and-humanities-scholarship) for the full
+more) — see [Pinpoint citations](#pinpoint-citations-citedrange) for the full
 vocabulary.
 
 **Publisher and place.** `<publisher>` and `<pubPlace>` hold the publisher's name (also
