@@ -5,6 +5,13 @@ data should be annotated to support documents containing references in footnotes
 complement what is described in the related models in the
 [Grobid documentation](https://grobid.readthedocs.io/en/latest/training/General-principles/).
 
+The official Grobid documentation is written with documents that have a conventional,
+structured bibliography in mind — a numbered or alphabetical list of references
+gathered at the end of the text. These guidelines instead focus specifically on legal
+scholarship and the humanities disciplines that share its citation culture (history,
+philology, area studies), where the citation apparatus lives almost entirely in
+footnotes instead.
+
 > [!NOTE]
 > These guidelines assume that annotators:
 > - are familiar with the type of documents to be annotated
@@ -865,11 +872,11 @@ citations, each with its own signal phrase or `supra`-style back-reference:
 <bibl><seg type="citationContext">cf.</seg> <author>Carli N. Conklin</author>,
   <title level="a">The Origins of the Pursuit of Happiness</title>,
   <title level="j">7 Wash. U. Juris. Rev.</title>
-  <biblScope unit="page" from="195" to="200">195, 200</biblScope> (2015))
+  <biblScope unit="page" from="195">195</biblScope>, <citedRange unit="page" from="200" to="200">200</citedRange> (<date type="publication">2015</date>))
   (selecting for use the first edition, as does the present article);
 </bibl>
 <bibl><author>Alan Watson</author>, <title level="a">The Structure of Blackstone's Commentaries</title>,
-  <title level="j">97 Yale L.J.</title> <biblScope unit="page" from="795" to="801">795, 801</biblScope> (1988) (same).
+  <title level="j">97 Yale L.J.</title> <biblScope unit="page" from="795">795, <citedRange unit="page" from="200" to="200">801</citedRange></biblScope> (<date type="publication">1988</date>) (same).
 </bibl>
 ```
 
@@ -878,6 +885,111 @@ note N` split into `<ref type="precedingWork">` + `<ref type="footnote" n="N">` 
 as in [Intra-footnote references](#intra-footnote-references), and
 no special nesting for the multiple citations sharing one footnote. (This annotation
 validates against `schema/grobid.training.references.rng`.)
+
+### The reference-segmentation examples, annotated
+
+The [reference segmentation model](#reference-segmentation-model) examples above show
+each footnote only up to the point of splitting it into raw, unparsed `<bibl>`
+citations. Picking most of them up again here shows what the `references` model does
+with that same raw text next — the same vocabulary introduced above, applied to real
+footnotes rather than invented ones. (The
+[several references in one footnote](#reference-segmentation-model) example is skipped:
+it is a plain, non-legal citation list with nothing further to annotate beyond ordinary
+`<author>`/`<title>`/`<date>`, already covered under
+[Basic bibliographic elements](#basic-bibliographic-elements).)
+
+This is the **German legal citation** example:
+
+```xml
+<bibl><label>2</label> <seg type="citationContext">Dazu etwa:</seg> <author>Hofmann</author>,
+  <title level="j">ZGE</title> <date type="publication" when="2016">2016</date>,
+  <biblScope unit="page">482</biblScope>, <citedRange unit="page">498</citedRange>;
+</bibl>
+<bibl><author>Becker</author>, <title level="j">ZGE</title> <date type="publication" when="2016">2016</date>,
+  <biblScope unit="page">239</biblScope>, <citedRange unit="page">273</citedRange>;
+</bibl>
+<bibl><author>Raue</author>, <title level="j">ZGE</title> <date type="publication" when="2014">2014</date>,
+  <biblScope unit="page">387</biblScope>, <citedRange unit="page">389</citedRange>.
+</bibl>
+```
+
+Each citation follows the German convention of *first page, pinpoint page* ("482,
+498"), so the first page becomes `<biblScope unit="page">` (the article's own extent)
+and the pinpoint becomes `<citedRange unit="page">` — the same
+[page/pinpoint distinction](#pinpoint-citations-citedrange) as `233 (240)` in the
+real-world example below.
+
+This is **introductory comment, example 1** (Kuschel):
+
+```xml
+<bibl><label>3</label> <seg type="citationContext">Zur Frage, ob der Erwerb eines (digitalen) Werkexemplars mit dem Erwerb eines dinglichen Genussrechts verbunden ist, vgl.:</seg>
+  <author>Kuschel</author>, <title level="m">Der Erwerb digitaler Werkexemplare zur privaten Nutzung</title>,
+  <date type="publication" when="2019">2019</date>.
+</bibl>
+```
+
+This is **introductory comment, example 2** (Lichuma / Dehbi & Martin-Ortega /
+Bonfanti). Note how `cit.` — the Italian-style short form for "already cited above" —
+is tagged the same way as `supra`/`a.a.O.` in
+[Intra-footnote references](#intra-footnote-references), and how the third citation
+carries its own, separate signal phrase rather than sharing the first one:
+
+```xml
+<bibl><label>15</label> <seg type="citationContext">Arguing that national corporate due diligence laws potentially breach the principle of consent in international law and the sovereignty of host States, and perpetuate power imbalances of colonial derivation, see e.g.:</seg>
+  <author>C. Omari Lichuma</author>, <title level="a">(Laws) Made in the 'First World'</title>,
+  <ref type="precedingWork">cit.</ref>, <biblScope unit="page" from="517" to="518">pp. 517-518</biblScope>;
+</bibl>
+<bibl>
+  <author>F. Dehbi</author>, <author>O. Martin-Ortega</author>,
+  <title level="a">An integrated approach to corporate due diligence from a human rights, environmental, and TWAIL perspective</title>,
+  <title level="j">Regulation &amp; Governance</title>, <date type="publication" when="2023">2023</date>,
+  <biblScope unit="issue">17</biblScope>, <biblScope unit="page" from="927" to="943">pp. 927-943</biblScope>,
+  in particular <citedRange unit="page" from="932" to="935">pp. 932-935</citedRange>.
+</bibl>
+<bibl>
+  <seg type="citationContext">In contrast, affirming that such national legislations are to be regarded as instruments facilitating home States' compliance with their international obligations, rather than as breaches of the host States' sovereignty, see:</seg>
+  <author>A. Bonfanti</author>, <title level="m">Imprese multinazionali, diritti umani e ambiente. Profili di diritto internazionale pubblico e privato</title>,
+  <pubPlace>Milano</pubPlace>, <date type="publication" when="2012">2012</date>, <biblScope unit="page">136</biblScope>.
+</bibl>
+```
+
+This is the **trailing comment** example. It combines an `<authority>` (a court, not a
+person), a `<title type="caseName">`, and a `<quote>` — with two separate
+`<seg type="citationContext">` spans, since the signal phrase and the phrase
+introducing the quotation are two distinct devices. The closing "See infra, section
+3.2." points to a section of the *citing* article itself, not to another footnote or
+work, so it falls outside the `<ref>` vocabulary documented above and is left as plain
+text:
+
+```xml
+<bibl><label>9</label> <seg type="citationContext">See e.g.:</seg>
+  <authority type="court">Inter-American Court of Human Rights</authority>,
+  <date type="decision" when="2020-02-16">judgment of 16 February 2020</date>,
+  <title level="a" type="caseName">Indigenous Communities of the Lhaka Honhat (Our Land) Association v. Argentina</title>,
+  <citedRange unit="number">par. 254</citedRange>,
+  <seg type="citationContext">quoting the amicus curiae intervention of the former UN Special Rapporteur on the Right to Food, De Schutter:</seg>
+  <quote>«Many indigenous peoples understand the right to adequate food as a collective right. They often see subsistence activities such as hunting, fishing and gathering as essential not only to their right to food, but to nurturing their cultures, languages, social life and identity».</quote>
+  The cultural value of food is recognized – with respect to indigenous peoples in particular – also under
+  art. 27 of the International Covenant on Civil and Political Rights (ICCPR). See infra, section 3.2.
+</bibl>
+```
+
+This is the **court decisions** example:
+
+```xml
+<bibl><label>6</label> <seg type="citationContext">See, ex multis:</seg>
+  <authority type="court">African Commission on Human and Peoples Rights</authority>,
+  <date type="decision" when="2001-10-27">decision of 27 October 2001</date>,
+  <title level="a" type="caseName">Social and Economic Rights Action Center (SERAC) and Center for Economic and Social Rights (CESR) v. Nigeria</title>;
+</bibl>
+<bibl>
+  <authority type="court">Inter-American Court of Human Rights</authority>,
+  <date type="decision" when="2012-06-27">judgment of 27 June 2012</date>,
+  <title level="a" type="caseName">Case of the Kichwa Indigenous People of Sarayaku v. Ecuador</title>.
+</bibl>
+```
+
+(All five annotations above validate against `schema/grobid.training.references.rng`.)
 
 ## Worked example: the full annotation pipeline
 
