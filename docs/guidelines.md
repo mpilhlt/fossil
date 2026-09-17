@@ -900,6 +900,8 @@ it is a plain, non-legal citation list with nothing further to annotate beyond o
 
 This is the **German legal citation** example:
 
+![German legal citation](img/refseg-german-legal-citation.png)
+
 ```xml
 <bibl><label>2</label> <seg type="citationContext">Dazu etwa:</seg> <author>Hofmann</author>,
   <title level="j">ZGE</title> <date type="publication" when="2016">2016</date>,
@@ -921,6 +923,8 @@ real-world example below.
 
 This is **introductory comment, example 1** (Kuschel):
 
+![Introductory comment, example 1](img/refseg-introductory-comment-1.png)
+
 ```xml
 <bibl><label>3</label> <seg type="citationContext">Zur Frage, ob der Erwerb eines (digitalen) Werkexemplars mit dem Erwerb eines dinglichen Genussrechts verbunden ist, vgl.:</seg>
   <author>Kuschel</author>, <title level="m">Der Erwerb digitaler Werkexemplare zur privaten Nutzung</title>,
@@ -933,6 +937,8 @@ Bonfanti). Note how `cit.` — the Italian-style short form for "already cited a
 is tagged the same way as `supra`/`a.a.O.` in
 [Intra-footnote references](#intra-footnote-references), and how the third citation
 carries its own, separate signal phrase rather than sharing the first one:
+
+![Introductory comment, example 2](img/refseg-introductory-comment-2.png)
 
 ```xml
 <bibl><label>15</label> <seg type="citationContext">Arguing that national corporate due diligence laws potentially breach the principle of consent in international law and the sovereignty of host States, and perpetuate power imbalances of colonial derivation, see e.g.:</seg>
@@ -961,6 +967,8 @@ introducing the quotation are two distinct devices. The closing "See infra, sect
 work, so it falls outside the `<ref>` vocabulary documented above and is left as plain
 text:
 
+![Trailing comment](img/refseg-trailing-comment.png)
+
 ```xml
 <bibl><label>9</label> <seg type="citationContext">See e.g.:</seg>
   <authority type="court">Inter-American Court of Human Rights</authority>,
@@ -975,6 +983,8 @@ text:
 ```
 
 This is the **court decisions** example:
+
+![Court decisions](img/refseg-court-decisions.png)
 
 ```xml
 <bibl><label>6</label> <seg type="citationContext">See, ex multis:</seg>
