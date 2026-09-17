@@ -604,8 +604,10 @@ An optional `@key` holds a short resolvable key for a named work (e.g. an abbrev
 so it can later be linked to an external database.
 
 **Dates.** `<date type="publication" when="...">` marks the publication date; `@when`
-holds the machine-readable ISO form when it can be determined, the text content the
-form as it appears in the source.
+holds [the machine-readable ISO form](https://web.uvic.ca/lancenrd/martin/guidelines/ref-att.datable.w3c.html) 
+when it can be determined, the text content the form as it appears in the source. 
+`@when` ususally does not need to be annotated since it will be added in a postprocessing step. 
+It should be added if the text content is ambiguous.
 
 **Extent.** `<biblScope unit="...">` carries the cited work's own extent — its volume,
 issue, or overall page range — with optional `@from`/`@to`:
@@ -615,6 +617,8 @@ issue, or overall page range — with optional `@from`/`@to`:
 | `page` | Full page range of the article |
 | `volume` | Volume number |
 | `issue` | Issue / number |
+
+As with `@when`, `@from` and `@to` can be left out when annotating if the page count 
 
 **Publisher and place.** `<publisher>` and `<pubPlace>` hold the publisher's name (also
 used for corporate authors such as web pages) and place of publication.
@@ -663,7 +667,7 @@ A non-legal example combining several of these:
 </bibl>
 ```
 
-## Legal and Humanities Scholarship
+### Legal and Humanities Scholarship
 
 Legal scholarship and the humanities disciplines that share its citation culture
 (history, philology, area studies) rely on the basic vocabulary above plus a further
@@ -675,7 +679,7 @@ whose polarity and force is itself a meaningful research signal. This section do
 that layer.
 
 
-### Genre of the cited work
+#### Genre of the cited work
 
 ```xml
 <bibl type="legislation">...</bibl>
@@ -687,7 +691,7 @@ citation. `type` is omitted for an ordinary reference, and reserved to `footnote
 comment that is not a bibliographic reference at all (see
 [Reference segmentation model](#reference-segmentation-model) above).
 
-### The issuing authority (`<authority>`)
+#### The issuing authority (`<authority>`)
 
 ```xml
 <authority type="court">EuGH</authority>,
@@ -711,7 +715,7 @@ institutional name, e.g. a court plus its deciding panel:
 (date a statute was enacted) are likewise specific to this section — outside it, `<date>`
 only uses `type="publication"` (which is the default when omitted).
 
-### Pinpoint citations (`<citedRange>`)
+#### Pinpoint citations (`<citedRange>`)
 
 `<biblScope>`, introduced above, carries the cited work's *own* extent. In legal and
 humanities citation practice, the citing text often also names a *pinpoint* into that
@@ -740,7 +744,7 @@ marginal number, say), there is simply no `<biblScope unit="page">` — only
 </bibl>
 ```
 
-### Docket and official identifiers
+#### Docket and official identifiers
 
 ```xml
 <idno type="docket">C-160/15</idno>
@@ -751,7 +755,7 @@ marginal number, say), there is simply no `<biblScope unit="page">` — only
 These are the legal-specific values of `<idno type="...">`, alongside the general ones
 listed under [Basic bibliographic elements](#basic-bibliographic-elements).
 
-### Case short-name and statute short-title
+#### Case short-name and statute short-title
 
 ```xml
 <title level="a" type="caseName">GS Media/Sanoma</title>
@@ -763,7 +767,7 @@ listed under [Basic bibliographic elements](#basic-bibliographic-elements). Tagg
 case short-name explicitly, rather than leaving it as trailing free text, is what stops
 the model from treating `– GS Media/Sanoma` as the start of a new reference.
 
-### Intra-footnote references
+#### Intra-footnote references
 
 Legal and humanities footnotes constantly avoid repeating a citation just given, using
 devices such as *id.*, *op. cit.*, *ibid.*, *a.a.O.*, *ders.*, *supra*, *infra*,
@@ -808,7 +812,7 @@ with `footnote`, e.g. "infra note 24":
 `@target` is available to hold a resolved pointer once the citation is resolved in
 post-processing; it is not required for training annotation.
 
-### Citation-signal phrases
+#### Citation-signal phrases
 
 Phrases that introduce a citation with an evaluative or directional stance — "See",
 "See also", "Cf.", "But see", "Contra", "vgl.", "anderer Ansicht" — carry citation-
@@ -830,7 +834,7 @@ the first (or nearest) `<bibl>` it introduces — see the
 referenceSegmenter's ["introductory comment" examples](#reference-segmentation-model)
 above.
 
-### Quotations
+#### Quotations
 
 `<quote>` pairs a direct quotation from the body text with the `<bibl>` that supports
 it. No attributes: quotation marks and trailing punctuation stay in the source text.
@@ -839,7 +843,7 @@ it. No attributes: quotation marks and trailing punctuation stay in the source t
 <bibl><seg type="citationContext">…</seg><quote>„The U. S. law and development movement …"</quote>, <author>Merryman</author>, …</bibl>
 ```
 
-### A real-world example: multiple references with multiple comments
+#### A real-world example: multiple references with multiple comments
 
 Footnotes routinely mix several of the devices above in one paragraph — multiple
 citations, each with its own signal phrase or `supra`-style back-reference:
@@ -886,7 +890,7 @@ as in [Intra-footnote references](#intra-footnote-references), and
 no special nesting for the multiple citations sharing one footnote. (This annotation
 validates against `schema/grobid.training.references.rng`.)
 
-### The reference-segmentation examples, annotated
+#### The reference-segmentation examples, annotated
 
 The [reference segmentation model](#reference-segmentation-model) examples above show
 each footnote only up to the point of splitting it into raw, unparsed `<bibl>`
