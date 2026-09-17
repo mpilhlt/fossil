@@ -25,16 +25,16 @@ For this reason these guidelines are a "living" document and may change over tim
 
 There are different strategies for annotation:
 - blind annotations + review: annotators work on the same documents and one reviewer
-  consolidates the different output
-- double round: each annotator works on a portion of the dataset, and revises other
-  people's annotations
+  consolidates the different annotations
+- double round + review: each annotator works on a portion of the dataset, and 
+  then revises other annotators' work; the reviewer checks the final result
 
-The work will be organised in iterations where the team performs the following tasks:
-- annotation
-- correction
-- training/evaluation
-- feedback
-- update guidelines
+The work will be organised in iterations where the team performs the following tasks on a batch of documents:
+1. automatic extraction from the source PDF
+2. annotation (either blind or double)
+3. review, feedback and corrections, update of guidelines if necessary
+4. training/evaluation of the model
+5. proceed with 1. on a new batch
 
 The input files are PDF documents that are pre-annotated by the ML models. The
 annotators then have to correct the pre-annotated output from the model.
@@ -43,12 +43,27 @@ annotators then have to correct the pre-annotated output from the model.
 > Questions, discussions and decisions must always go through GitHub issues at
 > <https://github.com/mpilhlt/fossil/issues>.
 
-> [!NOTE]
-> The technical description on how to generate training data is provided in the Grobid
-> documentation
-> [here](https://grobid.readthedocs.io/en/latest/training/General-principles/#generating-pre-annotated-training-data).
+## Layered model architecture
 
-![How to get GitHub updates](img/github-updates.png)
+Grobid does not annotate a document in one pass. It works through three separate
+models, one after the other, each one handed only the part of the document that the
+previous model marked out for it. First, the
+[document segmentation model](#document-segmentation-model) looks at the whole document
+and divides it into broad zones — the header, the body, the footnotes, and so on.
+Next, the [reference segmentation model](#reference-segmentation-model) takes only the
+zones marked as footnotes and splits that raw text into individual citations. Finally,
+the [citation model](#citation-model) takes each of those individual citations and
+works out its fine-grained structure — who the authors are, what the title is, which
+year it was published, and so on.
+
+The practical consequence of this pipeline is worth keeping in mind while annotating:
+each model can only "see" what the model before it correctly identified and handed
+down. If a piece of text is not tagged correctly at an earlier stage — for example, if
+a footnote is not marked as such by the segmentation model — it never reaches the later
+models at all, and no amount of careful annotation further down the pipeline can fix
+that. This is why getting the earlier, coarser distinctions right (what is a footnote,
+what is body text, what is a header) matters just as much as getting the later, more
+detailed ones right.
 
 ## Data correction
 
@@ -173,10 +188,6 @@ The general structure of the files is:
   </text>
 </TEI>
 ```
-
-We introduce a new label, `<div type="toc">`, to mark the table of contents in the
-document when present. For the moment, the block within this tag is ignored until
-enough training data is available.
 
 ### Tags
 
@@ -535,7 +546,7 @@ See examples in [#20](https://github.com/mpilhlt/fossil/issues/20).
 *infra*, "N. 22", "above") are, at the referenceSegmenter stage, simply part of the
 `<bibl>` they occur in — no separate label exists for them here. They are only broken
 out into their own `<ref type="...">` elements at the `references` stage; see
-[Intra-footnote anaphoric references](#intra-footnote-anaphoric-references) below.
+[Intra-footnote references](#intra-footnote-references) below.
 
 ### Example from the demo
 
@@ -559,7 +570,7 @@ times, in any order, inside a `<bibl>`.
 Most of the corpus is annotated with this base vocabulary alone. A smaller but
 significant part of the corpus — legal scholarship and the humanities disciplines that
 share its citation culture — needs a further, domain-specific layer on top of it, which
-is documented separately in [Legal Scholarship](#legal-scholarship) below.
+is documented separately in [Legal and Humanities Scholarship](#legal-and-humanities-scholarship) below.
 
 ### Basic bibliographic elements
 
@@ -605,8 +616,8 @@ used for corporate authors such as web pages) and place of publication.
 edition.
 
 **Basic identifiers.** `<idno type="...">` accepts, among the values also documented
-under [Legal Scholarship](#legal-scholarship): `DOI`, `ISSN`, `arXiv`, `report`
-(technical/institutional report number).
+under [Legal and Humanities Scholarship](#legal-and-humanities-scholarship): `DOI`,
+`ISSN`, `arXiv`, `report` (technical/institutional report number).
 
 **Web pointer.** `<ptr type="web" target="...">` holds a URL as text content, excluding
 prefixes like "URL:" and trailing periods.
@@ -645,7 +656,7 @@ A non-legal example combining several of these:
 </bibl>
 ```
 
-## Legal Scholarship
+## Legal and Humanities Scholarship
 
 Legal scholarship and the humanities disciplines that share its citation culture
 (history, philology, area studies) rely on the basic vocabulary above plus a further
@@ -656,13 +667,6 @@ back- and forward-references within the same footnote apparatus (`id.`, `op. cit
 whose polarity and force is itself a meaningful research signal. This section documents
 that layer.
 
-The full rationale for this vocabulary is written up in
-[`tei-proposal-legal-footnote-citations.md`](tei-proposal-legal-footnote-citations.md)
-(accepted by the TEI Technical Council as
-[TEIC/TEI#2974](https://github.com/TEIC/TEI/issues/2974)) and in
-[`spec-legal-references.md`](spec-legal-references.md) /
-[`spec-legal-footnote-citations-schema-changes.md`](spec-legal-footnote-citations-schema-changes.md),
-which describe how it was implemented in `schema/grobid.training.references.rng`.
 
 ### Genre of the cited work
 
@@ -696,10 +700,9 @@ institutional name, e.g. a court plus its deciding panel:
 <authority type="court"><orgName>Oberlandesgericht Frankfurt am Main</orgName>, 5. Zivilsenat</authority>
 ```
 
-`orgName@type="court"` is no longer used: use `<authority type="court">` instead. The
-`<date type="...">` values `decision` (date a court decision was issued) and `enacted`
+ The `<date type="...">` values `decision` (date a court decision was issued) and `enacted`
 (date a statute was enacted) are likewise specific to this section — outside it, `<date>`
-only uses `type="publication"`.
+only uses `type="publication"` (which is the default when omitted).
 
 ### Pinpoint citations (`<citedRange>`)
 
@@ -745,7 +748,7 @@ listed under [Basic bibliographic elements](#basic-bibliographic-elements).
 
 ```xml
 <title level="a" type="caseName">GS Media/Sanoma</title>
-<title level="m" type="legislation" key="UrhG">UrhG</title>
+<title level="m" type="legislation" key="UrhG">Urhebergesetz</title>
 ```
 
 These are the legal-specific presets of `<title>`, on top of the plain `@level` values
@@ -753,7 +756,7 @@ listed under [Basic bibliographic elements](#basic-bibliographic-elements). Tagg
 case short-name explicitly, rather than leaving it as trailing free text, is what stops
 the model from treating `– GS Media/Sanoma` as the start of a new reference.
 
-### Intra-footnote anaphoric references
+### Intra-footnote references
 
 Legal and humanities footnotes constantly avoid repeating a citation just given, using
 devices such as *id.*, *op. cit.*, *ibid.*, *a.a.O.*, *ders.*, *supra*, *infra*,
@@ -814,8 +817,7 @@ whole introductory phrase (not just a single trigger word) with
 ```
 
 `<seg type="citationContext">` marks only the signal phrase itself, not the citation
-that follows it. Because the `references` model has no way to label a span *between*
-two `<bibl>`s, when several citations share one signal phrase, keep the phrase only in
+that follows it. When several citations share one signal phrase, keep the phrase only in
 the first (or nearest) `<bibl>` it introduces — see the
 [pipeline example](#worked-example-the-full-annotation-pipeline) below and the
 referenceSegmenter's ["introductory comment" examples](#reference-segmentation-model)
@@ -873,27 +875,21 @@ citations, each with its own signal phrase or `supra`-style back-reference:
 
 The point is the pattern: one comment/signal phrase per `<bibl>` it introduces, `supra
 note N` split into `<ref type="precedingWork">` + `<ref type="footnote" n="N">` exactly
-as in [Intra-footnote anaphoric references](#intra-footnote-anaphoric-references), and
+as in [Intra-footnote references](#intra-footnote-references), and
 no special nesting for the multiple citations sharing one footnote. (This annotation
 validates against `schema/grobid.training.references.rng`.)
 
 ## Worked example: the full annotation pipeline
 
-The example below is not drawn from a real document. It is invented to show how one
-passage of body text and its footnotes move through all three models in sequence, from
-raw PDF text to a fully annotated citation — including a backward-pointing reference
-(`supra`) *and* a forward-pointing one (`infra`), which do not happen to co-occur in
-any of the real screenshots above. It adapts the connective prose and signal phrases of
-the [composite-footnote worked example](tei-proposal-legal-footnote-citations.md) in
-the source TEI proposal — originally in German — into the running English and Bluebook
-citation conventions of a US law journal, and surrounds it with two invented
-neighboring footnotes: an earlier one it cites back to (`supra note 8`) and a later one
-it points forward to (`infra note 24`).
+The example below is meant to show how one passage of body text and its footnotes 
+move through all three models in sequence, from raw PDF text to a fully annotated 
+citation — including a backward-pointing reference (`supra`) *and* a 
+forward-pointing one (`infra`).
 
-The (invented) passage of body text reads:
+The passage of body text reads:
 
 > Comparative criminology has increasingly examined the transnational transfer of legal
-> concepts.<sup>8</sup> This same methodological caution applies with particular force
+> concepts.<sup>8</sup>. [...] This same methodological caution applies with particular force
 > to law-and-development scholarship.<sup>19</sup>
 
 Footnote 8 gives a full citation that footnote 19 later cites back to with `supra`.
@@ -911,7 +907,7 @@ from the PDF:
 ```xml
 <body>
   Comparative criminology has increasingly examined the transnational transfer of
-  legal concepts.<lb/>8 This same methodological caution applies with particular
+  legal concepts.<lb/>8 [...] This same methodological caution applies with particular
   force to law-and-development scholarship.<lb/>19
 </body>
 
@@ -1008,11 +1004,3 @@ references:
   </bibl>
 </listBibl>
 ```
-
-Note that footnote 19's internal composite structure — one signal phrase or quotation
-nested inside the `<bibl>` it introduces, rather than sitting between citations as a
-sibling — follows the same convention as the
-[real-world example](#a-real-world-example-multiple-references-with-multiple-comments)
-above, and is explained in more detail in the source TEI proposal's note on that
-example's shape. This whole stage-3 annotation validates against
-`schema/grobid.training.references.rng`.
