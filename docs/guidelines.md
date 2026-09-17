@@ -6,9 +6,16 @@ complement what's described in the related models in the
 [Grobid documentation](https://grobid.readthedocs.io/en/latest/training/General-principles/).
 
 > [!NOTE]
-> The guidelines assume that:
-> - The annotators are familiar with the type of documents to be annotated
-> - The annotators are familiar with the annotation tool
+> These guidelines assume that annotators:
+> - are familiar with the type of documents to be annotated
+> - work with the [PDF-TEI-Editor](https://github.com/mpilhlt/pdf-tei-editor/) — though
+>   annotation can always be done with any XML editor instead
+
+The PDF-TEI-Editor has a visual mode in which annotation is done by marking a span of
+text and picking the matching tag from a chip palette, rather than by typing XML by
+hand. Even so, annotators must first familiarize themselves with the raw XML markup
+described in this document, since it is what defines the underlying schema — the chip
+palette only makes that schema faster to apply; it does not replace understanding it.
 
 ## General strategy
 
@@ -33,8 +40,8 @@ The input files are PDF documents that are pre-annotated by the ML models. The
 annotators then have to correct the pre-annotated output from the model.
 
 > [!WARNING]
-> Questions, discussions and decisions should be passed imperatively via GitHub issues
-> at <https://github.com/mpilhlt/fossil/issues>.
+> Questions, discussions and decisions must always go through GitHub issues at
+> <https://github.com/mpilhlt/fossil/issues>.
 
 > [!NOTE]
 > The technical description on how to generate training data is provided in the Grobid
@@ -46,7 +53,7 @@ annotators then have to correct the pre-annotated output from the model.
 ## Data correction
 
 The most important principle when correcting the pre-annotated training data is to keep
-the stream of text untouched. Only the tags can be moved, the text itself shall not be
+the stream of text untouched. Only the tags can be moved; the text itself shall not be
 modified or corrected. The stream of text present in the training file after extraction
 of the content of the PDF is similar to the stream of text Grobid will have to process
 once the models are (re)created. It is thus important to have Grobid trained on this
@@ -190,9 +197,9 @@ The following TEI elements are used by the segmentation model:
 * `<div type="funding">` for funding information annex (when not placed in the header)
 * `<div type="annex">` for any other annexes
 
-It is necessary to identify these substructures when interrupting the `<body>`. Figures
-and tables (including their potential titles, captions and notes) are considered part
-of the body, so they are contained by the `<body>` element.
+These substructures must be identified whenever they interrupt the flow of the
+`<body>`. Figures and tables (including their potential titles, captions and notes) are
+considered part of the body, so they are contained by the `<body>` element.
 
 Note that the markup overall follows the [TEI](http://www.tei-c.org) conventions.
 
@@ -222,27 +229,26 @@ The header section typically contains bibliographical information, such as the
 document's title, author(s) possibly with affiliations, abstract, keywords, container
 journal title, etc. The header usually covers everything until the start of the article
 body (e.g. until reaching the introduction of the article). While a cover page is
-optional, an article should normally always include a header, even if limited to the
-title.
+optional, an article should always include a header, even if limited to the title.
 
 > [!NOTE]
 > For the segmentation model, there are no `<title>` or `<author>` elements, because
-> they are handled in the `header` model which is applied in cascade at the next stage,
-> in the content identified by the segmentation model as "header".
+> they are handled by the `header` model, which runs in cascade at the next stage on
+> the content the segmentation model identified as "header".
 
 All this material should be contained within the `<front>` element. In addition, any
 footnotes that are referenced from within the header (for example when author
 affiliations and addresses are expressed in footnotes) should also be annotated under a
-`<front>` element. Furthermore, the footer including the first page number should go in
-the header, because it indicates the first page of the article, which is a useful and
-common piece of bibliographical information.
+`<front>` element. Furthermore, the footer that contains the first page number should
+also be treated as part of the header, since the first page number is useful, common
+bibliographical information.
 
 In general, we expect to find all the bibliographical information of the document as
 part of the header. This principle should be followed in every document in order to
 ensure homogeneity of the "header" content across the training data.
 
-Lines like the following, indicating bibliographical metadata, appearing as a footnote
-on the first page of the document, should be contained inside a `<front>` element:
+The following bibliographical-metadata lines, when they appear as a footnote on the
+first page of the document, should be contained inside a `<front>` element:
 * Received: [date]
 * Revised: [date]
 * Accepted: [date]
@@ -261,8 +267,8 @@ the document, such as:
 * Detailed affiliation and address information
 * Submission information: when the document was received, approved and published
 
-These elements relatively frequently appear at the very end of an article or just after
-the document body. However, for consistency, they should be annotated under `<front>`
+These items often appear at the very end of an article or just after the document
+body. However, for consistency, they should be annotated under `<front>`
 because they are bibliographical information covered by the header model.
 
 The following information blocks sometimes appear inside the article header, so they
@@ -300,7 +306,7 @@ survival <lb/></front>
 
 Sometimes an article starts mid-page, with the end of the preceding one occupying the
 upper first third of the page. As this content does not belong to the article in
-question, don't add any elements and remove any `<front>` or `<body>` elements that
+question, do not add any elements, and remove any `<front>` or `<body>` elements that
 could appear in the preceding article.
 
 #### Additional information `<div type="...">`
@@ -314,11 +320,11 @@ the article (typically after the conclusion), should be annotated under
 * `<div type="funding">` for funding information annex
 
 > [!NOTE]
-> Different sections of annex type should be segmented into separate
-> `<div type="annex">` elements to capture the start and end of each section block.
+> Different annex-type sections should be segmented into separate `<div type="annex">`
+> elements to capture the start and end of each section block.
 
-Supplementary texts, supplementary figures and tables, and any similar appendix should
-all be encoded under `<div type="annex">`.
+Supplementary texts, supplementary figures and tables, and any similar appendices
+should all be encoded under `<div type="annex">`.
 
 #### Elements interrupting the document body: headnotes and footnotes
 
@@ -352,7 +358,7 @@ related to an element of the `<body>`; if they concern header elements, they go 
 
 ![Example of different note types](img/different-note-examples.png)
 
-References are expected to also be placed in the footnotes, in three different styles:
+References are also expected to appear in footnotes, in four different styles:
 
 1. Header information, such as affiliation or publication information.
 
@@ -431,8 +437,8 @@ The reference segmenter model is trained with two labels only:
 
 - `<label>` — the reference number, e.g. "[1]" in a numbered bibliography, or the
   footnote number (as in "^1^ This is the first footnote.")
-- `<bibl>` — encloses one individual reference
-- `<bibl type="footnote">` — encloses one individual comment or note that does not
+- `<bibl>` — encloses an individual reference
+- `<bibl type="footnote">` — encloses an individual comment or note that does not
   refer to any reference (discussion:
   [#20](https://github.com/mpilhlt/fossil/issues/20)). This is to catch incorrect
   classification in the upstream "segmentation" annotation.
@@ -653,7 +659,7 @@ reference.
 
 Legal and humanities footnotes constantly avoid repeating a citation just given, using
 devices such as *id.*, *op. cit.*, *ibid.*, *a.a.O.*, *ders.*, *supra*, *infra*,
-"above," "N. 22." `<ref type="...">` labels these:
+"above", or "N. 22". `<ref type="...">` labels these:
 
 | `@type` | Meaning | Examples |
 | --- | --- | --- |
