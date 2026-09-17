@@ -872,11 +872,11 @@ citations, each with its own signal phrase or `supra`-style back-reference:
 <bibl><seg type="citationContext">cf.</seg> <author>Carli N. Conklin</author>,
   <title level="a">The Origins of the Pursuit of Happiness</title>,
   <title level="j">7 Wash. U. Juris. Rev.</title>
-  <biblScope unit="page" from="195">195</biblScope>, <citedRange unit="page" from="200" to="200">200</citedRange> (<date type="publication">2015</date>))
+  <biblScope unit="page" from="195" to="195">195</biblScope>, <citedRange unit="page" from="200" to="200">200</citedRange> (<date type="publication" when="2015">2015</date>)
   (selecting for use the first edition, as does the present article);
 </bibl>
 <bibl><author>Alan Watson</author>, <title level="a">The Structure of Blackstone's Commentaries</title>,
-  <title level="j">97 Yale L.J.</title> <biblScope unit="page" from="795">795, <citedRange unit="page" from="200" to="200">801</citedRange></biblScope> (<date type="publication">1988</date>) (same).
+  <title level="j">97 Yale L.J.</title> <biblScope unit="page" from="795" to="795">795</biblScope>, <citedRange unit="page" from="801" to="801">801</citedRange> (<date type="publication" when="1988">1988</date>) (same).
 </bibl>
 ```
 
