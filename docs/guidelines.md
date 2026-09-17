@@ -2,7 +2,7 @@
 
 The annotation guidelines are a collection of best practices and indications on how the
 data should be annotated to support documents containing references in footnotes. They
-complement what's described in the related models in the
+complement what is described in the related models in the
 [Grobid documentation](https://grobid.readthedocs.io/en/latest/training/General-principles/).
 
 > [!NOTE]
@@ -551,20 +551,118 @@ Sometimes the references are in separate sentences rather than separated by semi
 
 This section complements what's described in the
 [related model in the Grobid documentation](https://grobid.readthedocs.io/en/latest/training/Bibliographical-references/).
-It documents the legal/humanities-specific vocabulary added on top of Grobid's stock
-`references` model to handle footnote citations — courts and legislatures as issuing
-authorities, statute/marginal-number pinpoints, elliptical back-references, citation
-signal phrases, and quotations. The full rationale for this vocabulary is written up in
+The `references` model takes each `<bibl>` produced by the reference segmenter and
+labels its internal structure: author names, titles, dates, extents, identifiers, and
+so on. Every element below (except `<label>` and `<lb/>`) can occur any number of
+times, in any order, inside a `<bibl>`.
+
+Most of the corpus is annotated with this base vocabulary alone. A smaller but
+significant part of the corpus — legal scholarship and the humanities disciplines that
+share its citation culture — needs a further, domain-specific layer on top of it, which
+is documented separately in [Legal Scholarship](#legal-scholarship) below.
+
+### Basic bibliographic elements
+
+**Authors and editors.** `<author>` and `<editor>` hold a complete sequence of names as
+running text. Where the source clearly separates given name / surname, it is fine (but
+not required) to decompose them with `<persName>`, `<forename>`, `<surname>`:
+
+```xml
+<author>J. Smith</author>
+<author><persName><forename>J.</forename> <surname>Smith</surname></persName></author>
+```
+
+**Titles.** `<title level="...">` classifies the title by the kind of work it names:
+
+| `@level` | Meaning |
+| --- | --- |
+| `a` | Article or chapter title (analytic) |
+| `j` | Journal title |
+| `m` | Monograph, proceedings, book, or thesis title |
+| `s` | Series title |
+| `u` | Unpublished work title |
+
+An optional `@key` holds a short resolvable key for a named work (e.g. an abbreviation),
+so it can later be linked to an external database.
+
+**Dates.** `<date type="publication" when="...">` marks the publication date; `@when`
+holds the machine-readable ISO form when it can be determined, the text content the
+form as it appears in the source.
+
+**Extent.** `<biblScope unit="...">` carries the cited work's own extent — its volume,
+issue, or overall page range — with optional `@from`/`@to`:
+
+| `@unit` | Matches |
+| --- | --- |
+| `page` | Full page range of the article |
+| `volume` | Volume number |
+| `issue` | Issue / number |
+
+**Publisher and place.** `<publisher>` and `<pubPlace>` hold the publisher's name (also
+used for corporate authors such as web pages) and place of publication.
+
+**Edition.** `<edition n="...">` marks an edition statement, e.g. `n="2"` for a second
+edition.
+
+**Basic identifiers.** `<idno type="...">` accepts, among the values also documented
+under [Legal Scholarship](#legal-scholarship): `DOI`, `ISSN`, `arXiv`, `report`
+(technical/institutional report number).
+
+**Web pointer.** `<ptr type="web" target="...">` holds a URL as text content, excluding
+prefixes like "URL:" and trailing periods.
+
+**Miscellaneous note.** `<note type="report">` marks any note not covered by another
+tag — typically the type of report or thesis (e.g. "Ph.D. thesis", "Technical Report").
+
+**Institutional authorship.** `<orgName type="...">` names an institution that is not
+itself the work's issuing authority (see [The issuing authority](#the-issuing-authority-authority)
+for that case) — for example the university behind a thesis, or a project consortium
+behind a technical report:
+
+| `@type` | Meaning |
+| --- | --- |
+| `institution` | An institution (e.g. a university) |
+| `collaboration` | Project-based collaboration acting as an author group |
+| `department` | A department within an institution |
+| `laboratory` | A laboratory or research group |
+
+A non-legal example combining several of these:
+
+```xml
+<bibl><author>J. Smith</author> and <author>A. Doe</author>,
+  <title level="a">A Study of Neural Machine Translation</title>,
+  <title level="j">Journal of Computational Linguistics</title>
+  <biblScope unit="volume">45</biblScope>(<biblScope unit="issue">2</biblScope>),
+  <biblScope unit="page" from="123" to="145">123–145</biblScope>
+  (<date type="publication" when="2019">2019</date>).
+  <idno type="DOI">10.1162/coli_a_00345</idno>
+</bibl>
+
+<bibl><author>M. Müller</author>, <title level="m">Diffusion Models for Generative Art</title>
+  (Ph.D. thesis, <orgName type="institution">ETH Zürich</orgName>,
+  <date type="publication" when="2022">2022</date>).
+  <note type="report">Ph.D. thesis</note>
+</bibl>
+```
+
+## Legal Scholarship
+
+Legal scholarship and the humanities disciplines that share its citation culture
+(history, philology, area studies) rely on the basic vocabulary above plus a further
+layer: courts and legislatures cited as the "author" of a work, pinpoint citations
+below the level of a page (a statute section, a marginal number, a recital), elliptical
+back- and forward-references within the same footnote apparatus (`id.`, `op. cit.`,
+`a.a.O.`, `ders.`, *supra*, *infra*), and citation-signal phrases (`see`, `cf.`, `vgl.`)
+whose polarity and force is itself a meaningful research signal. This section documents
+that layer.
+
+The full rationale for this vocabulary is written up in
 [`tei-proposal-legal-footnote-citations.md`](tei-proposal-legal-footnote-citations.md)
 (accepted by the TEI Technical Council as
 [TEIC/TEI#2974](https://github.com/TEIC/TEI/issues/2974)) and in
 [`spec-legal-references.md`](spec-legal-references.md) /
 [`spec-legal-footnote-citations-schema-changes.md`](spec-legal-footnote-citations-schema-changes.md),
 which describe how it was implemented in `schema/grobid.training.references.rng`.
-
-The `references` model takes each `<bibl>` produced by the reference segmenter and
-labels its internal structure. Every element below (except `<label>` and `<lb/>`) can
-occur any number of times, in any order, inside a `<bibl>`.
 
 ### Genre of the cited work
 
@@ -574,9 +672,9 @@ occur any number of times, in any order, inside a `<bibl>`.
 ```
 
 `legislation` marks a statute citation, `decision` a court ruling / judicial decision
-citation. `<bibl type="footnote">` is reserved for a comment that is not a
-bibliographic reference at all (see [Reference segmentation model](#reference-segmentation-model)
-above); `type` is otherwise omitted for an ordinary (non-legal) reference.
+citation. `type` is omitted for an ordinary reference, and reserved to `footnote` for a
+comment that is not a bibliographic reference at all (see
+[Reference segmentation model](#reference-segmentation-model) above).
 
 ### The issuing authority (`<authority>`)
 
@@ -598,21 +696,20 @@ institutional name, e.g. a court plus its deciding panel:
 <authority type="court"><orgName>Oberlandesgericht Frankfurt am Main</orgName>, 5. Zivilsenat</authority>
 ```
 
-`<orgName>` on its own (outside `<authority>`) remains available for institutional
-authorship that is *not* an issuing authority — e.g. the institution behind a thesis or
-technical report — with `@type` values `institution`, `collaboration`, `department`,
-`laboratory`, or `jurisdiction`. `orgName@type="court"` is no longer used: use
-`<authority type="court">` instead.
+`orgName@type="court"` is no longer used: use `<authority type="court">` instead. The
+`<date type="...">` values `decision` (date a court decision was issued) and `enacted`
+(date a statute was enacted) are likewise specific to this section — outside it, `<date>`
+only uses `type="publication"`.
 
-### Pinpoint vs. container extent
+### Pinpoint citations (`<citedRange>`)
 
-`<biblScope>` carries the cited work's *own* extent (volume, issue, page range).
-`<citedRange>` carries the *pinpoint* into it — whatever level of granularity the
-citing text actually names (a statute section, a marginal number, a recital). If a work
-has no pagination at all (a decision cited only by marginal number, say), there is
-simply no `<biblScope unit="page">` — only `<citedRange>`.
-
-`<citedRange unit="...">` accepts:
+`<biblScope>`, introduced above, carries the cited work's *own* extent. In legal and
+humanities citation practice, the citing text often also names a *pinpoint* into that
+work — a level of granularity `<biblScope>`'s own `@unit` list has no room for, such as
+a statute section or a court decision's marginal number. `<citedRange unit="...">`
+carries that pinpoint. If a work has no pagination at all (a decision cited only by
+marginal number, say), there is simply no `<biblScope unit="page">` — only
+`<citedRange>`.
 
 | `@unit` | Matches |
 | --- | --- |
@@ -641,8 +738,8 @@ simply no `<biblScope unit="page">` — only `<citedRange>`.
 <idno type="CELEX">…</idno>
 ```
 
-`<idno type="...">` also covers the non-legal identifiers already in use: `DOI`,
-`ISSN`, `arXiv`, `report`.
+These are the legal-specific values of `<idno type="...">`, alongside the general ones
+listed under [Basic bibliographic elements](#basic-bibliographic-elements).
 
 ### Case short-name and statute short-title
 
@@ -651,9 +748,10 @@ simply no `<biblScope unit="page">` — only `<citedRange>`.
 <title level="m" type="legislation" key="UrhG">UrhG</title>
 ```
 
-Tagging the case short-name explicitly, rather than leaving it as trailing free text,
-is what stops the model from treating `– GS Media/Sanoma` as the start of a new
-reference.
+These are the legal-specific presets of `<title>`, on top of the plain `@level` values
+listed under [Basic bibliographic elements](#basic-bibliographic-elements). Tagging the
+case short-name explicitly, rather than leaving it as trailing free text, is what stops
+the model from treating `– GS Media/Sanoma` as the start of a new reference.
 
 ### Intra-footnote anaphoric references
 
@@ -690,6 +788,13 @@ them into one:
 <biblScope unit="page" from="89" to="89">89</biblScope>
 ```
 
+The same pattern applies to a *forward*-pointing reference, combining `subsequentWork`
+with `footnote`, e.g. "infra note 24":
+
+```xml
+<ref type="subsequentWork">infra</ref> <ref type="footnote" n="24">note 24</ref>
+```
+
 `@target` is available to hold a resolved pointer once the citation is resolved in
 post-processing; it is not required for training annotation.
 
@@ -711,9 +816,10 @@ whole introductory phrase (not just a single trigger word) with
 `<seg type="citationContext">` marks only the signal phrase itself, not the citation
 that follows it. Because the `references` model has no way to label a span *between*
 two `<bibl>`s, when several citations share one signal phrase, keep the phrase only in
-the first (or nearest) `<bibl>` it introduces — see
-[A composite footnote](#a-composite-footnote) below and the referenceSegmenter's
-["introductory comment" examples](#reference-segmentation-model) above.
+the first (or nearest) `<bibl>` it introduces — see the
+[pipeline example](#worked-example-the-full-annotation-pipeline) below and the
+referenceSegmenter's ["introductory comment" examples](#reference-segmentation-model)
+above.
 
 ### Quotations
 
@@ -771,70 +877,142 @@ as in [Intra-footnote anaphoric references](#intra-footnote-anaphoric-references
 no special nesting for the multiple citations sharing one footnote. (This annotation
 validates against `schema/grobid.training.references.rng`.)
 
-### A composite footnote
+## Worked example: the full annotation pipeline
 
-The following footnote combines a footnote-number label, a short elliptical citation,
-an explicit back-reference to another footnote, a multi-work citation joined by a
-signal phrase, general prose, and a citation supporting a direct quotation — every
-device introduced above, in one paragraph:
+The example below is not drawn from a real document. It is invented to show how one
+passage of body text and its footnotes move through all three models in sequence, from
+raw PDF text to a fully annotated citation — including a backward-pointing reference
+(`supra`) *and* a forward-pointing one (`infra`), which do not happen to co-occur in
+any of the real screenshots above. It adapts the connective prose and signal phrases of
+the [composite-footnote worked example](tei-proposal-legal-footnote-citations.md) in
+the source TEI proposal — originally in German — into the running English and Bluebook
+citation conventions of a US law journal, and surrounds it with two invented
+neighboring footnotes: an earlier one it cites back to (`supra note 8`) and a later one
+it points forward to (`infra note 24`).
 
-> 30 Dazu etwa Smelser 175 f. — Für die Kriminologie siehe Kaiser (oben N. 22) 89 sowie
-> Blazicek/Janeksela, Some Comments on Comparative Methodologies in Criminal Justice,
-> Int. J. Crim. Pen 6 (1978) 233 (240). Als besonders gefährlich hat sich die
-> unkritische Übertragung solcher Konzepte auf Länder der Dritten Welt erwiesen. So kam
-> man etwa zu dem Ergebnis: „The U. S. law and development movement was largely a
-> parochial expression of the American legal style", Merryman, Comparative Law and
-> Social Change - On the Origins, Style, Decline and Revival of the Law and Development
-> Movement, Am. J. Comp. L. 25 (1977) 457 (479).
+The (invented) passage of body text reads:
 
-The citation context (`<seg type="citationContext">`) and the quotation (`<quote>`) are
-annotated as *part of* the `<bibl>` they belong to (or are closest to, when several
-citations follow one signal phrase, as in this example). This keeps it unambiguous
-which citation a signal phrase or quotation is associated with, without needing a
-separate mechanism to record that association. Which spans of running text join which
-`<bibl>` is decided upstream, by the referenceSegmenter annotation task that first
-splits a footnote into `<bibl>` spans (see [Reference segmentation model](#reference-segmentation-model)) —
-not by the `references` model itself.
+> Comparative criminology has increasingly examined the transnational transfer of legal
+> concepts.<sup>8</sup> This same methodological caution applies with particular force
+> to law-and-development scholarship.<sup>19</sup>
+
+Footnote 8 gives a full citation that footnote 19 later cites back to with `supra`.
+Footnote 19 is the composite footnote itself — several citations joined by signal
+phrases and a quotation, with a `supra` back-reference to note 8 and an `infra`
+forward-reference to note 24. Footnote 24, quoted only in part below, is what that
+forward reference points to.
+
+### Stage 1: document segmentation model
+
+At this stage the footnote text is not yet split into individual citations — each
+footnote is simply wrapped in its own `<listBibl>` as raw text, exactly as extracted
+from the PDF:
 
 ```xml
+<body>
+  Comparative criminology has increasingly examined the transnational transfer of
+  legal concepts.<lb/>8 This same methodological caution applies with particular
+  force to law-and-development scholarship.<lb/>19
+</body>
+
 <listBibl>
-  <bibl>
-    <seg type="citationContext">Dazu etwa</seg>
-    <author>Smelser</author>
-      <biblScope unit="page" from="175" to="176">175 f.</biblScope> -
-  </bibl>
+8 Günther Kaiser, Kriminologie: Ein Lehrbuch (3d ed. 1996).<lb/>
+</listBibl>
 
-  <bibl>
-    <seg type="citationContext">Für die Kriminologie siehe</seg>
-    <author>Kaiser</author>
-    (<ref type="precedingWork">oben</ref> <ref type="footnote" n="22">N. 22</ref>)
-    <biblScope unit="page" from="89" to="89">89</biblScope> sowie
-  </bibl>
+<listBibl>
+19 See, e.g., Neil J. Smelser, Theory of Collective Behavior 175-76 (1962). On<lb/>
+criminology, see Kaiser, supra note 8, at 89, as well as Blazicek &amp; Janeksela, Some<lb/>
+Comments on Comparative Methodologies in Criminal Justice, 6 Int'l J. Comp. &amp; Applied<lb/>
+Crim. Just. 233, 240 (1978). The uncritical transfer of such concepts to countries of<lb/>
+the Third World has proven especially dangerous, as discussed further infra note 24.<lb/>
+Commentators reached the following conclusion: "The U.S. law and development movement<lb/>
+was largely a parochial expression of the American legal style." John Henry Merryman,<lb/>
+Comparative Law and Social Change: On the Origins, Style, Decline and Revival of the<lb/>
+Law and Development Movement, 25 Am. J. Comp. L. 457, 479 (1977).<lb/>
+</listBibl>
 
-  <bibl>
-    <author>Blazicek</author>/<author>Janeksela</author>,
-    <title level="a">Some Comments on Comparative Methodologies in Criminal Justice</title>,
-    <title level="j">Int. J. Crim. Pen</title>
-    <biblScope unit="volume">6</biblScope>
-    (<date type="publication" when="1978">1978</date>)
-    <biblScope unit="page">233</biblScope>
-    <citedRange unit="page">(240)</citedRange>.
-  </bibl>
-
-  <bibl>
-    <seg type="citationContext">Als besonders gefährlich hat sich die unkritische Übertragung solcher Konzepte auf Länder der Dritten Welt erwiesen. So kam man etwa zu dem Ergebnis:</seg>
-    <quote>„The U. S. law and development movement was largely a parochial expression of the American legal style"</quote>,
-    <author>Merryman</author>,
-    <title level="a">Comparative Law and Social Change - On the Origins, Style, Decline and Revival of the Law and Development Movement</title>,
-    <title level="j">Am. J. Comp. L.</title> <biblScope unit="volume">25</biblScope>
-    (<date type="publication" when="1977">1977</date>)
-    <biblScope unit="page">457</biblScope>
-    <citedRange unit="page">(479)</citedRange>.
-  </bibl>
-
+<listBibl>
+24 Elena Vargas, Law and Development Reconsidered 112-14 (2005) (arguing that the<lb/>
+movement's failures reflected its parochial assumptions rather than any flaw in its<lb/>
+underlying goals).<lb/>
 </listBibl>
 ```
 
-A composite, multi-citation footnote like this one is just several ordinary sibling
-`<bibl>` elements inside `<listBibl>` — no special nesting or nesting of `<bibl>`
-inside `<bibl>` is used or needed.
+### Stage 2: reference segmentation model
+
+The reference segmenter splits the raw footnote text into `<label>` + `<bibl>` pairs —
+one `<bibl>` per footnote, or per individual citation for a footnote that (like note
+19) bundles several. Nothing inside a `<bibl>` is parsed yet:
+
+```xml
+<listBibl>
+  <bibl><label>8</label> Günther Kaiser, Kriminologie: Ein Lehrbuch (3d ed. 1996). </bibl>
+
+  <bibl><label>19</label> See, e.g., Neil J. Smelser, Theory of Collective Behavior 175-76 (1962). </bibl>
+  <bibl>On criminology, see Kaiser, supra note 8, at 89, as well as </bibl>
+  <bibl>Blazicek &amp; Janeksela, Some Comments on Comparative Methodologies in Criminal Justice, 6 Int'l J. Comp. &amp; Applied Crim. Just. 233, 240 (1978). </bibl>
+  <bibl>The uncritical transfer of such concepts to countries of the Third World has proven especially dangerous, as discussed further infra note 24. Commentators reached the following conclusion: "The U.S. law and development movement was largely a parochial expression of the American legal style." John Henry Merryman, Comparative Law and Social Change: On the Origins, Style, Decline and Revival of the Law and Development Movement, 25 Am. J. Comp. L. 457, 479 (1977).</bibl>
+
+  <bibl><label>24</label> Elena Vargas, Law and Development Reconsidered 112-14 (2005) (arguing that the movement's failures reflected its parochial assumptions rather than any flaw in its underlying goals).</bibl>
+</listBibl>
+```
+
+### Stage 3: citation (`references`) model
+
+Finally, the `references` model labels the internal structure of each `<bibl>` —
+authors, titles, extents, pinpoints, signal phrases, the quotation, and both anaphoric
+references:
+
+```xml
+<listBibl>
+  <bibl><label>8</label> <author>Günther Kaiser</author>, <title level="m">Kriminologie: Ein Lehrbuch</title>
+    <edition n="3">3d ed.</edition> (<date type="publication" when="1996">1996</date>).
+  </bibl>
+
+  <bibl><label>19</label> <seg type="citationContext">See, e.g.,</seg>
+    <author>Neil J. Smelser</author>, <title level="m">Theory of Collective Behavior</title>
+    <biblScope unit="page" from="175" to="176">175-76</biblScope>
+    (<date type="publication" when="1962">1962</date>).
+  </bibl>
+  <bibl><seg type="citationContext">On criminology, see</seg>
+    <author>Kaiser</author>, <ref type="precedingWork">supra</ref> <ref type="footnote" n="8">note 8</ref>,
+    <biblScope unit="page" from="89" to="89">89</biblScope>, as well as
+  </bibl>
+  <bibl>
+    <author>Blazicek</author> &amp; <author>Janeksela</author>,
+    <title level="a">Some Comments on Comparative Methodologies in Criminal Justice</title>,
+    <biblScope unit="volume">6</biblScope>
+    <title level="j">Int'l J. Comp. &amp; Applied Crim. Just.</title>
+    <biblScope unit="page" from="233" to="233">233</biblScope>,
+    <citedRange unit="page">240</citedRange>
+    (<date type="publication" when="1978">1978</date>).
+  </bibl>
+  <bibl>
+    <seg type="citationContext">The uncritical transfer of such concepts to countries of the Third World has proven especially dangerous, as discussed further</seg>
+    <ref type="subsequentWork">infra</ref> <ref type="footnote" n="24">note 24</ref>.
+    <seg type="citationContext">Commentators reached the following conclusion:</seg>
+    <quote>The U.S. law and development movement was largely a parochial expression of the American legal style.</quote>
+    <author>John Henry Merryman</author>,
+    <title level="a">Comparative Law and Social Change: On the Origins, Style, Decline and Revival of the Law and Development Movement</title>,
+    <biblScope unit="volume">25</biblScope>
+    <title level="j">Am. J. Comp. L.</title>
+    <biblScope unit="page">457</biblScope>
+    <citedRange unit="page">479</citedRange>
+    (<date type="publication" when="1977">1977</date>).
+  </bibl>
+
+  <bibl><label>24</label> <author>Elena Vargas</author>, <title level="m">Law and Development Reconsidered</title>
+    <biblScope unit="page" from="112" to="114">112-14</biblScope>
+    (<date type="publication" when="2005">2005</date>)
+    (arguing that the movement's failures reflected its parochial assumptions rather than any flaw in its underlying goals).
+  </bibl>
+</listBibl>
+```
+
+Note that footnote 19's internal composite structure — one signal phrase or quotation
+nested inside the `<bibl>` it introduces, rather than sitting between citations as a
+sibling — follows the same convention as the
+[real-world example](#a-real-world-example-multiple-references-with-multiple-comments)
+above, and is explained in more detail in the source TEI proposal's note on that
+example's shape. This whole stage-3 annotation validates against
+`schema/grobid.training.references.rng`.
