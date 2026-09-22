@@ -23,8 +23,18 @@
 
   <define name="ref">
     <element name="ref">
+      <a:documentation>
+        @subtype and @type are used by encodingDesc/editorialDecl entries
+        (human/machine annotation-guide references); unused elsewhere.
+      </a:documentation>
       <optional>
         <attribute name="target"/>
+      </optional>
+      <optional>
+        <attribute name="subtype"/>
+      </optional>
+      <optional>
+        <attribute name="type"/>
       </optional>
       <text/>
     </element>

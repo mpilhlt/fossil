@@ -128,9 +128,38 @@
 
   <define name="encodingDesc">
     <element name="encodingDesc">
+      <optional>
+        <ref name="editorialDecl"/>
+      </optional>
       <zeroOrMore>
         <ref name="appInfo"/>
       </zeroOrMore>
+    </element>
+  </define>
+
+  <define name="editorialDecl">
+    <element name="editorialDecl">
+      <oneOrMore>
+        <ref name="interpretation"/>
+      </oneOrMore>
+    </element>
+  </define>
+
+  <define name="interpretation">
+    <element name="interpretation">
+      <optional>
+        <attribute name="type"/>
+      </optional>
+      <ref name="p"/>
+    </element>
+  </define>
+
+  <define name="p">
+    <element name="p">
+      <ref name="ref"/>
+      <optional>
+        <ref name="ref"/>
+      </optional>
     </element>
   </define>
 
