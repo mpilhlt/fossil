@@ -142,11 +142,13 @@
       <optional>
         <attribute name="type"/>
       </optional>
-      <ref name="p"/>
+      <ref name="editorialDecl_p"/>
     </element>
   </define>
 
-  <define name="p">
+  <!-- editorialDecl_p: <p> variant scoped to editorialDecl/interpretation
+       (1-2 <ref> children with @subtype); not the generic TEI <p>. -->
+  <define name="editorialDecl_p">
     <element name="p">
       <ref name="ref"/>
       <optional>
