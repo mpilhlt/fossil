@@ -380,12 +380,34 @@ References are also expected to appear in footnotes, in four different styles:
 
 1. Header information, such as affiliation or publication information.
 
-   ![Example of header information in a footnote](img/example-footnote-header.png)
+   > Prof. Dr. Eric Steinhauer<sup>\*</sup>
+   >
+   > **Bibliotheksrecht als Zugangsrecht und die Herausforderungen der Digitalisierung**
+   >
+   > …
+   >
+   > ---
+   >
+   > \* Der Verfasser ist stellvertretender Direktor der Universitätsbibliothek Hagen und Honorarprofessor am Institut für Bibliotheks- und Informationswissenschaft der Humboldt-Universität zu Berlin.
+   >
+   > 1 Vgl.: *Gantert*, Bibliothekarisches Grundwissen, 9. Aufl. 2016, S. 3.
+   >
+   > 2 Vgl.: *Genge*, Art. „Sekretierte Bücher“, in: Corsten/Füssel/Pflug, Lexikon des gesamten Buchwesens, Bd. 7, 2. Aufl. 2007, S. 49; *Kellner*, Der „Giftschrank“, 2002, S. 1 ff.
 
    The `*` note should be annotated as `<front>...</front>` because it is part of the
    bibliographic information header.
 
-   ![Example of affiliation/acknowledgment in a footnote](img/example-footnote-header-2.png)
+   > **The Power of Teaching Police through the Prism of Human Rights**<sup>1</sup>
+   >
+   > *Sean Molloy*<sup>2</sup>
+   >
+   > …
+   >
+   > ---
+   >
+   > <sup>1</sup> The author wishes to think Professor Colin Murray, Professor Chris Ashford, Dr Conall Mallory, and Dr Helene Tyrell for comments on earlier drafts. Any errors that remain are my sole responsibility.
+   >
+   > <sup>2</sup> Sean Molloy is a NUAcT Fellow in Law and Newcastle Law School, Newcastle University.
 
    Both references 1 and 2 are affiliation and acknowledgment, and should be annotated
    as `<front>...</front>`.
@@ -393,7 +415,19 @@ References are also expected to appear in footnotes, in four different styles:
 2. A pure footnote with a comment related to content in the text, annotated as
    `<note place="footnote">.....</note>`.
 
-   ![Example of a pure footnote comment](img/example-footnotes-body.png)
+   > ---
+   >
+   > <sup>4</sup> Feinstein, S., & Wood, R. (1995). *History of law-related education* at 10. (ED401163). ERIC. https://perma.cc/KCL2-8VFM
+   >
+   > <sup>5</sup> *Id.*
+   >
+   > <sup>6</sup> American Bar Association Division for Public Education. (n.d.). *Isidore Starr Award for Excellence in Law-Related Education.* https://perma.cc/4SZ2-47A9
+   >
+   > <sup>7</sup> Feinstein & Wood, *supra* note 3 at 12.
+   >
+   > <sup>8</sup> I have prepared a Timeline of Juvenile Law and Related Topics at https://civicsguide.com/chronology/.
+   >
+   > <sup>9</sup> Arbetman, L. (2018). Street Law, Inc.: context, history and future. *International Journal of Public Legal Education*, 2(1), https://perma.cc/P8RH-2E4D
 
    "see reference 8" should be annotated as `<note place="footnote">`.
 
@@ -484,7 +518,7 @@ Here are some examples that we will expand with more cases as needed.
 
 **Several references in one footnote**
 
-![Several references in one footnote](img/refseg-several-references.png)
+> <sup>2</sup> Ronald H. Coase, *The Problem of Social Cost*, 56 J.L & ECON 837 (1960); GUIDO CALABRESI, THE COSTS OF ACCIDENTS: A LEGAL AND ECONOMIC ANALYSIS (1970); RICHARD A. POSNER, THE ECONOMICS OF JUSTICE (1981); RICHARD A. POSNER, ECONOMIC ANALYSIS OF LAW (9th ed. 2014); ROBERT COOTER & THOMAS ULEN, LAW & ECONOMICS (2000); ROBIN P. MALLOY, LAW AND MARKET ECONOMY: REINTERPRETING THE VALUES OF LAW AND ECONOMICS (2000); NICHOLAS MERCURO & STEVEN G. MEDEMA, ECONOMICS AND THE LAW: FROM POSNER TO POST-MODERNISM AND BEYOND (2d ed. 2006).
 
 ```xml
 <bibl><label>2</label> Ronald H. Coase, The Problem of Social Cost, 56 J.L &amp; ECON 837 (1960); </bibl>
@@ -498,7 +532,7 @@ Here are some examples that we will expand with more cases as needed.
 
 **German legal citation**
 
-![German legal citation](img/refseg-german-legal-citation.png)
+> 2 Dazu etwa: *Hofmann*, ZGE 2016, 482, 498; *Becker*, ZGE 2016, 239, 273; *Raue*, ZGE 2014, 387, 389.
 
 ```xml
 <bibl><label>2</label> Dazu etwa: Hofmann, ZGE 2016, 482, 498; </bibl>
@@ -508,13 +542,13 @@ Here are some examples that we will expand with more cases as needed.
 
 **Introductory comment**
 
-![Introductory comment, example 1](img/refseg-introductory-comment-1.png)
+> 3 Zur Frage, ob der Erwerb eines (digitalen) Werkexemplars mit dem Erwerb eines dinglichen Genussrechts verbunden ist, vgl.: *Kuschel*, Der Erwerb digitaler Werkexemplare zur privaten Nutzung, 2019.
 
 ```xml
 <bibl><label>3</label> Zur Frage, ob der Erwerb eines (digitalen) Werkexemplars mit dem Erwerb eines dinglichen<lb/> Genussrechts verbunden ist, vgl.: Kuschel, Der Erwerb digitaler Werkexemplare zur privaten<lb/> Nutzung, 2019.<lb/> </bibl>
 ```
 
-![Introductory comment, example 2](img/refseg-introductory-comment-2.png)
+> <sup>15</sup> Arguing that national corporate due diligence laws potentially breach the principle of consent in international law and the sovereignty of host States, and perpetuate power imbalances of colonial derivation, see e.g.: C. OMARI LICHUMA, *(Laws) Made in the ‘First World’*, cit., pp. 517-518; F. DEHBI, O. MARTIN-ORTEGA, *An integrated approach to corporate due diligence from a human rights, environmental, and TWAIL perspective*, in *Regulation & Governance*, 2023, n. 17, pp. 927-943, in particular pp. 932-935. In contrast, affirming that such national legislations are to be regarded as instruments facilitating home States’ compliance with their international obligations, rather than as breaches of the host States’ sovereignty, see: A. BONFANTI, *Imprese multinazionali, diritti umani e ambiente. Profili di diritto internazionale pubblico e privato*, Milano, 2012, p. 136.
 
 ```xml
 <bibl><label>15</label> Arguing that national corporate due diligence laws potentially breach the principle of consent in<lb/> international law and the sovereignty of host States, and perpetuate power imbalances of colonial<lb/> derivation, see e.g.: C. OMARI LICHUMA, (Laws) Made in the 'First World', cit., pp. 517-518; </bibl>
@@ -530,7 +564,7 @@ phrase is what becomes `<seg type="citationContext">` — see
 
 **Trailing comment**
 
-![Trailing comment](img/refseg-trailing-comment.png)
+> <sup>9</sup> See e.g.: Inter-American Court of Human Rights, judgment of 16 February 2020, *Indigenous Communities of the Lhaka Honhat (Our Land) Association v. Argentina*, par. 254, quoting the *amicus curiae* intervention of the former UN Special Rapporteur on the Right to Food, De Schutter: «Many indigenous peoples understand the right to adequate food as a collective right. They often see subsistence activities such as hunting, fishing and gathering as essential not only to their right to food, but to nurturing their cultures, languages, social life and identity». The cultural value of food is recognized – with respect to indigenous peoples in particular – also under art. 27 of the International Covenant on Civil and Political Rights (ICCPR). See *infra*, section 3.2.
 
 ```xml
 <bibl><label>9 </label>See e.g.: Inter-American Court of Human Rights, judgment of 16 February 2020, Indigenous Communities<lb/> of the Lhaka Honhat (Our Land) Association v. Argentina, par. 254, quoting the amicus curiae intervention<lb/> of the former UN Special Rapporteur on the Right to Food, De Schutter: «Many indigenous peoples<lb/> understand the right to adequate food as a collective right. They often see subsistence activities such as<lb/> hunting, fishing and gathering as essential not only to their right to food, but to nurturing their cultures,<lb/> languages, social life and identity». The cultural value of food is recognized -with respect to indigenous<lb/> peoples in particular -also under art. 27 of the International Covenant on Civil and Political Rights<lb/> (ICCPR). See infra, section 3.2.<lb/> </bibl>
@@ -538,7 +572,7 @@ phrase is what becomes `<seg type="citationContext">` — see
 
 **Court decisions**
 
-![Court decisions](img/refseg-court-decisions.png)
+> <sup>6</sup> See, *ex multis*: African Commission on Human and Peoples Rights, decision of 27 October 2001, *Social and Economic Rights Action Center (SERAC) and Center for Economic and Social Rights (CESR) v. Nigeria*; Inter-American Court of Human Rights, judgment of 27 June 2012, *Case of the Kichwa Indigenous People of Sarayaku v. Ecuador*.
 
 ```xml
 <bibl><label>6</label> See, ex multis: African Commission on Human and Peoples Rights, decision of 27 October 2001, Social<lb/> and Economic Rights Action Center (SERAC) and Center for Economic and Social Rights (CESR) v.<lb/> Nigeria; </bibl>
@@ -921,7 +955,7 @@ it is a plain, non-legal citation list with nothing further to annotate beyond o
 
 This is the **German legal citation** example:
 
-![German legal citation](img/refseg-german-legal-citation.png)
+> 2 Dazu etwa: *Hofmann*, ZGE 2016, 482, 498; *Becker*, ZGE 2016, 239, 273; *Raue*, ZGE 2014, 387, 389.
 
 ```xml
 <bibl><label>2</label> <seg type="citationContext">Dazu etwa:</seg> <author>Hofmann</author>,
@@ -944,7 +978,7 @@ real-world example below.
 
 This is **introductory comment, example 1** (Kuschel):
 
-![Introductory comment, example 1](img/refseg-introductory-comment-1.png)
+> 3 Zur Frage, ob der Erwerb eines (digitalen) Werkexemplars mit dem Erwerb eines dinglichen Genussrechts verbunden ist, vgl.: *Kuschel*, Der Erwerb digitaler Werkexemplare zur privaten Nutzung, 2019.
 
 ```xml
 <bibl><label>3</label> <seg type="citationContext">Zur Frage, ob der Erwerb eines (digitalen) Werkexemplars mit dem Erwerb eines dinglichen Genussrechts verbunden ist, vgl.:</seg>
@@ -959,7 +993,7 @@ is tagged the same way as `supra`/`a.a.O.` in
 [Intra-footnote references](#intra-footnote-references), and how the third citation
 carries its own, separate signal phrase rather than sharing the first one:
 
-![Introductory comment, example 2](img/refseg-introductory-comment-2.png)
+> <sup>15</sup> Arguing that national corporate due diligence laws potentially breach the principle of consent in international law and the sovereignty of host States, and perpetuate power imbalances of colonial derivation, see e.g.: C. OMARI LICHUMA, *(Laws) Made in the ‘First World’*, cit., pp. 517-518; F. DEHBI, O. MARTIN-ORTEGA, *An integrated approach to corporate due diligence from a human rights, environmental, and TWAIL perspective*, in *Regulation & Governance*, 2023, n. 17, pp. 927-943, in particular pp. 932-935. In contrast, affirming that such national legislations are to be regarded as instruments facilitating home States’ compliance with their international obligations, rather than as breaches of the host States’ sovereignty, see: A. BONFANTI, *Imprese multinazionali, diritti umani e ambiente. Profili di diritto internazionale pubblico e privato*, Milano, 2012, p. 136.
 
 ```xml
 <bibl><label>15</label> <seg type="citationContext">Arguing that national corporate due diligence laws potentially breach the principle of consent in international law and the sovereignty of host States, and perpetuate power imbalances of colonial derivation, see e.g.:</seg>
@@ -988,7 +1022,7 @@ introducing the quotation are two distinct devices. The closing "See infra, sect
 work, so it falls outside the `<ref>` vocabulary documented above and is left as plain
 text:
 
-![Trailing comment](img/refseg-trailing-comment.png)
+> <sup>9</sup> See e.g.: Inter-American Court of Human Rights, judgment of 16 February 2020, *Indigenous Communities of the Lhaka Honhat (Our Land) Association v. Argentina*, par. 254, quoting the *amicus curiae* intervention of the former UN Special Rapporteur on the Right to Food, De Schutter: «Many indigenous peoples understand the right to adequate food as a collective right. They often see subsistence activities such as hunting, fishing and gathering as essential not only to their right to food, but to nurturing their cultures, languages, social life and identity». The cultural value of food is recognized – with respect to indigenous peoples in particular – also under art. 27 of the International Covenant on Civil and Political Rights (ICCPR). See *infra*, section 3.2.
 
 ```xml
 <bibl><label>9</label> <seg type="citationContext">See e.g.:</seg>
@@ -1005,7 +1039,7 @@ text:
 
 This is the **court decisions** example:
 
-![Court decisions](img/refseg-court-decisions.png)
+> <sup>6</sup> See, *ex multis*: African Commission on Human and Peoples Rights, decision of 27 October 2001, *Social and Economic Rights Action Center (SERAC) and Center for Economic and Social Rights (CESR) v. Nigeria*; Inter-American Court of Human Rights, judgment of 27 June 2012, *Case of the Kichwa Indigenous People of Sarayaku v. Ecuador*.
 
 ```xml
 <bibl><label>6</label> <seg type="citationContext">See, ex multis:</seg>
