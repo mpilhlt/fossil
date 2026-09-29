@@ -904,7 +904,7 @@ it. No attributes: quotation marks and trailing punctuation stay in the source t
 Footnotes routinely mix several of the devices above in one paragraph — multiple
 citations, each with its own signal phrase or `supra`-style back-reference:
 
-![A footnote combining several signal phrases and supra-note back-references](img/complex-reference.png)
+> <sup>23</sup> *See* 1 WILLIAM BLACKSTONE, COMMENTARIES ON THE LAWS OF ENGLAND 37 (The Legal Classics Library 1983) (1765-70) (quoting with approval John Fortescue’s endorsement that lay students “trace[] up the principles and grounds of the law, even to their original elements”). Blackstone’s use of natural law in the *Commentaries* may also reflect his own introduction to the law. It was St. German’s *Doctor and Student*, a work integrating theological and legal thought, that drew Blackstone to the law. Cook, *supra* note 12, at 170. Perhaps for similar reasons, the *Commentaries* turned students from theology to law. McKnight, *supra* note 2, at 401. Note that the pagination of the various editions of the *Commentaries* has become more or less standardized. This move is not without its problems, however. *See* Alschuler, *supra* note 1, at 3 n.4; *cf.* Carli N. Conklin, *The Origins of the Pursuit of Happiness*, 7 WASH. U. JURIS. REV. 195, 200 (2015) (selecting for use the first edition, as does the present article); Alan Watson, *The Structure of Blackstone’s Commentaries*, 97 YALE L.J. 795, 801 (1988) (same).
 
 ```xml
 <bibl><label>23</label> <seg type="citationContext">See</seg> <author>1 William Blackstone</author>,
