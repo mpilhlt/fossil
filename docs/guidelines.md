@@ -595,6 +595,11 @@ Sometimes the references are in separate sentences rather than separated by semi
 
 > <sup>1</sup> DANIEL J. BOORSTIN, THE MYSTERIOUS SCIENCE OF THE LAW, at vii (Peter Smith 1973) (1941); *see also* Albert W. Alschuler, *Rediscovering Blackstone*, 145 U. PA. L. REV. 1, 2 (1996). The *Commentaries* was hugely popular in the eighteenth and nineteenth centuries. *See* WILFRID PREST, WILLIAM BLACKSTONE 307 (2008).
 
+```xml
+<bibl><label>1</label> DANIEL J. BOORSTIN, THE MYSTERIOUS SCIENCE OF THE LAW, at vii (Peter Smith 1973) (1941);<lb/> </bibl>
+<bibl>see also Albert W. Alschuler, Rediscovering Blackstone, 145 U. PA. L. REV. 1, 2 (1996). The<lb/> Commentaries was hugely popular in the eighteenth and nineteenth centuries. See WILFRID<lb/> PREST, WILLIAM BLACKSTONE 307 (2008).<lb/> </bibl>
+```
+
 ## Citation model
 
 > [!NOTE]
