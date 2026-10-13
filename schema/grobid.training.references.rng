@@ -306,6 +306,10 @@
               <a:documentation>EU CELEX document identifier</a:documentation>
               <value>CELEX</value>
             </group>
+            <group>
+              <a:documentation>Official year/number designation of a legislative act, e.g. "2019/790"</a:documentation>
+              <value>actNumber</value>
+            </group>
           </choice>
         </attribute>
       </optional>
@@ -354,7 +358,14 @@
        unlike the shared define — this one is not left with two
        independent optional attributes: level+type are grouped into named
        presets, since "type=legislation" only ever co-occurs with
-       "level=m", never independently. -->
+       "level=m", never independently.
+       Content is phrase-level, as in standard TEI (#45): where the source
+       text grammatically embeds data points in a formal title (an act's
+       number, its issuing authority, its enactment date, or a passing
+       mention of another work), <idno>/<authority>/<date>/<ref> are tagged
+       in place inside the <title> rather than pulled out as siblings.
+       @subtype="short" (TEI att.typed) marks an abbreviated/alternate
+       form of a title tagged in full elsewhere; @key links the two. -->
   <define name="references_title">
     <element name="title">
       <a:documentation>Title of the cited work.</a:documentation>
@@ -397,11 +408,34 @@
           <attribute name="type"><value>caseName</value></attribute>
         </group>
       </choice>
-      <text/>
+      <optional>
+        <attribute name="subtype">
+          <choice>
+            <group>
+              <a:documentation>Abbreviated or alternate form of a title already tagged in full elsewhere in the same bibl (e.g. "DSM Directive"); @key ties both forms together.</a:documentation>
+              <value>short</value>
+            </group>
+          </choice>
+        </attribute>
+      </optional>
+      <interleave>
+        <text/>
+        <zeroOrMore>
+          <choice>
+            <ref name="authority"/>
+            <ref name="references_date"/>
+            <ref name="references_idno"/>
+            <ref name="references_ref"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
     </element>
   </define>
 
-  <!-- <ptr type="web"> contains the URL as text content -->
+  <!-- <ptr type="web"> contains the URL as text content. An identifier
+       that occurs only inside the URL (e.g. a CELEX number in a query
+       string) may be tagged in place with a nested <idno> (#45), since
+       duplicating it outside the <ptr> would alter the text stream. -->
   <define name="references_ptr">
     <element name="ptr">
       <a:documentation>Web URL (exclude prefixes like 'URL:' and trailing periods).</a:documentation>
@@ -415,7 +449,12 @@
       <optional>
         <attribute name="target"/>
       </optional>
-      <text/>
+      <interleave>
+        <text/>
+        <zeroOrMore>
+          <ref name="references_idno"/>
+        </zeroOrMore>
+      </interleave>
     </element>
   </define>
 
@@ -479,6 +518,9 @@
                              e.g. "ders.", "idem"
          footnote        -> explicit cross-reference to another footnote,
                              carrying @n with the footnote number
+         work            -> passing mention of another work (by number or
+                             name) that is not cited in its own <bibl>,
+                             e.g. "amending Directives 96/9/EC" (#45)
        @target optionally holds a resolved pointer once the citation is
        resolved in post-processing; not required for training annotation. -->
   <define name="references_ref">
@@ -503,6 +545,10 @@
             <optional>
               <attribute name="n"/>
             </optional>
+          </group>
+          <group>
+            <a:documentation>Passing mention of another work that gets no citation of its own, e.g. the amended directives named inside a legislative title</a:documentation>
+            <attribute name="type"><value>work</value></attribute>
           </group>
         </choice>
       </optional>

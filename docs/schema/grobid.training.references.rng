@@ -7,6 +7,7 @@
 
   <define name="teiHeader">
     <element name="teiHeader">
+      <a:documentation>(TEI header) supplies descriptive and declarative metadata associated with a digital resource or set of resources. [2.1.1. The TEI Header and Its Components 16.1. Varieties of Composite Text]</a:documentation>
       <zeroOrMore>
         <choice>
           <ref name="encodingDesc"/>
@@ -19,6 +20,7 @@
 
   <define name="fileDesc">
     <element name="fileDesc">
+      <a:documentation>(file description) contains a full bibliographic description of an electronic file. [2.2. The File Description 2.1.1. The TEI Header and Its Components]</a:documentation>
       <optional>
         <attribute name="id" ns="http://www.w3.org/XML/1998/namespace"/>
       </optional>
@@ -35,6 +37,7 @@
 
   <define name="titleStmt">
     <element name="titleStmt">
+      <a:documentation>(title statement) groups information about the title of a work and those responsible for its content. [2.2.1. The Title Statement 2.2. The File Description]</a:documentation>
       <zeroOrMore>
         <choice>
           <ref name="author"/>
@@ -87,6 +90,7 @@
 
   <define name="publicationStmt">
     <element name="publicationStmt">
+      <a:documentation>(publication statement) groups information concerning the publication or distribution of an electronic or other text. [2.2.4. Publication, Distribution, Licensing, etc. 2.2. The File Description]</a:documentation>
       <zeroOrMore>
         <choice>
           <ref name="availability"/>
@@ -101,6 +105,7 @@
 
   <define name="sourceDesc">
     <element name="sourceDesc">
+      <a:documentation>(source description) describes the source(s) from which an electronic text was derived or generated, typically a bibliographic description in the case of a digitized text, or a phrase such as born digital for a text which has no previous existence. [2.2.7. The Source Description]</a:documentation>
       <zeroOrMore>
         <choice>
           <ref name="sourceDescBibl"/>
@@ -923,6 +928,10 @@
               <a:documentation>EU CELEX document identifier</a:documentation>
               <value datatypeLibrary="">CELEX</value>
             </group>
+            <group>
+              <a:documentation>Official year/number designation of a legislative act, e.g. "2019/790"</a:documentation>
+              <value datatypeLibrary="">actNumber</value>
+            </group>
           </choice>
         </attribute>
       </optional>
@@ -971,7 +980,14 @@
        unlike the shared define — this one is not left with two
        independent optional attributes: level+type are grouped into named
        presets, since "type=legislation" only ever co-occurs with
-       "level=m", never independently. -->
+       "level=m", never independently.
+       Content is phrase-level, as in standard TEI (#45): where the source
+       text grammatically embeds data points in a formal title (an act's
+       number, its issuing authority, its enactment date, or a passing
+       mention of another work), <idno>/<authority>/<date>/<ref> are tagged
+       in place inside the <title> rather than pulled out as siblings.
+       @subtype="short" (TEI att.typed) marks an abbreviated/alternate
+       form of a title tagged in full elsewhere; @key links the two. -->
   <define name="references_title">
     <element name="title">
       <a:documentation>Title of the cited work.</a:documentation>
@@ -1014,11 +1030,34 @@
           <attribute name="type"><value datatypeLibrary="">caseName</value></attribute>
         </group>
       </choice>
-      <text/>
+      <optional>
+        <attribute name="subtype">
+          <choice>
+            <group>
+              <a:documentation>Abbreviated or alternate form of a title already tagged in full elsewhere in the same bibl (e.g. "DSM Directive"); @key ties both forms together.</a:documentation>
+              <value datatypeLibrary="">short</value>
+            </group>
+          </choice>
+        </attribute>
+      </optional>
+      <interleave>
+        <text/>
+        <zeroOrMore>
+          <choice>
+            <ref name="authority"/>
+            <ref name="references_date"/>
+            <ref name="references_idno"/>
+            <ref name="references_ref"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
     </element>
   </define>
 
-  <!-- <ptr type="web"> contains the URL as text content -->
+  <!-- <ptr type="web"> contains the URL as text content. An identifier
+       that occurs only inside the URL (e.g. a CELEX number in a query
+       string) may be tagged in place with a nested <idno> (#45), since
+       duplicating it outside the <ptr> would alter the text stream. -->
   <define name="references_ptr">
     <element name="ptr">
       <a:documentation>Web URL (exclude prefixes like 'URL:' and trailing periods).</a:documentation>
@@ -1032,7 +1071,12 @@
       <optional>
         <attribute name="target"/>
       </optional>
-      <text/>
+      <interleave>
+        <text/>
+        <zeroOrMore>
+          <ref name="references_idno"/>
+        </zeroOrMore>
+      </interleave>
     </element>
   </define>
 
@@ -1096,6 +1140,9 @@
                              e.g. "ders.", "idem"
          footnote        -> explicit cross-reference to another footnote,
                              carrying @n with the footnote number
+         work            -> passing mention of another work (by number or
+                             name) that is not cited in its own <bibl>,
+                             e.g. "amending Directives 96/9/EC" (#45)
        @target optionally holds a resolved pointer once the citation is
        resolved in post-processing; not required for training annotation. -->
   <define name="references_ref">
@@ -1120,6 +1167,10 @@
             <optional>
               <attribute name="n"/>
             </optional>
+          </group>
+          <group>
+            <a:documentation>Passing mention of another work that gets no citation of its own, e.g. the amended directives named inside a legislative title</a:documentation>
+            <attribute name="type"><value datatypeLibrary="">work</value></attribute>
           </group>
         </choice>
       </optional>
