@@ -282,6 +282,10 @@
       <optional>
         <attribute name="to"/>
       </optional>
+      <optional>
+        <a:documentation>Normalized value when the text content is non-numeric or has a unit abbreviation attached, e.g. n="2" for "II"</a:documentation>
+        <attribute name="n"/>
+      </optional>
       <text/>
     </element>
   </define>

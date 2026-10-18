@@ -545,6 +545,10 @@
       <optional>
         <attribute name="to"/>
       </optional>
+      <optional>
+        <a:documentation>Normalized value when the text content is non-numeric or has a unit abbreviation attached, e.g. n="2" for "II"</a:documentation>
+        <attribute name="n"/>
+      </optional>
       <text/>
     </element>
   </define>
@@ -874,6 +878,10 @@
       </optional>
       <optional>
         <attribute name="to"/>
+      </optional>
+      <optional>
+        <a:documentation>Normalized value when the text content is non-numeric or has a unit abbreviation attached, e.g. n="19a" for "§ 19a"</a:documentation>
+        <attribute name="n"/>
       </optional>
       <text/>
     </element>
