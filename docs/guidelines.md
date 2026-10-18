@@ -674,11 +674,31 @@ issue, or overall page range:
 | `volume` | Volume number |
 | `issue` | Issue / number |
 
-**Always set `@from`/`@to`** on any `<biblScope>` whose unit denotes a position in a
-sequence (`page`, typically) rather than a single scalar identifier (`volume`,
-`issue`, which have no `@from`/`@to`) — unless the extent genuinely cannot be inferred
-from the text. This includes the case where only a single page is named: both
-attributes then simply repeat that value.
+**Single value, `@n`, or range.** A single value whose text content is already a
+bare number needs no extra attribute at all — the content itself is the value:
+
+```xml
+<biblScope unit="volume">3</biblScope>
+```
+
+As soon as the text content is non-numeric or mixed with other text — a Roman
+numeral, or a value with a unit abbreviation still attached — it is no longer
+machine-readable on its own, so add `@n` to hold the normalized value:
+
+```xml
+<biblScope unit="volume" n="2">II</biblScope>
+```
+
+A genuine range — two distinct, named endpoints — gets `@from`/`@to`:
+
+```xml
+<biblScope unit="volume" from="3" to="5">3–5</biblScope>
+```
+
+When only the start of a range is given in the text and its end is not (an article
+cited by its first page alone, say), set `@from` alone and omit `@to` — do not repeat
+a single value in both `@from` and `@to`, since that wrongly implies a span the text
+never named.
 
 **Pinpoint extent.** When the citing text names a more specific location than
 `<biblScope>`'s own extent — the common "first page, at pinpoint page" pattern, e.g.
@@ -687,7 +707,7 @@ attributes then simply repeat that value.
 
 ```xml
 <biblScope unit="page" from="233" to="250">233–250</biblScope>, at
-<citedRange unit="page" from="240" to="240">240</citedRange>
+<citedRange unit="page">240</citedRange>
 ```
 
 `<citedRange>`'s `@unit` list also includes several pinpoint levels specific to legal
@@ -828,18 +848,22 @@ marginal number, say), there is simply no `<biblScope unit="page">` — only
 
 ```xml
 <bibl type="legislation">
-  <citedRange unit="section" from="19a" to="19a">§ 19a</citedRange>
-  <citedRange unit="subSection" from="2" to="2">Abs. 2</citedRange>
+  <citedRange unit="section" n="19a">§ 19a</citedRange>
+  <citedRange unit="subSection" n="2">Abs. 2</citedRange>
   <title level="m" type="legislation" key="UrhG">UrhG</title>
 </bibl>
 ```
 
-**Always set `@from`/`@to`.** Unless the pinpoint's exact bounds genuinely cannot be
-inferred from the text, give `<citedRange>` both `@from` and `@to` — including for a
-single pinpoint that is not a range, where both attributes simply repeat the same value:
+**Single value, `@n`, or range** — the same rule as for `<biblScope>` above. A single
+pinpoint whose text content is already a bare number needs no extra attribute; once
+the content is non-numeric or mixed with other text (an abbreviation like `Rn.`, `§`,
+`Abs.`, `lit.` still attached), add `@n` to hold the normalized value so it stays
+machine-readable. Reserve `@from`/`@to` for an actual range — never repeat a single
+value in both to express one point, which wrongly implies a span the text never named:
 
 ```xml
-<citedRange unit="page" from="240" to="240">240</citedRange>
+<citedRange unit="page">240</citedRange>
+<citedRange unit="margin" n="12">Rn. 12</citedRange>
 ```
 
 **Telling an item's own extent apart from a pinpoint.** A single page number or a
@@ -942,21 +966,21 @@ annotated as `<title level="a">`.
 
 ```xml
 <bibl><author>Westermann</author>, in: <title level="m">MünchKomm-BGB</title>,
-  <title level="a">§ 985</title> <citedRange unit="margin" from="12" to="12">Rn. 12</citedRange></bibl>
+  <title level="a">§ 985</title> <citedRange unit="margin" n="12">Rn. 12</citedRange></bibl>
 
 <bibl><title level="m">MünchKomm-BGB</title>/<author>Westermann</author>,
-  <title level="a">§ 985</title> <citedRange unit="margin" from="12" to="12">Rn. 12</citedRange></bibl>
+  <title level="a">§ 985</title> <citedRange unit="margin" n="12">Rn. 12</citedRange></bibl>
 
 <bibl><author>Spindler</author>, in: <title level="m">BeckOK-BGB</title>,
-  <title level="a">§ 823</title> <citedRange unit="margin" from="45" to="45">Rn. 45</citedRange></bibl>
+  <title level="a">§ 823</title> <citedRange unit="margin" n="45">Rn. 45</citedRange></bibl>
 
 <bibl><title level="m">BeckOK UrhR</title>/<author>Grübler</author>,
   <edition n="42">42. Ed.</edition> <date type="publication" when="2024-05-01">1.5.2024</date>,
-  <title level="a">UrhG § 60c</title> <citedRange unit="margin" from="5" to="5">Rn. 5</citedRange>;</bibl>
+  <title level="a">UrhG § 60c</title> <citedRange unit="margin" n="5">Rn. 5</citedRange>;</bibl>
 
 <bibl><title level="m">Dreier/Schulze</title>/<author>Dreier</author>,
   <edition n="7">7. Aufl.</edition> <date type="publication" when="2022">2022</date>,
-  <title level="a">UrhG § 60c</title> <citedRange unit="margin" from="1" to="1">Rn. 1</citedRange>.</bibl>
+  <title level="a">UrhG § 60c</title> <citedRange unit="margin" n="1">Rn. 1</citedRange>.</bibl>
 ```
 
 Single-volume commentaries named after their editor (e.g. *Grüneberg*, formerly
@@ -965,7 +989,7 @@ Here the name is part of the commentary's title, not an `<author>`:
 
 ```xml
 <bibl><title level="m">Grüneberg, BGB</title>, <title level="a">§ 280</title>
-  <citedRange unit="margin" from="8" to="8">Rn. 8</citedRange></bibl>
+  <citedRange unit="margin" n="8">Rn. 8</citedRange></bibl>
 ```
 
 #### Mentions of legal texts
@@ -1040,14 +1064,14 @@ devices such as *id.*, *op. cit.*, *ibid.*, *a.a.O.*, *ders.*, *supra*, *infra*,
 
 ```xml
 <bibl><author>Vogel</author>, <ref type="precedingWork">id.</ref>,
-  <citedRange unit="page" from="79" to="79">p. 79</citedRange></bibl>
+  <citedRange unit="page" n="79">p. 79</citedRange></bibl>
 
 <bibl><author>Vogel</author>, <ref type="precedingWork">op. cit.</ref>,
   <ref type="footnote" n="7">n. 7</ref>,
   <citedRange unit="page" from="80" to="81">pp. 80–1.</citedRange></bibl>
 
 <bibl><ref type="precedingAuthor">Ders.</ref>, <ref type="precedingWork">a.a.O.</ref>,
-  <citedRange unit="page" from="123" to="123">S. 123</citedRange>.</bibl>
+  <citedRange unit="page" n="123">S. 123</citedRange>.</bibl>
 ```
 
 When two of these devices sit next to each other but are lexically distinct — e.g.
@@ -1057,7 +1081,7 @@ them into one:
 ```xml
 <author>Kaiser</author>
 (<ref type="precedingWork">oben</ref> <ref type="footnote" n="22">N. 22</ref>)
-<biblScope unit="page" from="89" to="89">89</biblScope>
+<biblScope unit="page">89</biblScope>
 ```
 
 The same pattern applies to a *forward*-pointing reference, combining `subsequentWork`
@@ -1111,7 +1135,7 @@ citations, each with its own signal phrase or `supra`-style back-reference:
 ```xml
 <bibl><label>23</label> <seg type="citationContext">See</seg> <author>1 William Blackstone</author>,
   <title level="m">Commentaries on the Laws of England</title>
-  <citedRange unit="page" from="37" to="37">37</citedRange> (The Legal Classics Library 1983) (1765-70))
+  <citedRange unit="page">37</citedRange> (The Legal Classics Library 1983) (1765-70))
   (quoting with approval John Fortescue's endorsement that lay students "trace[] up the
   principles and grounds of the law, even to their original elements"). Blackstone's use
   of natural law in the <title level="m">Commentaries</title> may also reflect his own
@@ -1119,26 +1143,26 @@ citations, each with its own signal phrase or `supra`-style back-reference:
   a work integrating theological and legal thought, that drew Blackstone to the law.
 </bibl>
 <bibl><author>Cook</author>, <ref type="precedingWork">supra</ref> <ref type="footnote" n="12">note 12</ref>,
-  <citedRange unit="page" from="170" to="170">170</citedRange>. Perhaps for similar reasons, the
+  <citedRange unit="page">170</citedRange>. Perhaps for similar reasons, the
   <title level="m">Commentaries</title> turned students from theology to law.
 </bibl>
 <bibl><author>McKnight</author>, <ref type="precedingWork">supra</ref> <ref type="footnote" n="2">note 2</ref>,
-  <citedRange unit="page" from="401" to="401">401</citedRange>. Note that the pagination of the various
+  <citedRange unit="page">401</citedRange>. Note that the pagination of the various
   editions of the <title level="m">Commentaries</title> has become more or less
   standardized. This move is not without its problems, however.
 </bibl>
 <bibl><seg type="citationContext">See</seg> <author>Alschuler</author>,
   <ref type="precedingWork">supra</ref> <ref type="footnote" n="1">note 1</ref>,
-  <citedRange unit="page" from="3" to="3">3</citedRange> n.4;
+  <citedRange unit="page">3</citedRange> n.4;
 </bibl>
 <bibl><seg type="citationContext">cf.</seg> <author>Carli N. Conklin</author>,
   <title level="a">The Origins of the Pursuit of Happiness</title>,
   <title level="j">7 Wash. U. Juris. Rev.</title>
-  <biblScope unit="page" from="195" to="195">195</biblScope>, <citedRange unit="page" from="200" to="200">200</citedRange> (<date type="publication" when="2015">2015</date>)
+  <biblScope unit="page" from="195">195</biblScope>, <citedRange unit="page">200</citedRange> (<date type="publication" when="2015">2015</date>)
   (selecting for use the first edition, as does the present article);
 </bibl>
 <bibl><author>Alan Watson</author>, <title level="a">The Structure of Blackstone's Commentaries</title>,
-  <title level="j">97 Yale L.J.</title> <biblScope unit="page" from="795" to="795">795</biblScope>, <citedRange unit="page" from="801" to="801">801</citedRange> (<date type="publication" when="1988">1988</date>) (same).
+  <title level="j">97 Yale L.J.</title> <biblScope unit="page" from="795">795</biblScope>, <citedRange unit="page">801</citedRange> (<date type="publication" when="1988">1988</date>) (same).
 </bibl>
 ```
 
@@ -1167,13 +1191,13 @@ This is the **German legal citation** example:
 ```xml
 <bibl><label>2</label> <seg type="citationContext">Dazu etwa:</seg> <author>Hofmann</author>,
   <title level="j">ZGE</title> <date type="publication" when="2016">2016</date>,
-  <biblScope unit="page" from="482">482</biblScope>, <citedRange unit="page" from="498" to="498">498</citedRange>;
+  <biblScope unit="page" from="482">482</biblScope>, <citedRange unit="page">498</citedRange>;
 </bibl>
 <bibl><author>Becker</author>, <title level="j">ZGE</title> <date type="publication" when="2016">2016</date>,
-  <biblScope unit="page" from="239">239</biblScope>, <citedRange unit="page" from="273" to="273">273</citedRange>;
+  <biblScope unit="page" from="239">239</biblScope>, <citedRange unit="page">273</citedRange>;
 </bibl>
 <bibl><author>Raue</author>, <title level="j">ZGE</title> <date type="publication" when="2014">2014</date>,
-  <biblScope unit="page" from="387">387</biblScope>, <citedRange unit="page" from="389" to="389">389</citedRange>.
+  <biblScope unit="page" from="387">387</biblScope>, <citedRange unit="page">389</citedRange>.
 </bibl>
 ```
 
@@ -1218,7 +1242,7 @@ carries its own, separate signal phrase rather than sharing the first one:
 <bibl>
   <seg type="citationContext">In contrast, affirming that such national legislations are to be regarded as instruments facilitating home States' compliance with their international obligations, rather than as breaches of the host States' sovereignty, see:</seg>
   <author>A. Bonfanti</author>, <title level="m">Imprese multinazionali, diritti umani e ambiente. Profili di diritto internazionale pubblico e privato</title>,
-  <pubPlace>Milano</pubPlace>, <date type="publication" when="2012">2012</date>, <biblScope unit="page" from="136" to="136">136</biblScope>.
+  <pubPlace>Milano</pubPlace>, <date type="publication" when="2012">2012</date>, <biblScope unit="page">136</biblScope>.
 </bibl>
 ```
 
@@ -1237,7 +1261,7 @@ text:
   <authority type="court">Inter-American Court of Human Rights</authority>,
   <date type="decision" when="2020-02-16">judgment of 16 February 2020</date>,
   <title level="a" type="caseName">Indigenous Communities of the Lhaka Honhat (Our Land) Association v. Argentina</title>,
-  <citedRange unit="number" from="254" to="254">par. 254</citedRange>,
+  <citedRange unit="number" n="254">par. 254</citedRange>,
   <seg type="citationContext">quoting the amicus curiae intervention of the former UN Special Rapporteur on the Right to Food, De Schutter:</seg>
   <quote>«Many indigenous peoples understand the right to adequate food as a collective right. They often see subsistence activities such as hunting, fishing and gathering as essential not only to their right to food, but to nurturing their cultures, languages, social life and identity».</quote>
   The cultural value of food is recognized – with respect to indigenous peoples in particular – also under
@@ -1357,15 +1381,15 @@ references:
   </bibl>
   <bibl><seg type="citationContext">On criminology, see</seg>
     <author>Kaiser</author>, <ref type="precedingWork">supra</ref> <ref type="footnote" n="8">note 8</ref>,
-    <biblScope unit="page" from="89" to="89">89</biblScope>, as well as
+    <biblScope unit="page">89</biblScope>, as well as
   </bibl>
   <bibl>
     <author>Blazicek</author> &amp; <author>Janeksela</author>,
     <title level="a">Some Comments on Comparative Methodologies in Criminal Justice</title>,
     <biblScope unit="volume">6</biblScope>
     <title level="j">Int'l J. Comp. &amp; Applied Crim. Just.</title>
-    <biblScope unit="page" from="233" to="233">233</biblScope>,
-    <citedRange unit="page" from="240" to="240">240</citedRange>
+    <biblScope unit="page" from="233">233</biblScope>,
+    <citedRange unit="page">240</citedRange>
     (<date type="publication" when="1978">1978</date>).
   </bibl>
   <bibl>
@@ -1378,7 +1402,7 @@ references:
     <biblScope unit="volume">25</biblScope>
     <title level="j">Am. J. Comp. L.</title>
     <biblScope unit="page" from="457">457</biblScope>
-    <citedRange unit="page" from="479" to="479">479</citedRange>
+    <citedRange unit="page">479</citedRange>
     (<date type="publication" when="1977">1977</date>).
   </bibl>
 
