@@ -833,6 +833,38 @@ marginal number, say), there is simply no `<biblScope unit="page">` — only
 </bibl>
 ```
 
+**Always set `@from`/`@to`.** Unless the pinpoint's exact bounds genuinely cannot be
+inferred from the text, give `<citedRange>` both `@from` and `@to` — including for a
+single pinpoint that is not a range, where both attributes simply repeat the same value:
+
+```xml
+<citedRange unit="page" from="240" to="240">240</citedRange>
+```
+
+**Open-ended continuation pinpoints (`f.`, `ff.`, `et seq.`, `et seqq.`).** The citing
+text sometimes marks a pinpoint as continuing onto subsequent pages or sections instead
+of naming an explicit end point, using the German abbreviations `f.`/`ff.` or the Latin
+`et seq.`/`et seqq.`. These differ in exactly how many further units they claim:
+
+- **`f.`** (German, singular) and **`et seq.`** (Latin, *et sequens* — "and the
+  following [one]") both claim exactly *one* further unit. Treat this as an explicit
+  range: set `@from` to the cited unit and `@to` to the immediately following one.
+- **`ff.`** (German, plural) and **`et seqq.`** (Latin, *et sequentia* — "and the
+  following [ones]") claim an unspecified, open-ended number of further units. Since
+  the end point is not actually given, set only `@from` and omit `@to`.
+
+This applies to whichever `@unit` the pinpoint is in (page, margin number, section,
+etc.), not just `page`:
+
+```xml
+<citedRange unit="page" from="233" to="234">233 f.</citedRange>
+<citedRange unit="page" from="233" to="234">233 et seq.</citedRange>
+<citedRange unit="page" from="233">233 ff.</citedRange>
+<citedRange unit="page" from="233">233 et seqq.</citedRange>
+<citedRange unit="margin" from="12" to="13">Rn. 12 f.</citedRange>
+<citedRange unit="margin" from="12">Rn. 12 ff.</citedRange>
+```
+
 #### Docket and official identifiers
 
 ```xml
