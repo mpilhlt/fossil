@@ -631,17 +631,25 @@ not required) to decompose them with `<persName>`, `<forename>`, `<surname>`:
 <author><persName><forename>J.</forename> <surname>Smith</surname></persName></author>
 ```
 
-When a reference lists several authors, each one gets its own `<author>` element — even
-when the source packs them into a single comma-separated (or "and"/"&"-joined) run of
-names. This holds for any number of authors, so that every author is captured
-individually rather than the whole run being left as one approximated string (see
-[#48](https://github.com/mpilhlt/fossil/issues/48)):
+When a reference lists several people or organizations in the same role — several
+authors, several editors, several institutional co-authors — each one gets its own
+element, even when the source packs them into a single comma-separated (or
+"and"/"&"-joined) run of names. This holds for any number of names, so that every
+person or organization is captured individually rather than the whole run being left
+as one approximated string (see
+[#48](https://github.com/mpilhlt/fossil/issues/48),
+[#52](https://github.com/mpilhlt/fossil/issues/52)). The rule applies to `<author>`
+and `<editor>` here, and equally to `<orgName>` (see
+[Institutional authorship](#basic-bibliographic-elements)) and `<authority>` (see
+[The issuing authority](#the-issuing-authority-authority)) elsewhere in a `<bibl>`:
 
 ```xml
 <author>J. Jett</author>, <author>B. Capitanu</author>, <author>D. Kudeki</author>,
 <author>T. Cole</author>, <author>Y. Hu</author>, <author>P. Organisciak</author>,
 <author>T. Underwood</author>, <author>E. Dickson Koehl</author>,
 <author>R. Dubnicek</author>, <author>J. S. Downie</author>
+
+<editor>H. Müller</editor>, <editor>K. Schmidt</editor> (eds.)
 ```
 
 **Titles.** `<title level="...">` classifies the title by the kind of work it names:
