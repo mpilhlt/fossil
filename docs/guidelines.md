@@ -676,6 +676,18 @@ issue, or overall page range:
 | `volume` | Volume number |
 | `issue` | Issue / number |
 
+**Keep an attached unit abbreviation inside the tag.** `<biblScope>`'s text content is
+a span of the source, not a cleaned-up replacement for it: when the source glues a
+unit abbreviation directly onto the number (`p. 79`, `S. 123`, `pp. 517-518`), that
+abbreviation stays inside the tag rather than being peeled off into untagged text —
+`@unit` already states the locator type machine-side, so the abbreviation isn't
+needed for parsing, but annotation never removes text that is part of the matched
+span. Leave text outside the tag only when it is genuinely separate running prose (a
+connecting word like "at", a citation-signal phrase), never the unit's own marker.
+Many citation styles (Bluebook, German legal citations) never attach one to begin
+with, so the bare-number examples below are not a different convention, just a
+different source text.
+
 **Single value, `@n`, or range.** A single value whose text content is already a
 bare number needs no extra attribute at all — the content itself is the value:
 
@@ -856,12 +868,14 @@ marginal number, say), there is simply no `<biblScope unit="page">` — only
 </bibl>
 ```
 
-**Single value, `@n`, or range** — the same rule as for `<biblScope>` above. A single
-pinpoint whose text content is already a bare number needs no extra attribute; once
-the content is non-numeric or mixed with other text (an abbreviation like `Rn.`, `§`,
-`Abs.`, `lit.` still attached), add `@n` to hold the normalized value so it stays
-machine-readable. Reserve `@from`/`@to` for an actual range — never repeat a single
-value in both to express one point, which wrongly implies a span the text never named:
+**Single value, `@n`, or range** — the same rule as for `<biblScope>` above,
+including keeping an attached unit abbreviation (`Rn.`, `§`, `Abs.`, `lit.`) inside
+the tag rather than stripping it out. A single pinpoint whose text content is already
+a bare number needs no extra attribute; once the content is non-numeric or mixed with
+other text because such an abbreviation is attached, add `@n` to hold the normalized
+value so it stays machine-readable. Reserve `@from`/`@to` for an actual range — never
+repeat a single value in both to express one point, which wrongly implies a span the
+text never named:
 
 ```xml
 <citedRange unit="page">240</citedRange>
@@ -1244,7 +1258,7 @@ carries its own, separate signal phrase rather than sharing the first one:
 <bibl>
   <seg type="citationContext">In contrast, affirming that such national legislations are to be regarded as instruments facilitating home States' compliance with their international obligations, rather than as breaches of the host States' sovereignty, see:</seg>
   <author>A. Bonfanti</author>, <title level="m">Imprese multinazionali, diritti umani e ambiente. Profili di diritto internazionale pubblico e privato</title>,
-  <pubPlace>Milano</pubPlace>, <date type="publication">2012</date>, <biblScope unit="page">136</biblScope>.
+  <pubPlace>Milano</pubPlace>, <date type="publication">2012</date>, <biblScope unit="page" n="136">p. 136</biblScope>.
 </bibl>
 ```
 
