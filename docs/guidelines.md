@@ -676,17 +676,23 @@ issue, or overall page range:
 | `volume` | Volume number |
 | `issue` | Issue / number |
 
-**Keep an attached unit abbreviation inside the tag.** `<biblScope>`'s text content is
-a span of the source, not a cleaned-up replacement for it: when the source glues a
-unit abbreviation directly onto the number (`p. 79`, `S. 123`, `pp. 517-518`), that
-abbreviation stays inside the tag rather than being peeled off into untagged text —
-`@unit` already states the locator type machine-side, so the abbreviation isn't
-needed for parsing, but annotation never removes text that is part of the matched
-span. Leave text outside the tag only when it is genuinely separate running prose (a
-connecting word like "at", a citation-signal phrase), never the unit's own marker.
-Many citation styles (Bluebook, German legal citations) never attach one to begin
-with, so the bare-number examples below are not a different convention, just a
-different source text.
+**"p."/"pp." (in any language) stay outside the tag.** This follows
+[Grobid's own convention](https://grobid.readthedocs.io/en/latest/training/Bibliographical-references/index.html):
+a page abbreviation — `p.`, `pp.`, `S.`, or the equivalent in any other language — maps
+onto `@unit="page"` unambiguously, so it adds nothing `@unit` doesn't already say and is
+left as plain text before the tag:
+
+```xml
+p. <biblScope unit="page">79</biblScope>
+pp. <biblScope unit="page" from="517" to="518">517-518</biblScope>
+```
+
+Other pinpoint abbreviations are different: `Rn.`, `§`, `Abs.`, `lit.` and the like each
+require interpreting *which* `@unit` they map to (margin, section, subSection, letter —
+there is no single unambiguous target the way there is for a page), so that
+interpretive step is itself worth preserving. These stay inside the tag, normalized
+through `@n` or `@from`/`@to` as covered under
+[Pinpoint citations](#pinpoint-citations-citedrange) below.
 
 **Single value, `@n`, or range.** A single value whose text content is already a
 bare number needs no extra attribute at all — the content itself is the value:
@@ -1080,14 +1086,14 @@ devices such as *id.*, *op. cit.*, *ibid.*, *a.a.O.*, *ders.*, *supra*, *infra*,
 
 ```xml
 <bibl><author>Vogel</author>, <ref type="precedingWork">id.</ref>,
-  <citedRange unit="page" n="79">p. 79</citedRange></bibl>
+  p. <citedRange unit="page">79</citedRange></bibl>
 
 <bibl><author>Vogel</author>, <ref type="precedingWork">op. cit.</ref>,
   <ref type="footnote" n="7">n. 7</ref>,
-  <citedRange unit="page" from="80" to="81">pp. 80–1.</citedRange></bibl>
+  pp. <citedRange unit="page" from="80" to="81">80–1</citedRange>.</bibl>
 
 <bibl><ref type="precedingAuthor">Ders.</ref>, <ref type="precedingWork">a.a.O.</ref>,
-  <citedRange unit="page" n="123">S. 123</citedRange>.</bibl>
+  S. <citedRange unit="page">123</citedRange>.</bibl>
 ```
 
 When two of these devices sit next to each other but are lexically distinct — e.g.
@@ -1246,19 +1252,19 @@ carries its own, separate signal phrase rather than sharing the first one:
 ```xml
 <bibl><label>15</label> <seg type="citationContext">Arguing that national corporate due diligence laws potentially breach the principle of consent in international law and the sovereignty of host States, and perpetuate power imbalances of colonial derivation, see e.g.:</seg>
   <author>C. Omari Lichuma</author>, <title level="a">(Laws) Made in the 'First World'</title>,
-  <ref type="precedingWork">cit.</ref>, <biblScope unit="page" from="517" to="518">pp. 517-518</biblScope>;
+  <ref type="precedingWork">cit.</ref>, pp. <biblScope unit="page" from="517" to="518">517-518</biblScope>;
 </bibl>
 <bibl>
   <author>F. Dehbi</author>, <author>O. Martin-Ortega</author>,
   <title level="a">An integrated approach to corporate due diligence from a human rights, environmental, and TWAIL perspective</title>,
   <title level="j">Regulation &amp; Governance</title>, <date type="publication">2023</date>,
-  <biblScope unit="issue">17</biblScope>, <biblScope unit="page" from="927" to="943">pp. 927-943</biblScope>,
-  in particular <citedRange unit="page" from="932" to="935">pp. 932-935</citedRange>.
+  <biblScope unit="issue">17</biblScope>, pp. <biblScope unit="page" from="927" to="943">927-943</biblScope>,
+  in particular pp. <citedRange unit="page" from="932" to="935">932-935</citedRange>.
 </bibl>
 <bibl>
   <seg type="citationContext">In contrast, affirming that such national legislations are to be regarded as instruments facilitating home States' compliance with their international obligations, rather than as breaches of the host States' sovereignty, see:</seg>
   <author>A. Bonfanti</author>, <title level="m">Imprese multinazionali, diritti umani e ambiente. Profili di diritto internazionale pubblico e privato</title>,
-  <pubPlace>Milano</pubPlace>, <date type="publication">2012</date>, <biblScope unit="page" n="136">p. 136</biblScope>.
+  <pubPlace>Milano</pubPlace>, <date type="publication">2012</date>, p. <biblScope unit="page">136</biblScope>.
 </bibl>
 ```
 
