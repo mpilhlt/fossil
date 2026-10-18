@@ -46,10 +46,6 @@ The work will be organised in iterations where the team performs the following t
 The input files are PDF documents that are pre-annotated by the ML models. The
 annotators then have to correct the pre-annotated output from the model.
 
-> [!WARNING]
-> Questions, discussions and decisions must always go through GitHub issues at
-> <https://github.com/mpilhlt/fossil/issues>.
-
 ## Layered model architecture
 
 Grobid does not annotate a document in one pass. It works through three separate
@@ -493,9 +489,8 @@ The reference segmenter model is trained with two labels only:
   footnote number (as in "^1^ This is the first footnote.")
 - `<bibl>` — encloses an individual reference
 - `<bibl type="footnote">` — encloses an individual comment or note that does not
-  refer to any reference (discussion:
-  [#20](https://github.com/mpilhlt/fossil/issues/20)). This is to catch incorrect
-  classification in the upstream "segmentation" annotation.
+  refer to any reference. This is to catch incorrect classification in the upstream
+  "segmentation" annotation.
 
 For footnote references, we use one `<bibl>` element per reference. The `references`
 model (see [Citation model](#citation-model) below) then parses the content of each
@@ -581,10 +576,6 @@ phrase is what becomes `<seg type="citationContext">` — see
 <bibl>Inter-American Court of Human Rights, judgment of 27 June 2012, Case of the Kichwa Indigenous<lb/> People of Sarayaku v. Ecuador.<lb/> </bibl>
 ```
 
-**Comments not related to any citation in the footnote**
-
-See examples in [#20](https://github.com/mpilhlt/fossil/issues/20).
-
 **References to other references** (`id.`, `op. cit.`, `a.a.O.`, `ders.`, *supra*,
 *infra*, "N. 22", "above") are, at the referenceSegmenter stage, simply part of the
 `<bibl>` they occur in — no separate label exists for them here. They are only broken
@@ -636,10 +627,8 @@ authors, several editors, several institutional co-authors — each one gets its
 element, even when the source packs them into a single comma-separated (or
 "and"/"&"-joined) run of names. This holds for any number of names, so that every
 person or organization is captured individually rather than the whole run being left
-as one approximated string (see
-[#48](https://github.com/mpilhlt/fossil/issues/48),
-[#52](https://github.com/mpilhlt/fossil/issues/52)). The rule applies to `<author>`
-and `<editor>` here, and equally to `<orgName>` (see
+as one approximated string. The rule applies to `<author>` and `<editor>` here, and
+equally to `<orgName>` (see
 [Institutional authorship](#basic-bibliographic-elements)) and `<authority>` (see
 [The issuing authority](#the-issuing-authority-authority)) elsewhere in a `<bibl>`:
 
