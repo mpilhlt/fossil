@@ -658,13 +658,15 @@ An optional `@key` holds a short resolvable key for a named work (e.g. an abbrev
 so it can later be linked to an external database.
 
 **Dates.** `<date type="publication" when="...">` marks the publication date; `@when`
-holds [the machine-readable ISO form](https://web.uvic.ca/lancenrd/martin/guidelines/ref-att.datable.w3c.html) 
-when it can be determined, the text content the form as it appears in the source. 
-`@when` ususally does not need to be annotated since it will be added in a postprocessing step. 
-It should be added if the text content is ambiguous.
+holds [the machine-readable ISO form](https://web.uvic.ca/lancenrd/martin/guidelines/ref-att.datable.w3c.html)
+and the text content the date as it appears in the source. **Always set `@when`**
+whenever the date can be converted to that ISO form from the text — do not leave it
+unannotated on the assumption that a later processing step will fill it in, even when
+the date looks unambiguous (a bare year still converts to `when="2019"`). Only omit
+`@when` when the source genuinely does not pin down a resolvable date, e.g. "n.d.".
 
 **Extent.** `<biblScope unit="...">` carries the cited work's own extent — its volume,
-issue, or overall page range — with optional `@from`/`@to`:
+issue, or overall page range:
 
 | `@unit` | Matches |
 | --- | --- |
@@ -672,9 +674,11 @@ issue, or overall page range — with optional `@from`/`@to`:
 | `volume` | Volume number |
 | `issue` | Issue / number |
 
-
-As with `@when`, `@from` and `@to` can be left out when annotating if the pages cannot be 
-reliably inferred from the text context itself, such as in the case "pp. 23-34".
+**Always set `@from`/`@to`** on any `<biblScope>` whose unit denotes a position in a
+sequence (`page`, typically) rather than a single scalar identifier (`volume`,
+`issue`, which have no `@from`/`@to`) — unless the extent genuinely cannot be inferred
+from the text. This includes the case where only a single page is named: both
+attributes then simply repeat that value.
 
 **Pinpoint extent.** When the citing text names a more specific location than
 `<biblScope>`'s own extent — the common "first page, at pinpoint page" pattern, e.g.
@@ -683,7 +687,7 @@ reliably inferred from the text context itself, such as in the case "pp. 23-34".
 
 ```xml
 <biblScope unit="page" from="233" to="250">233–250</biblScope>, at
-<citedRange unit="page">240</citedRange>
+<citedRange unit="page" from="240" to="240">240</citedRange>
 ```
 
 `<citedRange>`'s `@unit` list also includes several pinpoint levels specific to legal
@@ -837,6 +841,21 @@ single pinpoint that is not a range, where both attributes simply repeat the sam
 ```xml
 <citedRange unit="page" from="240" to="240">240</citedRange>
 ```
+
+**Telling an item's own extent apart from a pinpoint.** A single page number or a
+small page range (`p. 5`, `pp. 23–27`) has exactly the same shape whether it names the
+*analytic item's own extent* — a short chapter, a commentary or dictionary entry — or
+a *pinpoint* into a longer work already cited (or about to be cited) by a larger
+extent; the two cannot be told apart by form alone. Decide by what the number actually
+bounds: if it is the full extent of the analytic item (`<title level="a">`) inside its
+monographic container (`<title level="m">`), annotate it as `<biblScope>`; if it
+locates a passage inside a work whose own extent is given separately, annotate it as
+`<citedRange>`. An open-ended continuation marker — `f.`/`ff.` or `et seq.`/`et seqq.`,
+covered next — is a reliable sign of the second case: a work's own extent has a
+definite end, so no one describes it as "p. 233 ff."; that phrasing only makes sense
+when pointing into a passage whose end the citing author hasn't bothered to name.
+Annotate any `f.`/`ff.`/`et seq.`/`et seqq.` pinpoint as `<citedRange>`, never as
+`<biblScope>`.
 
 **Open-ended continuation pinpoints (`f.`, `ff.`, `et seq.`, `et seqq.`).** The citing
 text sometimes marks a pinpoint as continuing onto subsequent pages or sections instead
