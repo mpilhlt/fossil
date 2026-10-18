@@ -659,11 +659,13 @@ so it can later be linked to an external database.
 
 **Dates.** `<date type="publication" when="...">` marks the publication date; `@when`
 holds [the machine-readable ISO form](https://web.uvic.ca/lancenrd/martin/guidelines/ref-att.datable.w3c.html)
-and the text content the date as it appears in the source. **Always set `@when`**
-whenever the date can be converted to that ISO form from the text — do not leave it
-unannotated on the assumption that a later processing step will fill it in, even when
-the date looks unambiguous (a bare year still converts to `when="2019"`). Only omit
-`@when` when the source genuinely does not pin down a resolvable date, e.g. "n.d.".
+and the text content the date as it appears in the source. The same single-value rule
+as for `<biblScope>`/`<citedRange>` above applies here: a bare year on its own (`2019`)
+is already that ISO form, so no `@when` is needed. As soon as the text is a fuller or
+non-ISO date — a day-month-year date, a date with a month name, an abbreviated form
+like `8.9.2016` — the content is no longer machine-readable on its own, so set `@when`
+to the converted ISO value. Only omit `@when` on such a date when the source genuinely
+does not pin down a resolvable date, e.g. "n.d.".
 
 **Extent.** `<biblScope unit="...">` carries the cited work's own extent — its volume,
 issue, or overall page range:
@@ -766,13 +768,13 @@ A non-legal example combining several of these:
   <title level="j">Journal of Computational Linguistics</title>
   <biblScope unit="volume">45</biblScope>(<biblScope unit="issue">2</biblScope>),
   <biblScope unit="page" from="123" to="145">123–145</biblScope>
-  (<date type="publication" when="2019">2019</date>).
+  (<date type="publication">2019</date>).
   <idno type="DOI">10.1162/coli_a_00345</idno>
 </bibl>
 
 <bibl><author>M. Müller</author>, <title level="m">Diffusion Models for Generative Art</title>
   (Ph.D. thesis, <orgName type="institution">ETH Zürich</orgName>,
-  <date type="publication" when="2022">2022</date>).
+  <date type="publication">2022</date>).
   <note type="report">Ph.D. thesis</note>
 </bibl>
 ```
@@ -979,7 +981,7 @@ annotated as `<title level="a">`.
   <title level="a">UrhG § 60c</title> <citedRange unit="margin" n="5">Rn. 5</citedRange>;</bibl>
 
 <bibl><title level="m">Dreier/Schulze</title>/<author>Dreier</author>,
-  <edition n="7">7. Aufl.</edition> <date type="publication" when="2022">2022</date>,
+  <edition n="7">7. Aufl.</edition> <date type="publication">2022</date>,
   <title level="a">UrhG § 60c</title> <citedRange unit="margin" n="1">Rn. 1</citedRange>.</bibl>
 ```
 
@@ -1105,7 +1107,7 @@ whole introductory phrase (not just a single trigger word) with
 ```xml
 <seg type="citationContext">For further analysis of the marriage contract, see</seg>
 <author>K. O'Donovan</author>, <title level="m">Family Matters</title>
-(<date type="publication" when="1993">1993</date>), especially
+(<date type="publication">1993</date>), especially
 <citedRange unit="page" from="43" to="59">43–59</citedRange>.
 ```
 
@@ -1158,11 +1160,11 @@ citations, each with its own signal phrase or `supra`-style back-reference:
 <bibl><seg type="citationContext">cf.</seg> <author>Carli N. Conklin</author>,
   <title level="a">The Origins of the Pursuit of Happiness</title>,
   <title level="j">7 Wash. U. Juris. Rev.</title>
-  <biblScope unit="page" from="195">195</biblScope>, <citedRange unit="page">200</citedRange> (<date type="publication" when="2015">2015</date>)
+  <biblScope unit="page" from="195">195</biblScope>, <citedRange unit="page">200</citedRange> (<date type="publication">2015</date>)
   (selecting for use the first edition, as does the present article);
 </bibl>
 <bibl><author>Alan Watson</author>, <title level="a">The Structure of Blackstone's Commentaries</title>,
-  <title level="j">97 Yale L.J.</title> <biblScope unit="page" from="795">795</biblScope>, <citedRange unit="page">801</citedRange> (<date type="publication" when="1988">1988</date>) (same).
+  <title level="j">97 Yale L.J.</title> <biblScope unit="page" from="795">795</biblScope>, <citedRange unit="page">801</citedRange> (<date type="publication">1988</date>) (same).
 </bibl>
 ```
 
@@ -1190,13 +1192,13 @@ This is the **German legal citation** example:
 
 ```xml
 <bibl><label>2</label> <seg type="citationContext">Dazu etwa:</seg> <author>Hofmann</author>,
-  <title level="j">ZGE</title> <date type="publication" when="2016">2016</date>,
+  <title level="j">ZGE</title> <date type="publication">2016</date>,
   <biblScope unit="page" from="482">482</biblScope>, <citedRange unit="page">498</citedRange>;
 </bibl>
-<bibl><author>Becker</author>, <title level="j">ZGE</title> <date type="publication" when="2016">2016</date>,
+<bibl><author>Becker</author>, <title level="j">ZGE</title> <date type="publication">2016</date>,
   <biblScope unit="page" from="239">239</biblScope>, <citedRange unit="page">273</citedRange>;
 </bibl>
-<bibl><author>Raue</author>, <title level="j">ZGE</title> <date type="publication" when="2014">2014</date>,
+<bibl><author>Raue</author>, <title level="j">ZGE</title> <date type="publication">2014</date>,
   <biblScope unit="page" from="387">387</biblScope>, <citedRange unit="page">389</citedRange>.
 </bibl>
 ```
@@ -1215,7 +1217,7 @@ This is **introductory comment, example 1** (Kuschel):
 ```xml
 <bibl><label>3</label> <seg type="citationContext">Zur Frage, ob der Erwerb eines (digitalen) Werkexemplars mit dem Erwerb eines dinglichen Genussrechts verbunden ist, vgl.:</seg>
   <author>Kuschel</author>, <title level="m">Der Erwerb digitaler Werkexemplare zur privaten Nutzung</title>,
-  <date type="publication" when="2019">2019</date>.
+  <date type="publication">2019</date>.
 </bibl>
 ```
 
@@ -1235,14 +1237,14 @@ carries its own, separate signal phrase rather than sharing the first one:
 <bibl>
   <author>F. Dehbi</author>, <author>O. Martin-Ortega</author>,
   <title level="a">An integrated approach to corporate due diligence from a human rights, environmental, and TWAIL perspective</title>,
-  <title level="j">Regulation &amp; Governance</title>, <date type="publication" when="2023">2023</date>,
+  <title level="j">Regulation &amp; Governance</title>, <date type="publication">2023</date>,
   <biblScope unit="issue">17</biblScope>, <biblScope unit="page" from="927" to="943">pp. 927-943</biblScope>,
   in particular <citedRange unit="page" from="932" to="935">pp. 932-935</citedRange>.
 </bibl>
 <bibl>
   <seg type="citationContext">In contrast, affirming that such national legislations are to be regarded as instruments facilitating home States' compliance with their international obligations, rather than as breaches of the host States' sovereignty, see:</seg>
   <author>A. Bonfanti</author>, <title level="m">Imprese multinazionali, diritti umani e ambiente. Profili di diritto internazionale pubblico e privato</title>,
-  <pubPlace>Milano</pubPlace>, <date type="publication" when="2012">2012</date>, <biblScope unit="page">136</biblScope>.
+  <pubPlace>Milano</pubPlace>, <date type="publication">2012</date>, <biblScope unit="page">136</biblScope>.
 </bibl>
 ```
 
@@ -1371,13 +1373,13 @@ references:
 ```xml
 <listBibl>
   <bibl><label>8</label> <author>Günther Kaiser</author>, <title level="m">Kriminologie: Ein Lehrbuch</title>
-    <edition n="3">3d ed.</edition> (<date type="publication" when="1996">1996</date>).
+    <edition n="3">3d ed.</edition> (<date type="publication">1996</date>).
   </bibl>
 
   <bibl><label>19</label> <seg type="citationContext">See, e.g.,</seg>
     <author>Neil J. Smelser</author>, <title level="m">Theory of Collective Behavior</title>
     <biblScope unit="page" from="175" to="176">175-76</biblScope>
-    (<date type="publication" when="1962">1962</date>).
+    (<date type="publication">1962</date>).
   </bibl>
   <bibl><seg type="citationContext">On criminology, see</seg>
     <author>Kaiser</author>, <ref type="precedingWork">supra</ref> <ref type="footnote" n="8">note 8</ref>,
@@ -1390,7 +1392,7 @@ references:
     <title level="j">Int'l J. Comp. &amp; Applied Crim. Just.</title>
     <biblScope unit="page" from="233">233</biblScope>,
     <citedRange unit="page">240</citedRange>
-    (<date type="publication" when="1978">1978</date>).
+    (<date type="publication">1978</date>).
   </bibl>
   <bibl>
     <seg type="citationContext">The uncritical transfer of such concepts to countries of the Third World has proven especially dangerous, as discussed further</seg>
@@ -1403,12 +1405,12 @@ references:
     <title level="j">Am. J. Comp. L.</title>
     <biblScope unit="page" from="457">457</biblScope>
     <citedRange unit="page">479</citedRange>
-    (<date type="publication" when="1977">1977</date>).
+    (<date type="publication">1977</date>).
   </bibl>
 
   <bibl><label>24</label> <author>Elena Vargas</author>, <title level="m">Law and Development Reconsidered</title>
     <biblScope unit="page" from="112" to="114">112-14</biblScope>
-    (<date type="publication" when="2005">2005</date>)
+    (<date type="publication">2005</date>)
     (arguing that the movement's failures reflected its parochial assumptions rather than any flaw in its underlying goals).
   </bibl>
 </listBibl>
