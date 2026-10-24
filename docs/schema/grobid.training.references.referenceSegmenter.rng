@@ -249,6 +249,11 @@
 
   <define name="change">
     <element name="change">
+      <!-- PDF-TEI-Editor revision hash: h-<16 hex>, a chained hash of the canonical TEI/text
+           at the time of the revision, written by the server -->
+      <optional>
+        <attribute name="id" ns="http://www.w3.org/XML/1998/namespace"/>
+      </optional>
       <optional>
         <attribute name="status"/>
       </optional>
