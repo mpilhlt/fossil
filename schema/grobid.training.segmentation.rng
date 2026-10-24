@@ -11,6 +11,7 @@
   ns="http://www.tei-c.org/ns/1.0">
 
   <include href="shared/tei-header.rng"/>
+  <include href="shared/stand-off.rng"/>
   <include href="shared/bibl-struct.rng"/>
   <include href="shared/common-elements.rng"/>
 
@@ -23,6 +24,7 @@
       <zeroOrMore>
         <choice>
           <ref name="teiHeader"/>
+          <ref name="standOff"/>
           <ref name="text"/>
         </choice>
       </zeroOrMore>

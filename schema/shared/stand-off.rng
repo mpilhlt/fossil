@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Stand-off data that tools keep next to the annotation, outside teiHeader and text.
+
+  Currently: the review marks of the PDF-TEI-Editor's unit review mode,
+  TEI/standOff/listAnnotation[@type="unit-review"], with one
+  annotation[@motivation="assessing"] per reviewer. The notes hold content
+  fingerprints of the reviewed units (ok, was-ok: space-separated lists; not-ok,
+  final-*, was-*: one note per unit, @n = fingerprint, content = comment).
+  The defines are prefixed with "standOff" because respStmt and note differ from
+  the teiHeader versions.
+-->
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+  xmlns:xml="http://www.w3.org/XML/1998/namespace"
+  ns="http://www.tei-c.org/ns/1.0">
+
+  <define name="standOff">
+    <element name="standOff">
+      <zeroOrMore>
+        <ref name="standOffListAnnotation"/>
+      </zeroOrMore>
+    </element>
+  </define>
+
+  <define name="standOffListAnnotation">
+    <element name="listAnnotation">
+      <optional>
+        <attribute name="type"/>
+      </optional>
+      <optional>
+        <attribute name="subtype"/>
+      </optional>
+      <zeroOrMore>
+        <ref name="standOffNote"/>
+      </zeroOrMore>
+      <zeroOrMore>
+        <ref name="standOffAnnotation"/>
+      </zeroOrMore>
+    </element>
+  </define>
+
+  <define name="standOffAnnotation">
+    <element name="annotation">
+      <optional>
+        <attribute name="id" ns="http://www.w3.org/XML/1998/namespace"/>
+      </optional>
+      <optional>
+        <attribute name="motivation"/>
+      </optional>
+      <optional>
+        <attribute name="target"/>
+      </optional>
+      <optional>
+        <attribute name="resp"/>
+      </optional>
+      <optional>
+        <ref name="standOffRespStmt"/>
+      </optional>
+      <optional>
+        <ref name="revisionDesc"/>
+      </optional>
+      <zeroOrMore>
+        <ref name="standOffNote"/>
+      </zeroOrMore>
+    </element>
+  </define>
+
+  <define name="standOffRespStmt">
+    <element name="respStmt">
+      <zeroOrMore>
+        <choice>
+          <ref name="resp"/>
+          <ref name="persName"/>
+          <element name="name">
+            <optional>
+              <attribute name="type"/>
+            </optional>
+            <text/>
+          </element>
+        </choice>
+      </zeroOrMore>
+    </element>
+  </define>
+
+  <define name="standOffNote">
+    <element name="note">
+      <optional>
+        <attribute name="type"/>
+      </optional>
+      <optional>
+        <attribute name="n"/>
+      </optional>
+      <text/>
+    </element>
+  </define>
+
+</grammar>
