@@ -78,7 +78,7 @@ Rules:
 
 ## Citation model
 
-<!-- sync: guide=8fb50aec91ca03f283760d8dd981b6eb9320c33f0f1163f5b8bb0a751bca4cab llm=9ddd75e0b3e0b61bd6231399b9810141f68d3c137f9b39d684c96aa4cc18ec1d -->
+<!-- sync: guide=8895df99372ffc86c9dc3f1a5966d4dd6c63f984e1c015abfb0ea190bc03857b llm=68a4ffb4eeb5a0603363749cd5481ca2b6e5f751e2d5614f3968245b5db6138d -->
 
 Labels the inside of each `<bibl>`. All elements except `<label>` and `<lb/>` may occur any number of times, in any order. Punctuation, "in:", brackets, "p."/"pp."/"S." and the like stay outside tags unless stated otherwise.
 
@@ -133,7 +133,7 @@ Labels the inside of each `<bibl>`. All elements except `<label>` and `<lb/>` ma
 | `page` | pinpoint page, e.g. `240` in `233 (240)` or `233, at 240`; `498` in `ZGE 2016, 482, 498` |
 
 - "p."/"pp."/"S." stay outside the tag; `Rn.`, `§`, `Abs.`, `lit.` and `f.`/`ff.` stay inside.
-- A page (range) that is the full extent of an article/chapter/entry inside its container is `<biblScope>`; one that locates a passage in a work whose extent is given separately, or any `f.`/`ff.`/`et seq.` pinpoint, is `<citedRange>`.
+- A page (range) that is the full extent of an article/chapter/entry inside its container is `<biblScope>` (small page ranges are usually pinpoint `<citedRange>`, except for encyclopedia or dictionary entries); one that locates a passage in a work whose extent is given separately, or any `f.`/`ff.`/`et seq.` pinpoint, is `<citedRange>`.
 - A work without pagination (decision cited by marginal number) has only `<citedRange>`.
 
 ```xml

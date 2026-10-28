@@ -932,7 +932,9 @@ covered next — is a reliable sign of the second case: a work's own extent has 
 definite end, so no one describes it as "p. 233 ff."; that phrasing only makes sense
 when pointing into a passage whose end the citing author hasn't bothered to name.
 Annotate any `f.`/`ff.`/`et seq.`/`et seqq.` pinpoint as `<citedRange>`, never as
-`<biblScope>`.
+`<biblScope>`. However, since chapters are usually longer than 1-4 pages, a general 
+heuristic is that a small page range in most cases is a pinpoint citation and should
+be annotated as `<citedRange>`, with the exception of encyclopedia or dictionary entries.
 
 **Open-ended continuation pinpoints (`f.`, `ff.`, `et seq.`, `et seqq.`).** The citing
 text sometimes marks a pinpoint as continuing onto subsequent pages or sections instead
