@@ -7,11 +7,11 @@ Not for human annotators: read docs/guidelines.md.
 
 Each "##" section below condenses the section of docs/guidelines.md with
 the same heading; the headings must stay identical so that their anchors
-match. Every change to one file must be mirrored in the other. The "sync"
-comment under each heading holds the hashes of both sections as of the last
-sync: after mirroring a change, run
-`python scripts/check-llm-digest.py --update`. Without --update, the script
-fails while a section changed on only one side.
+match. This file is maintained from the PDF-TEI-Editor's document rules
+editor, which updates a section from the changed guide section and proposes
+both upstream. The "sync" comment under each heading holds the hashes of both
+sections as of the last sync. It is written by the editor; do not edit it by
+hand.
 -->
 
 ## Data correction
