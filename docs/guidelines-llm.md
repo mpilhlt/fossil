@@ -78,7 +78,7 @@ Rules:
 
 ## Citation model
 
-<!-- sync: guide=8895df99372ffc86c9dc3f1a5966d4dd6c63f984e1c015abfb0ea190bc03857b llm=68a4ffb4eeb5a0603363749cd5481ca2b6e5f751e2d5614f3968245b5db6138d -->
+<!-- sync: guide=950184991ad9f92259d9f53b28169dffcdcf710c7500231a7b0f73f9e138f3f2 llm=9b73d9b6a1e435fd256d262eb4ba5483cda6f73e665de2a5d9a8b17954b7b124 -->
 
 Labels the inside of each `<bibl>`. All elements except `<label>` and `<lb/>` may occur any number of times, in any order. Punctuation, "in:", brackets, "p."/"pp."/"S." and the like stay outside tags unless stated otherwise.
 
@@ -133,7 +133,10 @@ Labels the inside of each `<bibl>`. All elements except `<label>` and `<lb/>` ma
 | `page` | pinpoint page, e.g. `240` in `233 (240)` or `233, at 240`; `498` in `ZGE 2016, 482, 498` |
 
 - "p."/"pp."/"S." stay outside the tag; `Rn.`, `§`, `Abs.`, `lit.` and `f.`/`ff.` stay inside.
-- A page (range) that is the full extent of an article/chapter/entry inside its container is `<biblScope>` (small page ranges are usually pinpoint `<citedRange>`, except for encyclopedia or dictionary entries); one that locates a passage in a work whose extent is given separately, or any `f.`/`ff.`/`et seq.` pinpoint, is `<citedRange>`.
+- A page (range) that is the full extent of an article/chapter/entry inside its container is `<biblScope>`
+- one that locates a passage in a work whose extent is given separately, or any `f.`/`ff.`/`et seq.` pinpoint, is `<citedRange>`.
+- CRITICAL RULE: with the exception of encyclopedia or dictionary entries, a single-page range and small page range (up to 5 pages) have to be annotated as a pinpoint `<citedRange>`
+
 - A work without pagination (decision cited by marginal number) has only `<citedRange>`.
 
 ```xml
@@ -210,7 +213,7 @@ In the Polish literature <seg type="citationContext">-cf.</seg> <editor>Z. Kmiec
 ### Example
 
 ```xml
-<bibl><label>9</label> <seg type="citationContext">See e.g.:</seg> <authority type="court">Inter-American Court of Human Rights</authority>, <date type="decision" when="2020-02-16">judgment of 16 February 2020</date>, <title level="a" type="caseName">Indigenous Communities of the Lhaka Honhat (Our Land) Association v. Argentina</title>, <citedRange unit="number" n="254">par. 254</citedRange>, <seg type="citationContext">quoting the amicus curiae intervention of the former UN Special Rapporteur on the Right to Food, De Schutter:</seg> <quote>«Many indigenous peoples understand the right to adequate food as a collective right. …»</quote> The cultural value of food is recognized … (ICCPR). See infra, section 3.2.</bibl>
+<bibl><label>9</label> <seg type="citationContext">See e.g.:</seg> <authority type="court">Inter-American Court of Human Rights</authority>, judgment of <date type="decision" when="2020-02-16">16 February 2020</date>, <title level="a" type="caseName">Indigenous Communities of the Lhaka Honhat (Our Land) Association v. Argentina</title>, <citedRange unit="number" n="254">par. 254</citedRange>, <seg type="citationContext">quoting the amicus curiae intervention of the former UN Special Rapporteur on the Right to Food, De Schutter:</seg> <quote>«Many indigenous peoples understand the right to adequate food as a collective right. …»</quote> The cultural value of food is recognized … (ICCPR). See infra, section 3.2.</bibl>
 <bibl><author>Cook</author>, <ref type="precedingWork">supra</ref> <ref type="footnote" n="12">note 12</ref>, <citedRange unit="page">170</citedRange>.</bibl>
 <bibl><seg type="citationContext">cf.</seg> <author>Carli N. Conklin</author>, <title level="a">The Origins of the Pursuit of Happiness</title>, <title level="j">7 Wash. U. Juris. Rev.</title> <biblScope unit="page" from="195">195</biblScope>, <citedRange unit="page">200</citedRange> (<date type="publication">2015</date>) (selecting for use the first edition, as does the present article);</bibl>
 ```
