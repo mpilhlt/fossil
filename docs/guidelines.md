@@ -855,8 +855,7 @@ comment that is not a bibliographic reference at all (see
 #### The issuing authority (`<authority>`)
 
 ```xml
-<authority type="court">EuGH</authority>,
-<date type="decision" when="2016-09-08">Urt. v. 8.9.2016</date> –
+<authority type="court">EuGH</authority>, Urt. v. <date type="decision" when="2016-09-08">8.9.2016</date> –
 <idno type="docket">C-160/15</idno>, …
 ```
 
@@ -932,9 +931,9 @@ covered next — is a reliable sign of the second case: a work's own extent has 
 definite end, so no one describes it as "p. 233 ff."; that phrasing only makes sense
 when pointing into a passage whose end the citing author hasn't bothered to name.
 Annotate any `f.`/`ff.`/`et seq.`/`et seqq.` pinpoint as `<citedRange>`, never as
-`<biblScope>`. However, since chapters are usually longer than 1-4 pages, a general 
-heuristic is that a small page range in most cases is a pinpoint citation and should
-be annotated as `<citedRange>`, with the exception of encyclopedia or dictionary entries.
+`<biblScope>`. NOTE: Since chapters are usually longer than 1-4 pages, a general 
+heuristic is that **a small page range in most cases is a pinpoint citation and should
+be annotated as `<citedRange>`, with the exception of encyclopedia or dictionary entries.**
 
 **Open-ended continuation pinpoints (`f.`, `ff.`, `et seq.`, `et seqq.`).** The citing
 text sometimes marks a pinpoint as continuing onto subsequent pages or sections instead
@@ -1313,8 +1312,8 @@ text:
 
 ```xml
 <bibl><label>9</label> <seg type="citationContext">See e.g.:</seg>
-  <authority type="court">Inter-American Court of Human Rights</authority>,
-  <date type="decision" when="2020-02-16">judgment of 16 February 2020</date>,
+  <authority type="court">Inter-American Court of Human Rights</authority>, judgment of 
+  <date type="decision" when="2020-02-16">16 February 2020</date>,
   <title level="a" type="caseName">Indigenous Communities of the Lhaka Honhat (Our Land) Association v. Argentina</title>,
   <citedRange unit="number" n="254">par. 254</citedRange>,
   <seg type="citationContext">quoting the amicus curiae intervention of the former UN Special Rapporteur on the Right to Food, De Schutter:</seg>
@@ -1330,13 +1329,13 @@ This is the **court decisions** example:
 
 ```xml
 <bibl><label>6</label> <seg type="citationContext">See, ex multis:</seg>
-  <authority type="court">African Commission on Human and Peoples Rights</authority>,
-  <date type="decision" when="2001-10-27">decision of 27 October 2001</date>,
+  <authority type="court">African Commission on Human and Peoples Rights</authority>, decision of 
+  <date type="decision" when="2001-10-27">27 October 2001</date>,
   <title level="a" type="caseName">Social and Economic Rights Action Center (SERAC) and Center for Economic and Social Rights (CESR) v. Nigeria</title>;
 </bibl>
 <bibl>
-  <authority type="court">Inter-American Court of Human Rights</authority>,
-  <date type="decision" when="2012-06-27">judgment of 27 June 2012</date>,
+  <authority type="court">Inter-American Court of Human Rights</authority>, judgment of 
+  <date type="decision" when="2012-06-27">27 June 2012</date>,
   <title level="a" type="caseName">Case of the Kichwa Indigenous People of Sarayaku v. Ecuador</title>.
 </bibl>
 ```
