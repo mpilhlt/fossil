@@ -1121,7 +1121,7 @@ devices such as *id.*, *op. cit.*, *ibid.*, *a.a.O.*, *ders.*, *supra*, *infra*,
   p. <citedRange unit="page">79</citedRange></bibl>
 
 <bibl><author>Vogel</author>, <ref type="precedingWork">op. cit.</ref>,
-  <ref type="footnote" n="7">n. 7</ref>,
+  n. <ref type="footnote" n="7">7</ref>,
   pp. <citedRange unit="page" from="80" to="81">80–1</citedRange>.</bibl>
 
 <bibl><ref type="precedingAuthor">Ders.</ref>, <ref type="precedingWork">a.a.O.</ref>,
@@ -1134,7 +1134,7 @@ them into one:
 
 ```xml
 <author>Kaiser</author>
-(<ref type="precedingWork">oben</ref> <ref type="footnote" n="22">N. 22</ref>)
+(<ref type="precedingWork">oben</ref> N. <ref type="footnote" n="22">22</ref>)
 <biblScope unit="page">89</biblScope>
 ```
 
@@ -1142,7 +1142,7 @@ The same pattern applies to a *forward*-pointing reference, combining `subsequen
 with `footnote`, e.g. "infra note 24":
 
 ```xml
-<ref type="subsequentWork">infra</ref> <ref type="footnote" n="24">note 24</ref>
+<ref type="subsequentWork">infra</ref> note <ref type="footnote" n="24">24</ref>
 ```
 
 `@target` is available to hold a resolved pointer once the citation is resolved in
@@ -1196,17 +1196,17 @@ citations, each with its own signal phrase or `supra`-style back-reference:
   introduction to the law. It was St. German's <title level="m">Doctor and Student</title>,
   a work integrating theological and legal thought, that drew Blackstone to the law.
 </bibl>
-<bibl><author>Cook</author>, <ref type="precedingWork">supra</ref> <ref type="footnote" n="12">note 12</ref>,
+<bibl><author>Cook</author>, <ref type="precedingWork">supra</ref> note <ref type="footnote" n="12">12</ref>,
   <citedRange unit="page">170</citedRange>. Perhaps for similar reasons, the
   <title level="m">Commentaries</title> turned students from theology to law.
 </bibl>
-<bibl><author>McKnight</author>, <ref type="precedingWork">supra</ref> <ref type="footnote" n="2">note 2</ref>,
+<bibl><author>McKnight</author>, <ref type="precedingWork">supra</ref> note <ref type="footnote" n="2">2</ref>,
   <citedRange unit="page">401</citedRange>.
 </bibl>
 <bibl><seg type="citationContext">Note that the pagination of the various
   editions of the Commentaries has become more or less
   standardized. This move is not without its problems, however. See</seg> <author>Alschuler</author>,
-  <ref type="precedingWork">supra</ref> <ref type="footnote" n="1">note 1</ref>,
+  <ref type="precedingWork">supra</ref> note <ref type="footnote" n="1">1</ref>,
   <citedRange unit="page">3</citedRange> n.4;
 </bibl>
 <bibl><seg type="citationContext">cf.</seg> <author>Carli N. Conklin</author>,

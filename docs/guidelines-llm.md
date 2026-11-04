@@ -78,7 +78,7 @@ Rules:
 
 ## Citation model
 
-<!-- sync: guide=950184991ad9f92259d9f53b28169dffcdcf710c7500231a7b0f73f9e138f3f2 llm=9b73d9b6a1e435fd256d262eb4ba5483cda6f73e665de2a5d9a8b17954b7b124 -->
+<!-- sync: guide=08270ea4754c6e4aa736868e497d3187d3717b0006ed50f312fc3179f6297e35 llm=3b2a1241d6e437243e914532b1ab5c8a1b9950dd93283e503fbd3021c24a2193 -->
 
 Labels the inside of each `<bibl>`. All elements except `<label>` and `<lb/>` may occur any number of times, in any order. Punctuation, "in:", brackets, "p."/"pp."/"S." and the like stay outside tags unless stated otherwise.
 
@@ -192,8 +192,11 @@ Tag a statute only when the `<bibl>` cites it as the source. A statute merely me
 Adjacent but distinct devices are separate `<ref>`s. A pointer to a section of the citing article itself ("See infra, section 3.2.") stays plain text.
 
 ```xml
-<author>Kaiser</author> (<ref type="precedingWork">oben</ref> <ref type="footnote" n="22">N. 22</ref>) <biblScope unit="page">89</biblScope>
+<bibl><author>Vogel</author>, <ref type="precedingWork">id.</ref>, p. <citedRange unit="page">79</citedRange></bibl>
+<bibl><author>Vogel</author>, <ref type="precedingWork">op. cit.</ref>, n. <ref type="footnote" n="7">7</ref>, pp. <citedRange unit="page" from="80" to="81">80–1</citedRange></bibl>
 <bibl><ref type="precedingAuthor">Ders.</ref>, <ref type="precedingWork">a.a.O.</ref>, S. <citedRange unit="page">123</citedRange>.</bibl>
+<author>Kaiser</author> (<ref type="precedingWork">oben</ref> N. <ref type="footnote" n="22">22</ref>) <biblScope unit="page">89</biblScope>
+<ref type="subsequentWork">infra</ref> note <ref type="footnote" n="24">24</ref>
 ```
 
 ### Signal phrases (`<seg type="citationContext">`)
@@ -214,6 +217,6 @@ In the Polish literature <seg type="citationContext">-cf.</seg> <editor>Z. Kmiec
 
 ```xml
 <bibl><label>9</label> <seg type="citationContext">See e.g.:</seg> <authority type="court">Inter-American Court of Human Rights</authority>, judgment of <date type="decision" when="2020-02-16">16 February 2020</date>, <title level="a" type="caseName">Indigenous Communities of the Lhaka Honhat (Our Land) Association v. Argentina</title>, <citedRange unit="number" n="254">par. 254</citedRange>, <seg type="citationContext">quoting the amicus curiae intervention of the former UN Special Rapporteur on the Right to Food, De Schutter:</seg> <quote>«Many indigenous peoples understand the right to adequate food as a collective right. …»</quote> The cultural value of food is recognized … (ICCPR). See infra, section 3.2.</bibl>
-<bibl><author>Cook</author>, <ref type="precedingWork">supra</ref> <ref type="footnote" n="12">note 12</ref>, <citedRange unit="page">170</citedRange>.</bibl>
+<bibl><author>Cook</author>, <ref type="precedingWork">supra</ref> note <ref type="footnote" n="12">12</ref>, <citedRange unit="page">170</citedRange>.</bibl>
 <bibl><seg type="citationContext">cf.</seg> <author>Carli N. Conklin</author>, <title level="a">The Origins of the Pursuit of Happiness</title>, <title level="j">7 Wash. U. Juris. Rev.</title> <biblScope unit="page" from="195">195</biblScope>, <citedRange unit="page">200</citedRange> (<date type="publication">2015</date>) (selecting for use the first edition, as does the present article);</bibl>
 ```
