@@ -200,6 +200,42 @@
 
   <define name="desc">
     <element name="desc">
+      <mixed>
+        <zeroOrMore>
+          <choice>
+            <ref name="time"/>
+            <ref name="measure"/>
+          </choice>
+        </zeroOrMore>
+      </mixed>
+    </element>
+  </define>
+
+  <define name="time">
+    <element name="time">
+      <a:documentation>(time) contains a phrase defining a time of day or a duration, for example the time a revision took to complete. [3.6.4. Dates and Times]</a:documentation>
+      <optional>
+        <attribute name="dur"/>
+      </optional>
+      <text/>
+    </element>
+  </define>
+
+  <define name="measure">
+    <element name="measure">
+      <a:documentation>(measure) contains a word or phrase referring to some quantity of an object or commodity, for example machine-readable counts in the description of an automated revision. [3.6.3. Numbers and Measures]</a:documentation>
+      <optional>
+        <attribute name="type"/>
+      </optional>
+      <optional>
+        <attribute name="subtype"/>
+      </optional>
+      <optional>
+        <attribute name="commodity"/>
+      </optional>
+      <optional>
+        <attribute name="quantity"/>
+      </optional>
       <text/>
     </element>
   </define>
