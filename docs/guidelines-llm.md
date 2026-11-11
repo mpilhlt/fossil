@@ -78,7 +78,7 @@ Rules:
 
 ## Citation model
 
-<!-- sync: guide=08270ea4754c6e4aa736868e497d3187d3717b0006ed50f312fc3179f6297e35 llm=3b2a1241d6e437243e914532b1ab5c8a1b9950dd93283e503fbd3021c24a2193 -->
+<!-- sync: guide=95cc301956f8028c0d171623300069aec6e4574c2abecd4cacb4e97161142972 llm=a0e910e4229e1b818b0b2ea628da3898ab23aea260a38a5bb6226c7d0a8d391a -->
 
 Labels the inside of each `<bibl>`. All elements except `<label>` and `<lb/>` may occur any number of times, in any order. Punctuation, "in:", brackets, "p."/"pp."/"S." and the like stay outside tags unless stated otherwise.
 
@@ -98,7 +98,9 @@ Labels the inside of each `<bibl>`. All elements except `<label>` and `<lb/>` ma
 | `<edition n="2">` | edition statement |
 | `<idno type="...">` | identifier; `@type` is one of `DOI`, `ISSN`, `arXiv`, `report` (report number), `docket`, `ECLI`, `CELEX`, `actNumber` (official number of a legislative act, "2019/790") |
 | `<ptr type="web" target="URL">` | URL as text, without "URL:" and trailing period |
-| `<note type="report">` | other note, e.g. "Ph.D. thesis", "Technical Report" |
+| `<note>` | any content not covered by another tag |
+| `<note type="report">` | type or form of the publication, e.g. "Ph.D. thesis", "Technical Report" |
+| `<note>` without attribute | fallback for any remaining non-bibliographic data, such as interspersed or trailing comments |
 | `<orgName type="...">` | institution that is not the issuing authority, e.g. a thesis's university; `@type` is one of `institution`, `collaboration`, `department`, `laboratory` |
 | `<authority type="...">` | court (`type="court"`), legislature (`type="legislature"`) or other issuing body of the cited work; never `<author>` or bare `<orgName>` for it; may contain `<orgName>` |
 | `<date type="decision">`, `<date type="enacted">` | date a decision was issued / a statute was enacted |
@@ -133,10 +135,7 @@ Labels the inside of each `<bibl>`. All elements except `<label>` and `<lb/>` ma
 | `page` | pinpoint page, e.g. `240` in `233 (240)` or `233, at 240`; `498` in `ZGE 2016, 482, 498` |
 
 - "p."/"pp."/"S." stay outside the tag; `Rn.`, `§`, `Abs.`, `lit.` and `f.`/`ff.` stay inside.
-- A page (range) that is the full extent of an article/chapter/entry inside its container is `<biblScope>`
-- one that locates a passage in a work whose extent is given separately, or any `f.`/`ff.`/`et seq.` pinpoint, is `<citedRange>`.
-- CRITICAL RULE: with the exception of encyclopedia or dictionary entries, a single-page range and small page range (up to 5 pages) have to be annotated as a pinpoint `<citedRange>`
-
+- A page (range) that is the full extent of an article/chapter/entry inside its container is `<biblScope>`; one that locates a passage in a work whose extent is given separately, or any `f.`/`ff.`/`et seq.` pinpoint, is `<citedRange>`.
 - A work without pagination (decision cited by marginal number) has only `<citedRange>`.
 
 ```xml
@@ -192,11 +191,8 @@ Tag a statute only when the `<bibl>` cites it as the source. A statute merely me
 Adjacent but distinct devices are separate `<ref>`s. A pointer to a section of the citing article itself ("See infra, section 3.2.") stays plain text.
 
 ```xml
-<bibl><author>Vogel</author>, <ref type="precedingWork">id.</ref>, p. <citedRange unit="page">79</citedRange></bibl>
-<bibl><author>Vogel</author>, <ref type="precedingWork">op. cit.</ref>, n. <ref type="footnote" n="7">7</ref>, pp. <citedRange unit="page" from="80" to="81">80–1</citedRange></bibl>
+<author>Kaiser</author> (<ref type="precedingWork">oben</ref> <ref type="footnote" n="22">N. 22</ref>) <biblScope unit="page">89</biblScope>
 <bibl><ref type="precedingAuthor">Ders.</ref>, <ref type="precedingWork">a.a.O.</ref>, S. <citedRange unit="page">123</citedRange>.</bibl>
-<author>Kaiser</author> (<ref type="precedingWork">oben</ref> N. <ref type="footnote" n="22">22</ref>) <biblScope unit="page">89</biblScope>
-<ref type="subsequentWork">infra</ref> note <ref type="footnote" n="24">24</ref>
 ```
 
 ### Signal phrases (`<seg type="citationContext">`)
@@ -216,7 +212,7 @@ In the Polish literature <seg type="citationContext">-cf.</seg> <editor>Z. Kmiec
 ### Example
 
 ```xml
-<bibl><label>9</label> <seg type="citationContext">See e.g.:</seg> <authority type="court">Inter-American Court of Human Rights</authority>, judgment of <date type="decision" when="2020-02-16">16 February 2020</date>, <title level="a" type="caseName">Indigenous Communities of the Lhaka Honhat (Our Land) Association v. Argentina</title>, <citedRange unit="number" n="254">par. 254</citedRange>, <seg type="citationContext">quoting the amicus curiae intervention of the former UN Special Rapporteur on the Right to Food, De Schutter:</seg> <quote>«Many indigenous peoples understand the right to adequate food as a collective right. …»</quote> The cultural value of food is recognized … (ICCPR). See infra, section 3.2.</bibl>
-<bibl><author>Cook</author>, <ref type="precedingWork">supra</ref> note <ref type="footnote" n="12">12</ref>, <citedRange unit="page">170</citedRange>.</bibl>
+<bibl><label>9</label> <seg type="citationContext">See e.g.:</seg> <authority type="court">Inter-American Court of Human Rights</authority>, <date type="decision" when="2020-02-16">judgment of 16 February 2020</date>, <title level="a" type="caseName">Indigenous Communities of the Lhaka Honhat (Our Land) Association v. Argentina</title>, <citedRange unit="number" n="254">par. 254</citedRange>, <seg type="citationContext">quoting the amicus curiae intervention of the former UN Special Rapporteur on the Right to Food, De Schutter:</seg> <quote>«Many indigenous peoples understand the right to adequate food as a collective right. …»</quote> The cultural value of food is recognized … (ICCPR). See infra, section 3.2.</bibl>
+<bibl><author>Cook</author>, <ref type="precedingWork">supra</ref> <ref type="footnote" n="12">note 12</ref>, <citedRange unit="page">170</citedRange>.</bibl>
 <bibl><seg type="citationContext">cf.</seg> <author>Carli N. Conklin</author>, <title level="a">The Origins of the Pursuit of Happiness</title>, <title level="j">7 Wash. U. Juris. Rev.</title> <biblScope unit="page" from="195">195</biblScope>, <citedRange unit="page">200</citedRange> (<date type="publication">2015</date>) (selecting for use the first edition, as does the present article);</bibl>
 ```

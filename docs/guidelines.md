@@ -794,8 +794,10 @@ If a separate, standalone `<idno type="DOI">` is already present elsewhere in th
 reference, leave the URL's `<ptr type="web">` as plain text instead — do not annotate
 the same DOI twice.
 
-**Miscellaneous note.** `<note type="report">` marks any note not covered by another
-tag — typically the type of report or thesis (e.g. "Ph.D. thesis", "Technical Report").
+**Miscellaneous note.**
+`<note>` marks any content not covered by another tag.
+- `<note type="report">` is used to indicate the type or form of the publication (e.g. "Ph.D. thesis", "Technical Report").
+- `<note>` without any attribute is the fallback for any remaining non-bibliographic data, such as interspersed or trailing comments.
 
 **Institutional authorship.** `<orgName type="...">` names an institution that is not
 itself the work's issuing authority (see [The issuing authority](#the-issuing-authority-authority)
@@ -855,7 +857,8 @@ comment that is not a bibliographic reference at all (see
 #### The issuing authority (`<authority>`)
 
 ```xml
-<authority type="court">EuGH</authority>, Urt. v. <date type="decision" when="2016-09-08">8.9.2016</date> –
+<authority type="court">EuGH</authority>,
+<date type="decision" when="2016-09-08">Urt. v. 8.9.2016</date> –
 <idno type="docket">C-160/15</idno>, …
 ```
 
@@ -931,9 +934,7 @@ covered next — is a reliable sign of the second case: a work's own extent has 
 definite end, so no one describes it as "p. 233 ff."; that phrasing only makes sense
 when pointing into a passage whose end the citing author hasn't bothered to name.
 Annotate any `f.`/`ff.`/`et seq.`/`et seqq.` pinpoint as `<citedRange>`, never as
-`<biblScope>`. NOTE: Since chapters are usually longer than 1-4 pages, a general 
-heuristic is that **a small page range in most cases is a pinpoint citation and should
-be annotated as `<citedRange>`, with the exception of encyclopedia or dictionary entries.**
+`<biblScope>`.
 
 **Open-ended continuation pinpoints (`f.`, `ff.`, `et seq.`, `et seqq.`).** The citing
 text sometimes marks a pinpoint as continuing onto subsequent pages or sections instead
@@ -1121,7 +1122,7 @@ devices such as *id.*, *op. cit.*, *ibid.*, *a.a.O.*, *ders.*, *supra*, *infra*,
   p. <citedRange unit="page">79</citedRange></bibl>
 
 <bibl><author>Vogel</author>, <ref type="precedingWork">op. cit.</ref>,
-  n. <ref type="footnote" n="7">7</ref>,
+  <ref type="footnote" n="7">n. 7</ref>,
   pp. <citedRange unit="page" from="80" to="81">80–1</citedRange>.</bibl>
 
 <bibl><ref type="precedingAuthor">Ders.</ref>, <ref type="precedingWork">a.a.O.</ref>,
@@ -1134,7 +1135,7 @@ them into one:
 
 ```xml
 <author>Kaiser</author>
-(<ref type="precedingWork">oben</ref> N. <ref type="footnote" n="22">22</ref>)
+(<ref type="precedingWork">oben</ref> <ref type="footnote" n="22">N. 22</ref>)
 <biblScope unit="page">89</biblScope>
 ```
 
@@ -1142,7 +1143,7 @@ The same pattern applies to a *forward*-pointing reference, combining `subsequen
 with `footnote`, e.g. "infra note 24":
 
 ```xml
-<ref type="subsequentWork">infra</ref> note <ref type="footnote" n="24">24</ref>
+<ref type="subsequentWork">infra</ref> <ref type="footnote" n="24">note 24</ref>
 ```
 
 `@target` is available to hold a resolved pointer once the citation is resolved in
@@ -1196,17 +1197,17 @@ citations, each with its own signal phrase or `supra`-style back-reference:
   introduction to the law. It was St. German's <title level="m">Doctor and Student</title>,
   a work integrating theological and legal thought, that drew Blackstone to the law.
 </bibl>
-<bibl><author>Cook</author>, <ref type="precedingWork">supra</ref> note <ref type="footnote" n="12">12</ref>,
+<bibl><author>Cook</author>, <ref type="precedingWork">supra</ref> <ref type="footnote" n="12">note 12</ref>,
   <citedRange unit="page">170</citedRange>. Perhaps for similar reasons, the
   <title level="m">Commentaries</title> turned students from theology to law.
 </bibl>
-<bibl><author>McKnight</author>, <ref type="precedingWork">supra</ref> note <ref type="footnote" n="2">2</ref>,
+<bibl><author>McKnight</author>, <ref type="precedingWork">supra</ref> <ref type="footnote" n="2">note 2</ref>,
   <citedRange unit="page">401</citedRange>.
 </bibl>
 <bibl><seg type="citationContext">Note that the pagination of the various
   editions of the Commentaries has become more or less
   standardized. This move is not without its problems, however. See</seg> <author>Alschuler</author>,
-  <ref type="precedingWork">supra</ref> note <ref type="footnote" n="1">1</ref>,
+  <ref type="precedingWork">supra</ref> <ref type="footnote" n="1">note 1</ref>,
   <citedRange unit="page">3</citedRange> n.4;
 </bibl>
 <bibl><seg type="citationContext">cf.</seg> <author>Carli N. Conklin</author>,
@@ -1312,8 +1313,8 @@ text:
 
 ```xml
 <bibl><label>9</label> <seg type="citationContext">See e.g.:</seg>
-  <authority type="court">Inter-American Court of Human Rights</authority>, judgment of 
-  <date type="decision" when="2020-02-16">16 February 2020</date>,
+  <authority type="court">Inter-American Court of Human Rights</authority>,
+  <date type="decision" when="2020-02-16">judgment of 16 February 2020</date>,
   <title level="a" type="caseName">Indigenous Communities of the Lhaka Honhat (Our Land) Association v. Argentina</title>,
   <citedRange unit="number" n="254">par. 254</citedRange>,
   <seg type="citationContext">quoting the amicus curiae intervention of the former UN Special Rapporteur on the Right to Food, De Schutter:</seg>
@@ -1329,13 +1330,13 @@ This is the **court decisions** example:
 
 ```xml
 <bibl><label>6</label> <seg type="citationContext">See, ex multis:</seg>
-  <authority type="court">African Commission on Human and Peoples Rights</authority>, decision of 
-  <date type="decision" when="2001-10-27">27 October 2001</date>,
+  <authority type="court">African Commission on Human and Peoples Rights</authority>,
+  <date type="decision" when="2001-10-27">decision of 27 October 2001</date>,
   <title level="a" type="caseName">Social and Economic Rights Action Center (SERAC) and Center for Economic and Social Rights (CESR) v. Nigeria</title>;
 </bibl>
 <bibl>
-  <authority type="court">Inter-American Court of Human Rights</authority>, judgment of 
-  <date type="decision" when="2012-06-27">27 June 2012</date>,
+  <authority type="court">Inter-American Court of Human Rights</authority>,
+  <date type="decision" when="2012-06-27">judgment of 27 June 2012</date>,
   <title level="a" type="caseName">Case of the Kichwa Indigenous People of Sarayaku v. Ecuador</title>.
 </bibl>
 ```
