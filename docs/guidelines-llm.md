@@ -78,7 +78,7 @@ Rules:
 
 ## Citation model
 
-<!-- sync: guide=08270ea4754c6e4aa736868e497d3187d3717b0006ed50f312fc3179f6297e35 llm=3b2a1241d6e437243e914532b1ab5c8a1b9950dd93283e503fbd3021c24a2193 -->
+<!-- sync: guide=60873b32acacbe691d5b5bf5d6763376f8cda0d2cbb8590774197178209349f8 llm=b1385a22f0b8d0b611e44ac2647a76bff62b41b112fa59df0cbc20d6bcd62e0d -->
 
 Labels the inside of each `<bibl>`. All elements except `<label>` and `<lb/>` may occur any number of times, in any order. Punctuation, "in:", brackets, "p."/"pp."/"S." and the like stay outside tags unless stated otherwise.
 
@@ -98,7 +98,8 @@ Labels the inside of each `<bibl>`. All elements except `<label>` and `<lb/>` ma
 | `<edition n="2">` | edition statement |
 | `<idno type="...">` | identifier; `@type` is one of `DOI`, `ISSN`, `arXiv`, `report` (report number), `docket`, `ECLI`, `CELEX`, `actNumber` (official number of a legislative act, "2019/790") |
 | `<ptr type="web" target="URL">` | URL as text, without "URL:" and trailing period |
-| `<note type="report">` | other note, e.g. "Ph.D. thesis", "Technical Report" |
+| `<note type="report">` | type or form of the publication, e.g. "Ph.D. thesis", "Technical Report" |
+| `<note>` | no attribute: fallback for any remaining non-bibliographic data, e.g. interspersed or trailing comments |
 | `<orgName type="...">` | institution that is not the issuing authority, e.g. a thesis's university; `@type` is one of `institution`, `collaboration`, `department`, `laboratory` |
 | `<authority type="...">` | court (`type="court"`), legislature (`type="legislature"`) or other issuing body of the cited work; never `<author>` or bare `<orgName>` for it; may contain `<orgName>` |
 | `<date type="decision">`, `<date type="enacted">` | date a decision was issued / a statute was enacted |

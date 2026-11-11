@@ -794,8 +794,10 @@ If a separate, standalone `<idno type="DOI">` is already present elsewhere in th
 reference, leave the URL's `<ptr type="web">` as plain text instead — do not annotate
 the same DOI twice.
 
-**Miscellaneous note.** `<note type="report">` marks any note not covered by another
-tag — typically the type of report or thesis (e.g. "Ph.D. thesis", "Technical Report").
+**Miscellaneous note.**
+`<note>` marks any content not covered by another tag.
+- `<note type="report">` is used to indicate the type or form of the publication (e.g. "Ph.D. thesis", "Technical Report").
+- `<note>` without any attribute is the fallback for any remaining non-bibliographic data, such as interspersed or trailing comments.
 
 **Institutional authorship.** `<orgName type="...">` names an institution that is not
 itself the work's issuing authority (see [The issuing authority](#the-issuing-authority-authority)
