@@ -205,9 +205,26 @@
           <choice>
             <ref name="time"/>
             <ref name="measure"/>
+            <ref name="descName"/>
           </choice>
         </zeroOrMore>
       </mixed>
+    </element>
+  </define>
+
+  <define name="descName">
+    <element name="name">
+      <a:documentation>(name, proper noun) contains a proper noun or noun phrase, for example the language model that made an automated revision, with the model's identifier in @key. [13.2.1. Personal Names]</a:documentation>
+      <optional>
+        <attribute name="type"/>
+      </optional>
+      <optional>
+        <attribute name="subtype"/>
+      </optional>
+      <optional>
+        <attribute name="key"/>
+      </optional>
+      <text/>
     </element>
   </define>
 
