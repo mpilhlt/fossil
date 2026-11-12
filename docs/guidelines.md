@@ -616,10 +616,11 @@ normalization.** Each element contains the whole statement as it appears in the
 source, including any language-specific words or abbreviations that are part of it —
 "pp. 67-82", "Rn. 5", "2nd ed.", "Zweite, verbesserte Auflage", "8.9.2016". The
 attributes carry what the statement means in a normalized, machine-readable form: the
-kind of unit in `@unit`, a number in `@n`, a range in `@from`/`@to`, an ISO date in
-`@when`. The two layers do different jobs. The element content records *where* a piece
-of information is in the text and how the source expresses it; the attributes make it
-comparable across languages and citation styles without re-reading the text.
+kind of unit in `@unit`, a page, volume or other position in `@from`/`@to`, an edition
+or footnote number in `@n`, an ISO date in `@when`. The two layers do different jobs.
+The element content records *where* a piece of information is in the text and how the
+source expresses it; the attributes make it comparable across languages and citation
+styles without re-reading the text.
 
 ```xml
 <biblScope unit="page" from="67" to="82">pp. 67-82</biblScope>
@@ -627,8 +628,10 @@ comparable across languages and citation styles without re-reading the text.
 <date type="decision" when="2016-09-08">8.9.2016</date>
 ```
 
-When the content is already in normalized form — a bare Arabic number, a plain year —
-no attribute is needed, since the content is its own value. The rules below apply this
+`<biblScope>` and `<citedRange>` always carry `@from`/`@to`, even when the content is
+a bare number. For other elements, content that is already in normalized form — a
+plain year, a bare edition number — needs no attribute, since the content is its own
+value. The rules below apply this
 principle element by element; where they say what stays *outside* an element, it is
 because that text is not part of the statement the element denotes (punctuation
 between fields, connecting words, a role marker after a name).
@@ -700,9 +703,8 @@ translation gets no `@xml:lang`.
 
 **Dates.** `<date type="publication" when="...">` marks the publication date; `@when`
 holds [the machine-readable ISO form](https://web.uvic.ca/lancenrd/martin/guidelines/ref-att.datable.w3c.html)
-and the text content the date as it appears in the source. The same single-value rule
-as for `<biblScope>`/`<citedRange>` above applies here: a bare year on its own (`2019`)
-is already that ISO form, so no `@when` is needed. As soon as the text is a fuller or
+and the text content the date as it appears in the source. A bare year on its own
+(`2019`) is already that ISO form, so no `@when` is needed. As soon as the text is a fuller or
 non-ISO date — a day-month-year date, a date with a month name, an abbreviated form
 like `8.9.2016` — the content is no longer machine-readable on its own, so set `@when`
 to the converted ISO value. Only omit `@when` on such a date when the source genuinely
@@ -735,15 +737,15 @@ kind of a value — `p.`, `pp.`, `S.`, `Vol.`, `Bd.`, `No.`, `n.`, `Heft`, `Rn.`
 annotated together with the value it introduces. This applies the
 [annotation principle](#citation-model) stated at the start of this section: the
 element content covers the whole expression as it appears in the source, and the
-attributes (`@unit`, `@n`, `@from`/`@to`) hold the normalized, language-independent
+attributes (`@unit`, `@from`/`@to`) hold the normalized, language-independent
 value, just as `@when` does for **Dates** above:
 
 ```xml
-<biblScope unit="volume" n="1">Vol. 1</biblScope>, <biblScope unit="issue" n="2">No. 2</biblScope>,
+<biblScope unit="volume" from="1" to="1">Vol. 1</biblScope>, <biblScope unit="issue" from="2" to="2">No. 2</biblScope>,
 <biblScope unit="page" from="67" to="82">pp. 67-82</biblScope>
-<citedRange unit="page" n="79">p. 79</citedRange>
-<citedRange unit="margin" n="5">Rn. 5</citedRange>
-<citedRange unit="section" n="64">para 64</citedRange>
+<citedRange unit="page" from="79" to="79">p. 79</citedRange>
+<citedRange unit="margin" from="5" to="5">Rn. 5</citedRange>
+<citedRange unit="section" from="64" to="64">para 64</citedRange>
 ```
 
 There are three reasons for this rule:
@@ -770,7 +772,7 @@ What stays **outside** the element:
 When one designator introduces a list of values, it goes into the first element only:
 
 ```xml
-<citedRange unit="margin" n="5">Rn. 5</citedRange>, <citedRange unit="margin" n="7">7</citedRange>
+<citedRange unit="margin" from="5" to="5">Rn. 5</citedRange>, <citedRange unit="margin" from="7" to="7">7</citedRange>
 ```
 
 This differs from
@@ -779,34 +781,29 @@ which leaves page abbreviations outside `<biblScope>`. Converting to that conven
 a matter for the export to Grobid's training format, not for annotation; annotators
 always follow the rule given here.
 
-**Single value, `@n`, or range.** A single value whose text content is already a
-bare number needs no extra attribute at all — the content itself is the value:
+**Always set `@from`/`@to`.** Every `<biblScope>` holds its normalized value in
+`@from` and `@to`. A range gets its two endpoints; a single value repeats the same
+value in both attributes. This holds even when the content is already a bare number,
+so that consumers of the data always read the value from the same place. Roman
+numerals and other non-Arabic forms are normalized to Arabic numbers:
 
 ```xml
-<biblScope unit="volume">3</biblScope>
-```
-
-As soon as the text content is non-numeric or mixed with other text — a Roman
-numeral, or a value with its designator — it is no longer machine-readable on its own,
-so add `@n` to hold the normalized value as an Arabic number:
-
-```xml
-<biblScope unit="volume" n="2">II</biblScope>
-<biblScope unit="volume" n="2">Bd. 2</biblScope>
-<biblScope unit="page" n="79">p. 79</biblScope>
-```
-
-A genuine range — two distinct, named endpoints — gets `@from`/`@to`:
-
-```xml
+<biblScope unit="volume" from="3" to="3">3</biblScope>
+<biblScope unit="volume" from="2" to="2">II</biblScope>
+<biblScope unit="volume" from="2" to="2">Bd. 2</biblScope>
+<biblScope unit="page" from="79" to="79">p. 79</biblScope>
 <biblScope unit="volume" from="3" to="5">3–5</biblScope>
 <biblScope unit="page" from="517" to="518">pp. 517-518</biblScope>
 ```
 
-When only the start of a range is given in the text and its end is not (an article
-cited by its first page alone, say), set `@from` alone and omit `@to` — do not repeat
-a single value in both `@from` and `@to`, since that wrongly implies a span the text
-never named.
+The one exception is a range whose end the text does not give — an article cited by
+its first page alone, or an open-ended `ff.` (see
+[Pinpoint citations](#pinpoint-citations-citedrange)). Set `@from` alone and omit
+`@to`, since the end point is unknown rather than identical to the start:
+
+```xml
+<biblScope unit="page" from="795">795</biblScope>
+```
 
 **Pinpoint extent.** When the citing text names a more specific location than
 `<biblScope>`'s own extent — the common "first page, at pinpoint page" pattern, e.g.
@@ -815,7 +812,7 @@ never named.
 
 ```xml
 <biblScope unit="page" from="233" to="250">233–250</biblScope>, at
-<citedRange unit="page">240</citedRange>
+<citedRange unit="page" from="240" to="240">240</citedRange>
 ```
 
 `<citedRange>`'s `@unit` list also includes several pinpoint levels specific to legal
@@ -887,7 +884,7 @@ A non-legal example combining several of these:
 <bibl><author>J. Smith</author> and <author>A. Doe</author>,
   <title level="a">A Study of Neural Machine Translation</title>,
   <title level="j">Journal of Computational Linguistics</title>
-  <biblScope unit="volume">45</biblScope>(<biblScope unit="issue">2</biblScope>),
+  <biblScope unit="volume" from="45" to="45">45</biblScope>(<biblScope unit="issue" from="2" to="2">2</biblScope>),
   <biblScope unit="page" from="123" to="145">123–145</biblScope>
   (<date type="publication">2019</date>).
   <idno type="DOI">10.1162/coli_a_00345</idno>
@@ -970,27 +967,28 @@ marginal number, say), there is simply no `<biblScope unit="page">` — only
 
 ```xml
 <bibl type="legislation">
-  <citedRange unit="section" n="19a">§ 19a</citedRange>
-  <citedRange unit="subSection" n="2">Abs. 2</citedRange>
+  <citedRange unit="section" from="19a" to="19a">§ 19a</citedRange>
+  <citedRange unit="subSection" from="2" to="2">Abs. 2</citedRange>
   <title level="m" type="legislation" key="UrhG">UrhG</title>
 </bibl>
 ```
 
-**Single value, `@n`, or range** — the same rules as for `<biblScope>` above,
-including keeping the designator (`p.`, `S.`, `Rn.`, `§`, `Abs.`, `lit.`) inside the
-tag (see [Designators go inside the element](#basic-bibliographic-elements)). A single
-pinpoint whose text content is already a bare number needs no extra attribute; once
-the content is non-numeric or carries its designator, add `@n` to hold the normalized
-value so it stays machine-readable. Reserve `@from`/`@to` for an actual range — never
-repeat a single value in both to express one point, which wrongly implies a span the
-text never named:
+**Always set `@from`/`@to`** — the same rules as for `<biblScope>` above, including
+keeping the designator (`p.`, `S.`, `Rn.`, `§`, `Abs.`, `lit.`) inside the tag (see
+[Designators go inside the element](#basic-bibliographic-elements)). A single pinpoint
+repeats its value in `@from` and `@to`, also when the content is a bare number; a
+range gets its two endpoints. Values that are not plain numbers, such as `19a`, are
+recorded as they stand:
 
 ```xml
-<citedRange unit="page">240</citedRange>
-<citedRange unit="page" n="240">S. 240</citedRange>
-<citedRange unit="margin" n="12">Rn. 12</citedRange>
+<citedRange unit="page" from="240" to="240">240</citedRange>
+<citedRange unit="page" from="240" to="240">S. 240</citedRange>
+<citedRange unit="margin" from="12" to="12">Rn. 12</citedRange>
+<citedRange unit="section" from="19a" to="19a">§ 19a</citedRange>
 <citedRange unit="page" from="932" to="935">pp. 932-935</citedRange>
 ```
+
+Only an open-ended pinpoint (`ff.`, `et seqq.`, covered below) sets `@from` alone.
 
 **Telling an item's own extent apart from a pinpoint.** A single page number or a
 small page range (`p. 5`, `pp. 23–27`) has exactly the same shape whether it names the
@@ -1094,21 +1092,21 @@ annotated as `<title level="a">`.
 
 ```xml
 <bibl><author>Westermann</author>, in: <title level="m">MünchKomm-BGB</title>,
-  <title level="a">§ 985</title> <citedRange unit="margin" n="12">Rn. 12</citedRange></bibl>
+  <title level="a">§ 985</title> <citedRange unit="margin" from="12" to="12">Rn. 12</citedRange></bibl>
 
 <bibl><title level="m">MünchKomm-BGB</title>/<author>Westermann</author>,
-  <title level="a">§ 985</title> <citedRange unit="margin" n="12">Rn. 12</citedRange></bibl>
+  <title level="a">§ 985</title> <citedRange unit="margin" from="12" to="12">Rn. 12</citedRange></bibl>
 
 <bibl><author>Spindler</author>, in: <title level="m">BeckOK-BGB</title>,
-  <title level="a">§ 823</title> <citedRange unit="margin" n="45">Rn. 45</citedRange></bibl>
+  <title level="a">§ 823</title> <citedRange unit="margin" from="45" to="45">Rn. 45</citedRange></bibl>
 
 <bibl><title level="m">BeckOK UrhR</title>/<author>Grübler</author>,
   <edition n="42">42. Ed.</edition> <date type="publication" when="2024-05-01">1.5.2024</date>,
-  <title level="a">UrhG § 60c</title> <citedRange unit="margin" n="5">Rn. 5</citedRange>;</bibl>
+  <title level="a">UrhG § 60c</title> <citedRange unit="margin" from="5" to="5">Rn. 5</citedRange>;</bibl>
 
 <bibl><title level="m">Dreier/Schulze</title>/<author>Dreier</author>,
   <edition n="7">7. Aufl.</edition> <date type="publication">2022</date>,
-  <title level="a">UrhG § 60c</title> <citedRange unit="margin" n="1">Rn. 1</citedRange>.</bibl>
+  <title level="a">UrhG § 60c</title> <citedRange unit="margin" from="1" to="1">Rn. 1</citedRange>.</bibl>
 ```
 
 Single-volume commentaries named after their editor (e.g. *Grüneberg*, formerly
@@ -1117,7 +1115,7 @@ Here the name is part of the commentary's title, not an `<author>`:
 
 ```xml
 <bibl><title level="m">Grüneberg, BGB</title>, <title level="a">§ 280</title>
-  <citedRange unit="margin" n="8">Rn. 8</citedRange></bibl>
+  <citedRange unit="margin" from="8" to="8">Rn. 8</citedRange></bibl>
 ```
 
 #### Mentions of legal texts
@@ -1196,14 +1194,14 @@ the designator (`n.`, `N.`, `note`, `Fn.`) is part of the `<ref type="footnote">
 
 ```xml
 <bibl><author>Vogel</author>, <ref type="precedingWork">id.</ref>,
-  <citedRange unit="page" n="79">p. 79</citedRange></bibl>
+  <citedRange unit="page" from="79" to="79">p. 79</citedRange></bibl>
 
 <bibl><author>Vogel</author>, <ref type="precedingWork">op. cit.</ref>,
   <ref type="footnote" n="7">n. 7</ref>,
   <citedRange unit="page" from="80" to="81">pp. 80–1</citedRange>.</bibl>
 
 <bibl><ref type="precedingAuthor">Ders.</ref>, <ref type="precedingWork">a.a.O.</ref>,
-  <citedRange unit="page" n="123">S. 123</citedRange>.</bibl>
+  <citedRange unit="page" from="123" to="123">S. 123</citedRange>.</bibl>
 ```
 
 When two of these devices sit next to each other but are lexically distinct — e.g.
@@ -1213,7 +1211,7 @@ them into one:
 ```xml
 <author>Kaiser</author>
 (<ref type="precedingWork">oben</ref> <ref type="footnote" n="22">N. 22</ref>)
-<biblScope unit="page">89</biblScope>
+<biblScope unit="page" from="89" to="89">89</biblScope>
 ```
 
 The same pattern applies to a *forward*-pointing reference, combining `subsequentWork`
@@ -1267,7 +1265,7 @@ citations, each with its own signal phrase or `supra`-style back-reference:
 ```xml
 <bibl><label>23</label> <seg type="citationContext">See</seg> <author>1 William Blackstone</author>,
   <title level="m">Commentaries on the Laws of England</title>
-  <citedRange unit="page">37</citedRange> (The Legal Classics Library 1983) (1765-70))
+  <citedRange unit="page" from="37" to="37">37</citedRange> (The Legal Classics Library 1983) (1765-70))
   (quoting with approval John Fortescue's endorsement that lay students "trace[] up the
   principles and grounds of the law, even to their original elements"). Blackstone's use
   of natural law in the <title level="m">Commentaries</title> may also reflect his own
@@ -1275,26 +1273,26 @@ citations, each with its own signal phrase or `supra`-style back-reference:
   a work integrating theological and legal thought, that drew Blackstone to the law.
 </bibl>
 <bibl><author>Cook</author>, <ref type="precedingWork">supra</ref> <ref type="footnote" n="12">note 12</ref>,
-  <citedRange unit="page">170</citedRange>. Perhaps for similar reasons, the
+  <citedRange unit="page" from="170" to="170">170</citedRange>. Perhaps for similar reasons, the
   <title level="m">Commentaries</title> turned students from theology to law.
 </bibl>
 <bibl><author>McKnight</author>, <ref type="precedingWork">supra</ref> <ref type="footnote" n="2">note 2</ref>,
-  <citedRange unit="page">401</citedRange>.
+  <citedRange unit="page" from="401" to="401">401</citedRange>.
 </bibl>
 <bibl><seg type="citationContext">Note that the pagination of the various
   editions of the Commentaries has become more or less
   standardized. This move is not without its problems, however. See</seg> <author>Alschuler</author>,
   <ref type="precedingWork">supra</ref> <ref type="footnote" n="1">note 1</ref>,
-  <citedRange unit="page">3</citedRange> n.4;
+  <citedRange unit="page" from="3" to="3">3</citedRange> n.4;
 </bibl>
 <bibl><seg type="citationContext">cf.</seg> <author>Carli N. Conklin</author>,
   <title level="a">The Origins of the Pursuit of Happiness</title>,
   <title level="j">7 Wash. U. Juris. Rev.</title>
-  <biblScope unit="page" from="195">195</biblScope>, <citedRange unit="page">200</citedRange> (<date type="publication">2015</date>)
+  <biblScope unit="page" from="195">195</biblScope>, <citedRange unit="page" from="200" to="200">200</citedRange> (<date type="publication">2015</date>)
   (selecting for use the first edition, as does the present article);
 </bibl>
 <bibl><author>Alan Watson</author>, <title level="a">The Structure of Blackstone's Commentaries</title>,
-  <title level="j">97 Yale L.J.</title> <biblScope unit="page" from="795">795</biblScope>, <citedRange unit="page">801</citedRange> (<date type="publication">1988</date>) (same).
+  <title level="j">97 Yale L.J.</title> <biblScope unit="page" from="795">795</biblScope>, <citedRange unit="page" from="801" to="801">801</citedRange> (<date type="publication">1988</date>) (same).
 </bibl>
 ```
 
@@ -1323,13 +1321,13 @@ This is the **German legal citation** example:
 ```xml
 <bibl><label>2</label> <seg type="citationContext">Dazu etwa:</seg> <author>Hofmann</author>,
   <title level="j">ZGE</title> <date type="publication">2016</date>,
-  <biblScope unit="page" from="482">482</biblScope>, <citedRange unit="page">498</citedRange>;
+  <biblScope unit="page" from="482">482</biblScope>, <citedRange unit="page" from="498" to="498">498</citedRange>;
 </bibl>
 <bibl><author>Becker</author>, <title level="j">ZGE</title> <date type="publication">2016</date>,
-  <biblScope unit="page" from="239">239</biblScope>, <citedRange unit="page">273</citedRange>;
+  <biblScope unit="page" from="239">239</biblScope>, <citedRange unit="page" from="273" to="273">273</citedRange>;
 </bibl>
 <bibl><author>Raue</author>, <title level="j">ZGE</title> <date type="publication">2014</date>,
-  <biblScope unit="page" from="387">387</biblScope>, <citedRange unit="page">389</citedRange>.
+  <biblScope unit="page" from="387">387</biblScope>, <citedRange unit="page" from="389" to="389">389</citedRange>.
 </bibl>
 ```
 
@@ -1368,13 +1366,13 @@ carries its own, separate signal phrase rather than sharing the first one:
   <author>F. Dehbi</author>, <author>O. Martin-Ortega</author>,
   <title level="a">An integrated approach to corporate due diligence from a human rights, environmental, and TWAIL perspective</title>,
   <title level="j">Regulation &amp; Governance</title>, <date type="publication">2023</date>,
-  <biblScope unit="issue" n="17">n. 17</biblScope>, <biblScope unit="page" from="927" to="943">pp. 927-943</biblScope>,
+  <biblScope unit="issue" from="17" to="17">n. 17</biblScope>, <biblScope unit="page" from="927" to="943">pp. 927-943</biblScope>,
   in particular <citedRange unit="page" from="932" to="935">pp. 932-935</citedRange>.
 </bibl>
 <bibl>
   <seg type="citationContext">In contrast, affirming that such national legislations are to be regarded as instruments facilitating home States' compliance with their international obligations, rather than as breaches of the host States' sovereignty, see:</seg>
   <author>A. Bonfanti</author>, <title level="m">Imprese multinazionali, diritti umani e ambiente. Profili di diritto internazionale pubblico e privato</title>,
-  <pubPlace>Milano</pubPlace>, <date type="publication">2012</date>, <biblScope unit="page" n="136">p. 136</biblScope>.
+  <pubPlace>Milano</pubPlace>, <date type="publication">2012</date>, <biblScope unit="page" from="136" to="136">p. 136</biblScope>.
 </bibl>
 ```
 
@@ -1393,7 +1391,7 @@ text:
   <authority type="court">Inter-American Court of Human Rights</authority>, judgment of 
   <date type="decision" when="2020-02-16">16 February 2020</date>,
   <title level="a" type="caseName">Indigenous Communities of the Lhaka Honhat (Our Land) Association v. Argentina</title>,
-  <citedRange unit="number" n="254">par. 254</citedRange>,
+  <citedRange unit="number" from="254" to="254">par. 254</citedRange>,
   <seg type="citationContext">quoting the amicus curiae intervention of the former UN Special Rapporteur on the Right to Food, De Schutter:</seg>
   <quote>«Many indigenous peoples understand the right to adequate food as a collective right. They often see subsistence activities such as hunting, fishing and gathering as essential not only to their right to food, but to nurturing their cultures, languages, social life and identity».</quote>
   The cultural value of food is recognized – with respect to indigenous peoples in particular – also under
@@ -1513,15 +1511,15 @@ references:
   </bibl>
   <bibl><seg type="citationContext">On criminology, see</seg>
     <author>Kaiser</author>, <ref type="precedingWork">supra</ref> <ref type="footnote" n="8">note 8</ref>,
-    <biblScope unit="page">89</biblScope>, as well as
+    <biblScope unit="page" from="89" to="89">89</biblScope>, as well as
   </bibl>
   <bibl>
     <author>Blazicek</author> &amp; <author>Janeksela</author>,
     <title level="a">Some Comments on Comparative Methodologies in Criminal Justice</title>,
-    <biblScope unit="volume">6</biblScope>
+    <biblScope unit="volume" from="6" to="6">6</biblScope>
     <title level="j">Int'l J. Comp. &amp; Applied Crim. Just.</title>
     <biblScope unit="page" from="233">233</biblScope>,
-    <citedRange unit="page">240</citedRange>
+    <citedRange unit="page" from="240" to="240">240</citedRange>
     (<date type="publication">1978</date>).
   </bibl>
   <bibl>
@@ -1531,10 +1529,10 @@ references:
     <quote>The U.S. law and development movement was largely a parochial expression of the American legal style.</quote>
     <author>John Henry Merryman</author>,
     <title level="a">Comparative Law and Social Change: On the Origins, Style, Decline and Revival of the Law and Development Movement</title>,
-    <biblScope unit="volume">25</biblScope>
+    <biblScope unit="volume" from="25" to="25">25</biblScope>
     <title level="j">Am. J. Comp. L.</title>
     <biblScope unit="page" from="457">457</biblScope>
-    <citedRange unit="page">479</citedRange>
+    <citedRange unit="page" from="479" to="479">479</citedRange>
     (<date type="publication">1977</date>).
   </bibl>
 
