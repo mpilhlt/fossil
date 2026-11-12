@@ -80,7 +80,7 @@ Rules:
 
 <!-- sync: guide=60873b32acacbe691d5b5bf5d6763376f8cda0d2cbb8590774197178209349f8 llm=b1385a22f0b8d0b611e44ac2647a76bff62b41b112fa59df0cbc20d6bcd62e0d -->
 
-Labels the inside of each `<bibl>`. All elements except `<label>` and `<lb/>` may occur any number of times, in any order. Punctuation, "in:", brackets, "p."/"pp."/"S." and the like stay outside tags unless stated otherwise.
+Labels the inside of each `<bibl>`. All elements except `<label>` and `<lb/>` may occur any number of times, in any order. Content is the statement as it appears in the source; attributes hold the normalized value. Punctuation, "in:", brackets, connecting words and role markers stay outside tags; designators naming a unit or kind of value stay inside (see Values).
 
 ### Elements
 
@@ -92,10 +92,10 @@ Labels the inside of each `<bibl>`. All elements except `<label>` and `<lb/>` ma
 | `<title level="m">` | book, proceedings, thesis, whole website, commentary, statute |
 | `<title level="s">`, `<title level="u">` | series, unpublished work |
 | `<date type="publication">` | publication date (default type) |
-| `<biblScope unit="...">` | the cited work's own extent; `@unit` is one of `page` (the article's full page range), `volume`, `issue` |
-| `<citedRange unit="...">` | a pinpoint into the work (see below), sibling of `<biblScope>`, never nested in it |
+| `<biblScope unit="...">` | the cited work's own extent; `@unit` is one of `page` (the article's full page range), `volume`, `issue`; always `@from`/`@to`, except open-ended `@from` only (see Values) |
+| `<citedRange unit="...">` | a pinpoint into the work (see below), sibling of `<biblScope>`, never nested in it; always `@from`/`@to` except open-ended |
 | `<publisher>`, `<pubPlace>` | publisher (also corporate web publisher), place |
-| `<edition n="2">` | edition statement |
+| `<edition>` | complete edition statement incl. designator and qualifiers; `@n` = Arabic edition number when determinable, omitted if no number |
 | `<idno type="...">` | identifier; `@type` is one of `DOI`, `ISSN`, `arXiv`, `report` (report number), `docket`, `ECLI`, `CELEX`, `actNumber` (official number of a legislative act, "2019/790") |
 | `<ptr type="web" target="URL">` | URL as text, without "URL:" and trailing period |
 | `<note type="report">` | type or form of the publication, e.g. "Ph.D. thesis", "Technical Report" |
@@ -113,10 +113,11 @@ Labels the inside of each `<bibl>`. All elements except `<label>` and `<lb/>` ma
 
 ### Values: `@when`, `@n`, `@from`/`@to`
 
-- Bare year or bare number: no attribute (`<date>2019</date>`, `<biblScope unit="volume">3</biblScope>`).
-- Any other date form (`8.9.2016`, "17 April 2019"): add ISO `@when`; omit only if not resolvable ("n.d.").
-- Non-numeric or mixed content (Roman numeral, attached `Rn.`/`§`/`Abs.`/`lit.`): add normalized `@n` (`<biblScope unit="volume" n="2">II</biblScope>`).
-- Real range: `@from` + `@to`. Only the start given (first page of an article): `@from` only. Never the same value in both.
+- Designators (`p.`, `pp.`, `S.`, `Vol.`, `Bd.`, `No.`, `n.`, `Heft`, `Rn.`, `§`, `Abs.`, `para`, `ed.`, `Aufl.`, `note`, `Fn.`) stay inside the element with their value; punctuation separators, connecting words and role markers stay outside. One designator introducing a list goes into the first element only.
+- Bare year: no `@when` (`<date>2019</date>`). Any other date form (`8.9.2016`, "17 April 2019"): add ISO `@when`; omit only if not resolvable ("n.d.").
+- `<biblScope>` and `<citedRange>` always carry `@from`/`@to`: a single value repeats in both (`<biblScope unit="volume" from="3" to="3">3</biblScope>`); a range gets its two endpoints (`<biblScope unit="volume" from="3" to="5">3–5</biblScope>`); Roman numerals are normalized to Arabic (`<biblScope unit="volume" from="2" to="2">II</biblScope>`); non-plain values such as `19a` are recorded as they stand. Only a range whose end is not given sets `@from` alone (`<biblScope unit="page" from="795">795</biblScope>`).
+- `<edition>` holds the complete statement; `@n` holds the Arabic edition number when determinable (a bare number needs no `@n`); no `@n` if no number.
+- `<ref type="footnote">` holds the designator with the number; `@n` holds the number (`<ref type="footnote" n="7">n. 7</ref>`).
 - `f.`/`et seq.`: `@from` = cited unit, `@to` = next unit. `ff.`/`et seqq.`: `@from` only. Applies to every unit.
 - Multi-day `<date>`: `@from` + `@to` (ISO, one per end of the range) instead of `@when`; text content stays as in the source. `<date from="2012-03-01" to="2012-03-02">1-2.03.2012</date>`. `@when` and `@from`/`@to` are mutually exclusive.
 
@@ -133,7 +134,8 @@ Labels the inside of each `<bibl>`. All elements except `<label>` and `<lb/>` ma
 | `recital` | `ErwGr. 21` |
 | `page` | pinpoint page, e.g. `240` in `233 (240)` or `233, at 240`; `498` in `ZGE 2016, 482, 498` |
 
-- "p."/"pp."/"S." stay outside the tag; `Rn.`, `§`, `Abs.`, `lit.` and `f.`/`ff.` stay inside.
+- Designators (`p.`, `pp.`, `S.`, `Rn.`, `§`, `Abs.`, `lit.`, `para`, `f.`, `ff.`) stay inside the tag; punctuation separators and connecting words stay outside.
+- `<citedRange>` always carries `@from`/`@to`; a single pinpoint repeats its value in both; a range gets its two endpoints; non-plain values such as `19a` are recorded as they stand; only open-ended `ff.`/`et seqq.` sets `@from` alone.
 - A page (range) that is the full extent of an article/chapter/entry inside its container is `<biblScope>`
 - one that locates a passage in a work whose extent is given separately, or any `f.`/`ff.`/`et seq.` pinpoint, is `<citedRange>`.
 - CRITICAL RULE: with the exception of encyclopedia or dictionary entries, a single-page range and small page range (up to 5 pages) have to be annotated as a pinpoint `<citedRange>`
@@ -141,10 +143,10 @@ Labels the inside of each `<bibl>`. All elements except `<label>` and `<lb/>` ma
 - A work without pagination (decision cited by marginal number) has only `<citedRange>`.
 
 ```xml
-<biblScope unit="page" from="233" to="250">233–250</biblScope>, at <citedRange unit="page">240</citedRange>
+<biblScope unit="page" from="233" to="250">233–250</biblScope>, at <citedRange unit="page" from="240" to="240">240</citedRange>
 <citedRange unit="page" from="233" to="234">233 f.</citedRange>
 <citedRange unit="margin" from="12">Rn. 12 ff.</citedRange>
-<bibl type="legislation"><citedRange unit="section" n="19a">§ 19a</citedRange> <citedRange unit="subSection" n="2">Abs. 2</citedRange> <title level="m" type="legislation" key="UrhG">UrhG</title></bibl>
+<bibl type="legislation"><citedRange unit="section" from="19a" to="19a">§ 19a</citedRange> <citedRange unit="subSection" from="2" to="2">Abs. 2</citedRange> <title level="m" type="legislation" key="UrhG">UrhG</title></bibl>
 ```
 
 ### Titles
@@ -172,8 +174,8 @@ Labels the inside of each `<bibl>`. All elements except `<label>` and `<lb/>` ma
 - Slash form: commentator is the name after the last slash.
 
 ```xml
-<bibl><author>Westermann</author>, in: <title level="m">MünchKomm-BGB</title>, <title level="a">§ 985</title> <citedRange unit="margin" n="12">Rn. 12</citedRange></bibl>
-<bibl><title level="m">Dreier/Schulze</title>/<author>Dreier</author>, <edition n="7">7. Aufl.</edition> <date type="publication">2022</date>, <title level="a">UrhG § 60c</title> <citedRange unit="margin" n="1">Rn. 1</citedRange>.</bibl>
+<bibl><author>Westermann</author>, in: <title level="m">MünchKomm-BGB</title>, <title level="a">§ 985</title> <citedRange unit="margin" from="12" to="12">Rn. 12</citedRange></bibl>
+<bibl><title level="m">Dreier/Schulze</title>/<author>Dreier</author>, <edition n="7">7. Aufl.</edition> <date type="publication">2022</date>, <title level="a">UrhG § 60c</title> <citedRange unit="margin" from="1" to="1">Rn. 1</citedRange>.</bibl>
 ```
 
 ### Mentions of legal texts
@@ -192,12 +194,14 @@ Tag a statute only when the `<bibl>` cites it as the source. A statute merely me
 
 Adjacent but distinct devices are separate `<ref>`s. A pointer to a section of the citing article itself ("See infra, section 3.2.") stays plain text.
 
+A footnote cross-reference follows the same rule: the designator (`n.`, `N.`, `note`, `Fn.`) is part of `<ref type="footnote">`, and `@n` holds the number.
+
 ```xml
-<bibl><author>Vogel</author>, <ref type="precedingWork">id.</ref>, p. <citedRange unit="page">79</citedRange></bibl>
-<bibl><author>Vogel</author>, <ref type="precedingWork">op. cit.</ref>, n. <ref type="footnote" n="7">7</ref>, pp. <citedRange unit="page" from="80" to="81">80–1</citedRange></bibl>
-<bibl><ref type="precedingAuthor">Ders.</ref>, <ref type="precedingWork">a.a.O.</ref>, S. <citedRange unit="page">123</citedRange>.</bibl>
-<author>Kaiser</author> (<ref type="precedingWork">oben</ref> N. <ref type="footnote" n="22">22</ref>) <biblScope unit="page">89</biblScope>
-<ref type="subsequentWork">infra</ref> note <ref type="footnote" n="24">24</ref>
+<bibl><author>Vogel</author>, <ref type="precedingWork">id.</ref>, <citedRange unit="page" from="79" to="79">p. 79</citedRange></bibl>
+<bibl><author>Vogel</author>, <ref type="precedingWork">op. cit.</ref>, <ref type="footnote" n="7">n. 7</ref>, <citedRange unit="page" from="80" to="81">pp. 80–1</citedRange>.</bibl>
+<bibl><ref type="precedingAuthor">Ders.</ref>, <ref type="precedingWork">a.a.O.</ref>, <citedRange unit="page" from="123" to="123">S. 123</citedRange>.</bibl>
+<author>Kaiser</author> (<ref type="precedingWork">oben</ref> <ref type="footnote" n="22">N. 22</ref>) <biblScope unit="page" from="89" to="89">89</biblScope>
+<ref type="subsequentWork">infra</ref> <ref type="footnote" n="24">note 24</ref>
 ```
 
 ### Signal phrases (`<seg type="citationContext">`)
@@ -217,7 +221,7 @@ In the Polish literature <seg type="citationContext">-cf.</seg> <editor>Z. Kmiec
 ### Example
 
 ```xml
-<bibl><label>9</label> <seg type="citationContext">See e.g.:</seg> <authority type="court">Inter-American Court of Human Rights</authority>, judgment of <date type="decision" when="2020-02-16">16 February 2020</date>, <title level="a" type="caseName">Indigenous Communities of the Lhaka Honhat (Our Land) Association v. Argentina</title>, <citedRange unit="number" n="254">par. 254</citedRange>, <seg type="citationContext">quoting the amicus curiae intervention of the former UN Special Rapporteur on the Right to Food, De Schutter:</seg> <quote>«Many indigenous peoples understand the right to adequate food as a collective right. …»</quote> The cultural value of food is recognized … (ICCPR). See infra, section 3.2.</bibl>
-<bibl><author>Cook</author>, <ref type="precedingWork">supra</ref> note <ref type="footnote" n="12">12</ref>, <citedRange unit="page">170</citedRange>.</bibl>
-<bibl><seg type="citationContext">cf.</seg> <author>Carli N. Conklin</author>, <title level="a">The Origins of the Pursuit of Happiness</title>, <title level="j">7 Wash. U. Juris. Rev.</title> <biblScope unit="page" from="195">195</biblScope>, <citedRange unit="page">200</citedRange> (<date type="publication">2015</date>) (selecting for use the first edition, as does the present article);</bibl>
+<bibl><label>9</label> <seg type="citationContext">See e.g.:</seg> <authority type="court">Inter-American Court of Human Rights</authority>, judgment of <date type="decision" when="2020-02-16">16 February 2020</date>, <title level="a" type="caseName">Indigenous Communities of the Lhaka Honhat (Our Land) Association v. Argentina</title>, <citedRange unit="number" from="254" to="254">par. 254</citedRange>, <seg type="citationContext">quoting the amicus curiae intervention of the former UN Special Rapporteur on the Right to Food, De Schutter:</seg> <quote>«Many indigenous peoples understand the right to adequate food as a collective right. …»</quote> The cultural value of food is recognized … (ICCPR). See infra, section 3.2.</bibl>
+<bibl><author>Cook</author>, <ref type="precedingWork">supra</ref> <ref type="footnote" n="12">note 12</ref>, <citedRange unit="page" from="170" to="170">170</citedRange>.</bibl>
+<bibl><seg type="citationContext">cf.</seg> <author>Carli N. Conklin</author>, <title level="a">The Origins of the Pursuit of Happiness</title>, <title level="j">7 Wash. U. Juris. Rev.</title> <biblScope unit="page" from="195">195</biblScope>, <citedRange unit="page" from="200" to="200">200</citedRange> (<date type="publication">2015</date>) (selecting for use the first edition, as does the present article);</bibl>
 ```
