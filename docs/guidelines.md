@@ -611,6 +611,28 @@ significant part of the corpus — legal scholarship and the humanities discipli
 share its citation culture — needs a further, domain-specific layer on top of it, which
 is documented separately in [Legal and Humanities Scholarship](#legal-and-humanities-scholarship) below.
 
+**The annotation principle: content is the statement, attributes are the
+normalization.** Each element contains the whole statement as it appears in the
+source, including any language-specific words or abbreviations that are part of it —
+"pp. 67-82", "Rn. 5", "2nd ed.", "Zweite, verbesserte Auflage", "8.9.2016". The
+attributes carry what the statement means in a normalized, machine-readable form: the
+kind of unit in `@unit`, a number in `@n`, a range in `@from`/`@to`, an ISO date in
+`@when`. The two layers do different jobs. The element content records *where* a piece
+of information is in the text and how the source expresses it; the attributes make it
+comparable across languages and citation styles without re-reading the text.
+
+```xml
+<biblScope unit="page" from="67" to="82">pp. 67-82</biblScope>
+<edition n="2">Zweite, verbesserte Auflage</edition>
+<date type="decision" when="2016-09-08">8.9.2016</date>
+```
+
+When the content is already in normalized form — a bare Arabic number, a plain year —
+no attribute is needed, since the content is its own value. The rules below apply this
+principle element by element; where they say what stays *outside* an element, it is
+because that text is not part of the statement the element denotes (punctuation
+between fields, connecting words, a role marker after a name).
+
 ### Basic bibliographic elements
 
 **Authors and editors.** `<author>` and `<editor>` hold a complete sequence of names as
@@ -710,11 +732,11 @@ issue, or overall page range:
 **Designators go inside the element.** A word or abbreviation that names the unit or
 kind of a value — `p.`, `pp.`, `S.`, `Vol.`, `Bd.`, `No.`, `n.`, `Heft`, `Rn.`, `§`,
 `Abs.`, `para`, `ed.`, `Aufl.`, `note`, or the equivalent in any other language — is
-annotated together with the value it introduces. The element content covers the whole
-expression as it appears in the source; the attributes (`@unit`, `@n`, `@from`/`@to`)
-hold the normalized, language-independent value. This is the same model already used
-for dates, where the content is the source text and `@when` the machine-readable form
-(see **Dates** above):
+annotated together with the value it introduces. This applies the
+[annotation principle](#citation-model) stated at the start of this section: the
+element content covers the whole expression as it appears in the source, and the
+attributes (`@unit`, `@n`, `@from`/`@to`) hold the normalized, language-independent
+value, just as `@when` does for **Dates** above:
 
 ```xml
 <biblScope unit="volume" n="1">Vol. 1</biblScope>, <biblScope unit="issue" n="2">No. 2</biblScope>,
