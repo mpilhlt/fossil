@@ -50,6 +50,24 @@ git commit -m "Regenerate schemas"
 
 The build script will abort with an error if any `<define>` name appears more than once in a flattened output — a sign that a shared element needs a filename-stem prefix (e.g. `bibl-struct_note` instead of `note`).
 
+## Annotation guidelines
+
+The annotation guidelines are maintained in [`docs/guidelines.md`](docs/guidelines.md). Word and PDF versions are published alongside the schemas:
+
+- **PDF:** <https://mpilhlt.github.io/fossil/guidelines.pdf>
+- **Word:** <https://mpilhlt.github.io/fossil/guidelines.docx>
+
+Both are **auto-generated** and must not be edited directly. When a pull request changes `docs/guidelines.md`, the [Build guidelines](.github/workflows/build-guidelines.yml) workflow regenerates them and commits them to the pull request's branch, so they are merged together with the change. Pull the branch before pushing further changes to it.
+
+To build them locally, install [pandoc](https://pandoc.org/installing.html) and [LibreOffice](https://www.libreoffice.org/download/), then run:
+
+```bash
+uv sync --group dev        # first time only
+uv run python scripts/build-guidelines-docx.py --pdf
+```
+
+Without `--pdf`, only the Word version is written, and LibreOffice is optional: it is used to fill in the page numbers of the table of contents. Without it, Word offers to update the table when the file is opened.
+
 ## Data Structure
 
 The structure of the data will be based on batches and will follow this structure:

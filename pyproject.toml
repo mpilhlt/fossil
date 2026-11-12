@@ -15,5 +15,8 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "pygments>=2.20.0",
+    "pypdf>=7.0.1",
+    "python-docx>=1.2.0",
     "rnginline>=0.0.3",
 ]
