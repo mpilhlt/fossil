@@ -673,7 +673,7 @@ translation gets no `@xml:lang`.
   <title level="m" xml:lang="pl">Postępowanie administracyjne w Europie</title>
   [<title level="m" xml:lang="en">Administrative Procedure in Europe</title>],
   <pubPlace>Warszawa</pubPlace>: <publisher>Wolters Kluwer Polska</publisher> <date>2010</date>,
-  pp. <biblScope unit="page" from="31" to="42">31-42</biblScope>.</bibl>
+  <biblScope unit="page" from="31" to="42">pp. 31-42</biblScope>.</bibl>
 ```
 
 **Dates.** `<date type="publication" when="...">` marks the publication date; `@when`
@@ -707,23 +707,55 @@ issue, or overall page range:
 | `volume` | Volume number |
 | `issue` | Issue / number |
 
-**"p."/"pp." (in any language) stay outside the tag.** This follows
-[Grobid's own convention](https://grobid.readthedocs.io/en/latest/training/Bibliographical-references/index.html):
-a page abbreviation — `p.`, `pp.`, `S.`, or the equivalent in any other language — maps
-onto `@unit="page"` unambiguously, so it adds nothing `@unit` doesn't already say and is
-left as plain text before the tag:
+**Designators go inside the element.** A word or abbreviation that names the unit or
+kind of a value — `p.`, `pp.`, `S.`, `Vol.`, `Bd.`, `No.`, `n.`, `Heft`, `Rn.`, `§`,
+`Abs.`, `para`, `ed.`, `Aufl.`, `note`, or the equivalent in any other language — is
+annotated together with the value it introduces. The element content covers the whole
+expression as it appears in the source; the attributes (`@unit`, `@n`, `@from`/`@to`)
+hold the normalized, language-independent value. This is the same model already used
+for dates, where the content is the source text and `@when` the machine-readable form
+(see **Dates** above):
 
 ```xml
-p. <biblScope unit="page">79</biblScope>
-pp. <biblScope unit="page" from="517" to="518">517-518</biblScope>
+<biblScope unit="volume" n="1">Vol. 1</biblScope>, <biblScope unit="issue" n="2">No. 2</biblScope>,
+<biblScope unit="page" from="67" to="82">pp. 67-82</biblScope>
+<citedRange unit="page" n="79">p. 79</citedRange>
+<citedRange unit="margin" n="5">Rn. 5</citedRange>
+<citedRange unit="section" n="64">para 64</citedRange>
 ```
 
-Other pinpoint abbreviations are different: `Rn.`, `§`, `Abs.`, `lit.` and the like each
-require interpreting *which* `@unit` they map to (margin, section, subSection, letter —
-there is no single unambiguous target the way there is for a page), so that
-interpretive step is itself worth preserving. These stay inside the tag, normalized
-through `@n` or `@from`/`@to` as covered under
-[Pinpoint citations](#pinpoint-citations-citedrange) below.
+There are three reasons for this rule:
+
+- It follows the TEI convention. The TEI Guidelines' own `<biblScope>` and `<edition>`
+  examples include the designator in the element.
+- It loses nothing. The bare value can always be derived from content plus attributes,
+  but the extent of the original expression cannot be reconstructed from a value-only
+  annotation.
+- Designators are not always unambiguous. `S.` is a page (*Seite*) in `S. 123` but a
+  sentence (*Satz*) in `§ 1 Abs. 2 S. 1`; `ed.` is an edition after a number but an
+  editor after a name. Keeping the designator inside the element records which reading
+  the annotator chose, through `@unit` or the element name.
+
+What stays **outside** the element:
+
+- Punctuation that separates fields — commas, semicolons, brackets. The abbreviation's
+  own period (`pp.`, `Rn.`) belongs to the designator and stays inside.
+- Connecting words that do not name a unit, such as "at" in "233, at 240", "in
+  particular", or "in:".
+- Role markers after names, such as "(ed.)", "(eds.)", "(Hrsg.)". `<author>` and
+  `<editor>` hold names, and a role marker is not part of the name.
+
+When one designator introduces a list of values, it goes into the first element only:
+
+```xml
+<citedRange unit="margin" n="5">Rn. 5</citedRange>, <citedRange unit="margin" n="7">7</citedRange>
+```
+
+This differs from
+[Grobid's own convention](https://grobid.readthedocs.io/en/latest/training/Bibliographical-references/index.html),
+which leaves page abbreviations outside `<biblScope>`. Converting to that convention is
+a matter for the export to Grobid's training format, not for annotation; annotators
+always follow the rule given here.
 
 **Single value, `@n`, or range.** A single value whose text content is already a
 bare number needs no extra attribute at all — the content itself is the value:
@@ -733,17 +765,20 @@ bare number needs no extra attribute at all — the content itself is the value:
 ```
 
 As soon as the text content is non-numeric or mixed with other text — a Roman
-numeral, or a value with a unit abbreviation still attached — it is no longer
-machine-readable on its own, so add `@n` to hold the normalized value:
+numeral, or a value with its designator — it is no longer machine-readable on its own,
+so add `@n` to hold the normalized value as an Arabic number:
 
 ```xml
 <biblScope unit="volume" n="2">II</biblScope>
+<biblScope unit="volume" n="2">Bd. 2</biblScope>
+<biblScope unit="page" n="79">p. 79</biblScope>
 ```
 
 A genuine range — two distinct, named endpoints — gets `@from`/`@to`:
 
 ```xml
 <biblScope unit="volume" from="3" to="5">3–5</biblScope>
+<biblScope unit="page" from="517" to="518">pp. 517-518</biblScope>
 ```
 
 When only the start of a range is given in the text and its end is not (an article
@@ -769,8 +804,21 @@ vocabulary.
 **Publisher and place.** `<publisher>` and `<pubPlace>` hold the publisher's name (also
 used for corporate authors such as web pages) and place of publication.
 
-**Edition.** `<edition n="...">` marks an edition statement, e.g. `n="2"` for a second
-edition.
+**Edition.** `<edition>` marks the complete edition statement, including the generic
+designator (`ed.`, `edn.`, `Aufl.`, `éd.`) and any qualifiers ("revised", "verbesserte").
+Where an edition number can be determined, record it as an Arabic number in `@n`. An
+edition statement without a number gets no `@n`:
+
+```xml
+<edition n="2">2nd ed.</edition>
+<edition n="2">Zweite, verbesserte und vermehrte Auflage</edition>
+<edition n="42">42. Ed.</edition>
+<edition>rev. ed.</edition>
+```
+
+A date that follows the edition statement stays a separate `<date>` next to `<edition>`,
+not nested inside it (see the commentary examples under
+[German legal commentaries](#german-legal-commentaries-kommentare)).
 
 **Basic identifiers.** `<idno type="...">` accepts, among the values also documented
 under [Legal and Humanities Scholarship](#legal-and-humanities-scholarship): `DOI`,
@@ -906,18 +954,20 @@ marginal number, say), there is simply no `<biblScope unit="page">` — only
 </bibl>
 ```
 
-**Single value, `@n`, or range** — the same rule as for `<biblScope>` above,
-including keeping an attached unit abbreviation (`Rn.`, `§`, `Abs.`, `lit.`) inside
-the tag rather than stripping it out. A single pinpoint whose text content is already
-a bare number needs no extra attribute; once the content is non-numeric or mixed with
-other text because such an abbreviation is attached, add `@n` to hold the normalized
+**Single value, `@n`, or range** — the same rules as for `<biblScope>` above,
+including keeping the designator (`p.`, `S.`, `Rn.`, `§`, `Abs.`, `lit.`) inside the
+tag (see [Designators go inside the element](#basic-bibliographic-elements)). A single
+pinpoint whose text content is already a bare number needs no extra attribute; once
+the content is non-numeric or carries its designator, add `@n` to hold the normalized
 value so it stays machine-readable. Reserve `@from`/`@to` for an actual range — never
 repeat a single value in both to express one point, which wrongly implies a span the
 text never named:
 
 ```xml
 <citedRange unit="page">240</citedRange>
+<citedRange unit="page" n="240">S. 240</citedRange>
 <citedRange unit="margin" n="12">Rn. 12</citedRange>
+<citedRange unit="page" from="932" to="935">pp. 932-935</citedRange>
 ```
 
 **Telling an item's own extent apart from a pinpoint.** A single page number or a
@@ -1118,16 +1168,20 @@ devices such as *id.*, *op. cit.*, *ibid.*, *a.a.O.*, *ders.*, *supra*, *infra*,
 | `footnote` | an explicit cross-reference to another footnote, carrying `@n` | `n. 7`, `N. 22`, "oben N. 22" |
 | `work` | a passing mention of another work that is not cited in its own `<bibl>` | "amending Directives 96/9/EC" (see [Data embedded in a title or URL](#data-embedded-in-a-title-or-url)) |
 
+A footnote cross-reference follows the same rule as `<biblScope>` and `<citedRange>`:
+the designator (`n.`, `N.`, `note`, `Fn.`) is part of the `<ref type="footnote">`, and
+`@n` holds the footnote number.
+
 ```xml
 <bibl><author>Vogel</author>, <ref type="precedingWork">id.</ref>,
-  p. <citedRange unit="page">79</citedRange></bibl>
+  <citedRange unit="page" n="79">p. 79</citedRange></bibl>
 
 <bibl><author>Vogel</author>, <ref type="precedingWork">op. cit.</ref>,
-  n. <ref type="footnote" n="7">7</ref>,
-  pp. <citedRange unit="page" from="80" to="81">80–1</citedRange>.</bibl>
+  <ref type="footnote" n="7">n. 7</ref>,
+  <citedRange unit="page" from="80" to="81">pp. 80–1</citedRange>.</bibl>
 
 <bibl><ref type="precedingAuthor">Ders.</ref>, <ref type="precedingWork">a.a.O.</ref>,
-  S. <citedRange unit="page">123</citedRange>.</bibl>
+  <citedRange unit="page" n="123">S. 123</citedRange>.</bibl>
 ```
 
 When two of these devices sit next to each other but are lexically distinct — e.g.
@@ -1136,7 +1190,7 @@ them into one:
 
 ```xml
 <author>Kaiser</author>
-(<ref type="precedingWork">oben</ref> N. <ref type="footnote" n="22">22</ref>)
+(<ref type="precedingWork">oben</ref> <ref type="footnote" n="22">N. 22</ref>)
 <biblScope unit="page">89</biblScope>
 ```
 
@@ -1144,7 +1198,7 @@ The same pattern applies to a *forward*-pointing reference, combining `subsequen
 with `footnote`, e.g. "infra note 24":
 
 ```xml
-<ref type="subsequentWork">infra</ref> note <ref type="footnote" n="24">24</ref>
+<ref type="subsequentWork">infra</ref> <ref type="footnote" n="24">note 24</ref>
 ```
 
 `@target` is available to hold a resolved pointer once the citation is resolved in
@@ -1198,17 +1252,17 @@ citations, each with its own signal phrase or `supra`-style back-reference:
   introduction to the law. It was St. German's <title level="m">Doctor and Student</title>,
   a work integrating theological and legal thought, that drew Blackstone to the law.
 </bibl>
-<bibl><author>Cook</author>, <ref type="precedingWork">supra</ref> note <ref type="footnote" n="12">12</ref>,
+<bibl><author>Cook</author>, <ref type="precedingWork">supra</ref> <ref type="footnote" n="12">note 12</ref>,
   <citedRange unit="page">170</citedRange>. Perhaps for similar reasons, the
   <title level="m">Commentaries</title> turned students from theology to law.
 </bibl>
-<bibl><author>McKnight</author>, <ref type="precedingWork">supra</ref> note <ref type="footnote" n="2">2</ref>,
+<bibl><author>McKnight</author>, <ref type="precedingWork">supra</ref> <ref type="footnote" n="2">note 2</ref>,
   <citedRange unit="page">401</citedRange>.
 </bibl>
 <bibl><seg type="citationContext">Note that the pagination of the various
   editions of the Commentaries has become more or less
   standardized. This move is not without its problems, however. See</seg> <author>Alschuler</author>,
-  <ref type="precedingWork">supra</ref> note <ref type="footnote" n="1">1</ref>,
+  <ref type="precedingWork">supra</ref> <ref type="footnote" n="1">note 1</ref>,
   <citedRange unit="page">3</citedRange> n.4;
 </bibl>
 <bibl><seg type="citationContext">cf.</seg> <author>Carli N. Conklin</author>,
@@ -1223,7 +1277,7 @@ citations, each with its own signal phrase or `supra`-style back-reference:
 ```
 
 The point is the pattern: one comment/signal phrase per `<bibl>` it introduces, `supra
-note N` split into `<ref type="precedingWork">` + `<ref type="footnote" n="N">` exactly
+note N` split into `<ref type="precedingWork">supra</ref>` + `<ref type="footnote" n="N">note N</ref>` exactly
 as in [Intra-footnote references](#intra-footnote-references), and
 no special nesting for the multiple citations sharing one footnote. (This annotation
 validates against `schema/grobid.training.references.rng`.)
@@ -1286,19 +1340,19 @@ carries its own, separate signal phrase rather than sharing the first one:
 ```xml
 <bibl><label>15</label> <seg type="citationContext">Arguing that national corporate due diligence laws potentially breach the principle of consent in international law and the sovereignty of host States, and perpetuate power imbalances of colonial derivation, see e.g.:</seg>
   <author>C. Omari Lichuma</author>, <title level="a">(Laws) Made in the 'First World'</title>,
-  <ref type="precedingWork">cit.</ref>, pp. <biblScope unit="page" from="517" to="518">517-518</biblScope>;
+  <ref type="precedingWork">cit.</ref>, <biblScope unit="page" from="517" to="518">pp. 517-518</biblScope>;
 </bibl>
 <bibl>
   <author>F. Dehbi</author>, <author>O. Martin-Ortega</author>,
   <title level="a">An integrated approach to corporate due diligence from a human rights, environmental, and TWAIL perspective</title>,
   <title level="j">Regulation &amp; Governance</title>, <date type="publication">2023</date>,
-  <biblScope unit="issue">17</biblScope>, pp. <biblScope unit="page" from="927" to="943">927-943</biblScope>,
-  in particular pp. <citedRange unit="page" from="932" to="935">932-935</citedRange>.
+  <biblScope unit="issue" n="17">n. 17</biblScope>, <biblScope unit="page" from="927" to="943">pp. 927-943</biblScope>,
+  in particular <citedRange unit="page" from="932" to="935">pp. 932-935</citedRange>.
 </bibl>
 <bibl>
   <seg type="citationContext">In contrast, affirming that such national legislations are to be regarded as instruments facilitating home States' compliance with their international obligations, rather than as breaches of the host States' sovereignty, see:</seg>
   <author>A. Bonfanti</author>, <title level="m">Imprese multinazionali, diritti umani e ambiente. Profili di diritto internazionale pubblico e privato</title>,
-  <pubPlace>Milano</pubPlace>, <date type="publication">2012</date>, p. <biblScope unit="page">136</biblScope>.
+  <pubPlace>Milano</pubPlace>, <date type="publication">2012</date>, <biblScope unit="page" n="136">p. 136</biblScope>.
 </bibl>
 ```
 
