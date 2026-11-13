@@ -78,7 +78,7 @@ Rules:
 
 ## Citation model
 
-<!-- sync: guide=60873b32acacbe691d5b5bf5d6763376f8cda0d2cbb8590774197178209349f8 llm=b1385a22f0b8d0b611e44ac2647a76bff62b41b112fa59df0cbc20d6bcd62e0d -->
+<!-- sync: guide=f3270f76af8d148cb705fd9362297a00a8499de640fbcb1e404851430b27839f llm=e132ade4ffa25b758b1867d98351368fe083b8ad2abdd70c4416af07928acbb3 -->
 
 Labels the inside of each `<bibl>`. All elements except `<label>` and `<lb/>` may occur any number of times, in any order. Content is the statement as it appears in the source; attributes hold the normalized value. Punctuation, "in:", brackets, connecting words and role markers stay outside tags; designators naming a unit or kind of value stay inside (see Values).
 
