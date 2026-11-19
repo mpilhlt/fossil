@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Shared common inline elements: lb, pb, ptr, ref, label.
+  Shared common inline elements: lb, ptr, ref, label.
   Included by all top-level grobid training schemas.
 -->
 <grammar xmlns="http://relaxng.org/ns/structure/1.0"
@@ -10,16 +10,6 @@
 
   <define name="lb">
     <element name="lb">
-      <empty/>
-    </element>
-  </define>
-
-  <define name="pb">
-    <element name="pb">
-      <a:documentation>Start of a PDF page; @n is the page number in the PDF (1-based)</a:documentation>
-      <optional>
-        <attribute name="n"/>
-      </optional>
       <empty/>
     </element>
   </define>

@@ -31,6 +31,16 @@
     </element>
   </define>
 
+  <define name="pb">
+    <element name="pb">
+      <a:documentation>Start of a PDF page; @n is the page number in the PDF (1-based)</a:documentation>
+      <optional>
+        <attribute name="n"/>
+      </optional>
+      <empty/>
+    </element>
+  </define>
+
   <!-- ============================================================ -->
   <!-- training.segmentation main elements                          -->
   <!-- ============================================================ -->
