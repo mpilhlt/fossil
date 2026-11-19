@@ -473,6 +473,21 @@ print ncb1110 17/3/04 2:58 PM Page 309 <lb/>
 <note place="footnote">© 2004 Nature Publishing Group <lb/></note>
 ```
 
+#### Page breaks
+
+The PDF-TEI-Editor marks the start of every PDF page with a `<pb n="..."/>` element, where
+`n` is the page number in the PDF (counted from 1, not the number printed on the page). It
+is placed before the first word of the page, inside whatever element that word is in, and
+can therefore appear in any of the elements above. GROBID ignores `<pb/>` during training.
+Like `<lb/>`, it records the layout of the PDF and is not an annotation: do not move or
+delete it, and leave it where it is when moving the boundaries of an element.
+
+```xml
+continued on the next page. <lb/></body>
+<page><pb n="2"/>2 <lb/></page>
+<note place="headnote">Doe and Roe, A Sample Article <lb/></note>
+```
+
 ## Reference segmentation model
 
 > [!NOTE]
