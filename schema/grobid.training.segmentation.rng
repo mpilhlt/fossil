@@ -31,6 +31,16 @@
     </element>
   </define>
 
+  <define name="pb">
+    <element name="pb">
+      <a:documentation>Start of a PDF page; @n is the page number in the PDF (1-based)</a:documentation>
+      <optional>
+        <attribute name="n"/>
+      </optional>
+      <empty/>
+    </element>
+  </define>
+
   <!-- ============================================================ -->
   <!-- training.segmentation main elements                          -->
   <!-- ============================================================ -->
@@ -61,6 +71,9 @@
           <ref name="lb"/>
         </zeroOrMore>
         <zeroOrMore>
+          <ref name="pb"/>
+        </zeroOrMore>
+        <zeroOrMore>
           <ref name="listBibl"/>
         </zeroOrMore>
         <zeroOrMore>
@@ -82,6 +95,9 @@
           <ref name="lb"/>
         </zeroOrMore>
         <zeroOrMore>
+          <ref name="pb"/>
+        </zeroOrMore>
+        <zeroOrMore>
           <ref name="page"/>
         </zeroOrMore>
       </interleave>
@@ -94,6 +110,9 @@
         <text/>
         <zeroOrMore>
           <ref name="lb"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="pb"/>
         </zeroOrMore>
         <zeroOrMore>
           <ref name="page"/>
@@ -144,6 +163,9 @@
           <ref name="lb"/>
         </zeroOrMore>
         <zeroOrMore>
+          <ref name="pb"/>
+        </zeroOrMore>
+        <zeroOrMore>
           <ref name="page"/>
         </zeroOrMore>
       </interleave>
@@ -157,6 +179,9 @@
         <text/>
         <zeroOrMore>
           <ref name="lb"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="pb"/>
         </zeroOrMore>
         <zeroOrMore>
           <ref name="page"/>
@@ -173,6 +198,9 @@
         <zeroOrMore>
           <ref name="lb"/>
         </zeroOrMore>
+        <zeroOrMore>
+          <ref name="pb"/>
+        </zeroOrMore>
       </interleave>
     </element>
   </define>
@@ -185,6 +213,9 @@
         <zeroOrMore>
           <ref name="lb"/>
         </zeroOrMore>
+        <zeroOrMore>
+          <ref name="pb"/>
+        </zeroOrMore>
       </interleave>
     </element>
   </define>
@@ -196,6 +227,9 @@
         <text/>
         <zeroOrMore>
           <ref name="lb"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="pb"/>
         </zeroOrMore>
       </interleave>
     </element>
@@ -224,6 +258,9 @@
         <text/>
         <zeroOrMore>
           <ref name="lb"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="pb"/>
         </zeroOrMore>
       </interleave>
     </element>
